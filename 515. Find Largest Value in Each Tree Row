@@ -1,0 +1,57 @@
+/**
+ * Problem:
+ * Given the root of a binary tree, return an array of the largest value in each row of the tree (0-indexed).
+ */
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public IList<int> LargestValues(TreeNode root) {
+        if(root==null)
+            return new List<int>();
+        Queue<TreeNode> queue=new Queue<TreeNode>();
+        int size,max=root.val;
+        List<int> ret=new List<int>();
+        TreeNode temp;
+        queue.Enqueue(root);
+        while(queue.Count!=0)
+        {
+            size=queue.Count;
+            for(int i=0;i<size;i++)
+            {
+                temp=queue.Dequeue();
+                max=maxof2(max,temp);
+                Console.Write((temp!=null?temp.val:"null")+" ");
+                if(temp.left!=null)
+                    queue.Enqueue(temp.left);
+                if(temp.right!=null)
+                    queue.Enqueue(temp.right);
+            }
+            Console.WriteLine();
+            Console.WriteLine(max);
+            ret.Add(max);
+            max=Int32.MinValue;
+            Console.WriteLine(max);
+        }
+        return ret;
+    }
+    
+    private int maxof2(int a,TreeNode b)
+    {
+        if(b==null)
+            return a;
+        return a>=b.val?a:b.val;
+    }
+    
+    
+}
