@@ -1,0 +1,129 @@
+/**
+ * Problem:
+ * Given the root of a binary search tree and the lowest and highest boundaries as low and high, trim the tree so that all its elements lies in [low, high].        * Trimming the tree should not change the relative structure of the elements that will remain in the tree (i.e., any node's descendant should remain a descenant). It can be proven that there is a unique answer.
+ * Return the root of the trimmed binary search tree. Note that the root may change depending on the given bounds.
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    private TreeNode parent=null;
+    public TreeNode TrimBST(TreeNode root, int low, int high) {
+        int least=sear1(root).val;
+        int great=sear2(root).val;
+        Console.WriteLine(least+" "+great);
+        for(int i=least;i<low;i++)
+        {
+            if(search(root,i)!=null)
+                root=delete(root,i);
+        }
+        for(int i=high+1;i<=great;i++)
+        {
+            if(search(root,i)!=null)
+                root=delete(root,i);
+        }
+        return root;
+    }
+    
+    private TreeNode temp(TreeNode root,int low,int high)
+    {
+        if(root==null)
+            return null;
+        greatestlessthan(root,low);
+        TreeNode lw=parent;
+        leastgreaterthan(root,high);
+        TreeNode hi=parent;
+        if(lw!=null)
+        {
+            Console.WriteLine(lw.val);
+            lw.right=null;
+            root=delete(root,lw.val);
+        }
+        if(hi!=null)
+        {
+            Console.WriteLine(hi.val);
+            hi.right=null;
+            root=delete(root,hi.val);
+        }
+        return root;
+    }
+    private TreeNode search(TreeNode node,int val)
+    {
+        if(node==null || node.val==val)
+            return node;
+        if(val<node.val)
+            return search(node.left,val);
+        else
+            return search(node.right,val);
+        return node;
+    }
+    private void leastgreaterthan(TreeNode node,int val)
+    {
+        if(node==null)
+            return;
+        if(val<node.val)
+        {
+            parent=node;
+            leastgreaterthan(node.left,val);   
+        }
+        else
+            leastgreaterthan(node.right,val);
+    }
+    
+    private void greatestlessthan(TreeNode node,int val)
+    {
+        if(node==null)
+            return;
+        if(val<=node.val)
+            greatestlessthan(node.left,val);
+        else
+        {
+            parent=node;
+            greatestlessthan(node.right,val);
+        }
+    }
+    
+    private TreeNode delete(TreeNode node,int val)
+    {
+        if(node==null)
+            return null;
+        if(val<node.val)
+            node.left=delete(node.left,val);
+        else if(val>node.val)
+            node.right=delete(node.right,val);
+        else
+        {
+            if(node.left==null)
+                return node.right;
+            else if(node.right==null)
+                return node.left;
+            TreeNode temp=sear1(node.right);
+            node.val=temp.val;
+            node.right=delete(node.right,node.val);
+        }
+        return node;
+    }
+    
+    private TreeNode sear1(TreeNode node)
+    {
+        if(node.left!=null)
+            return sear1(node.left);
+        return node;
+    }
+    
+    private TreeNode sear2(TreeNode node)
+    {
+        if(node.right!=null)
+            return sear2(node.right);
+        return node;
+    }
+}
