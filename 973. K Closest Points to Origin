@@ -1,0 +1,116 @@
+/**
+ * Problem:
+ * Given an array of points where points[i] = [xi, yi] represents a point on the X-Y plane and an integer k, return the k closest points to the origin (0, 0).
+ * The distance between two points on the X-Y plane is the Euclidean distance (i.e., √(x1 - x2)2 + (y1 - y2)2).
+ * You may return the answer in any order. The answer is guaranteed to be unique (except for the order that it isin).
+ */
+
+public class minheap<T>
+{
+    public int s;
+    public List<T> a;
+    public List<int> key;
+    public minheap()
+    {
+        s=-1;
+        a=new List<T>();
+        key=new List<int>();
+    }
+    public void insert(T val,int keey)
+    {
+        this.s++;
+        this.a.Add(val);
+        this.key.Add(keey);
+        heapify_up(this.s);
+    }
+    private void heapify_up(int i)
+    {
+        while(i>0)
+        {
+            if(key[i]<key[(i-1)/2])
+            {
+                swap(i,(i-1)/2);
+                swap(i,(i-1)/2,true);
+            }
+            i=(i-1)/2;
+        }
+    }
+    public T extract_min()
+    {
+        T val=this.a[0];
+        swap(0,s);
+        swap(0,s,true);
+        this.a.RemoveAt(this.s);
+        this.key.RemoveAt(this.s);
+        this.s--;
+        if(s==-1)
+        {
+            this.key.Clear();
+            this.a.Clear();
+            return val;
+        }
+        heapify_down();
+        return val;
+    }
+    private void heapify_down()
+    {
+        int i=0;
+        while(2*i+1<=this.s)
+        {
+            if(2*i+2>s || key[2*i+1]<=key[2*i+2])
+            {
+                if(key[i]>key[2*i+1])
+                {
+                    swap(i,2*i+1);
+                    swap(i,2*i+1,true);
+                    i=2*i+1;
+                }
+                else
+                    break;
+            }
+            else
+            {
+                if(key[i]>key[2*i+2])
+                {
+                    swap(i,2*i+2);
+                    swap(i,2*i+2,true);
+                    i=2*i+2;
+                }
+                else
+                    break;
+            }
+        }
+    }
+    
+    private void swap(int i,int j,bool iskey=false)
+    {
+        if(iskey)
+        {
+            int tmp=this.key[i];
+            this.key[i]=this.key[j];
+            this.key[j]=tmp;
+        }
+        else
+        {
+            T tmp=this.a[i];
+            this.a[i]=this.a[j];
+            this.a[j]=tmp;
+        }
+    }
+}
+
+
+
+public class Solution {
+    
+    public int[][] KClosest(int[][] points, int k) {
+        minheap<int[]> h=new minheap<int[]>();
+        int[] dist=new int[points.Length];
+        List<int[]> ret=new List<int[]>();
+        for(int i=0;i<points.Length;i++)
+            h.insert(points[i],points[i][0]*points[i][0]+points[i][1]*points[i][1]);
+        for(int i=0;i<k;i++)
+            ret.Add(h.extract_min());
+        return ret.ToArray();
+    }
+}
