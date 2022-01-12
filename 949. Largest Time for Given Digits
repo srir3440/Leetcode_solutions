@@ -1,0 +1,72 @@
+/**
+ * Problem:
+ * Given an array arr of 4 digits, find the latest 24-hour time that can be made using each digit exactly once.
+ * 24-hour times are formatted as "HH:MM", where HH is between 00 and 23, and MM is between 00 and 59. The earliest 24-hour time is 00:00, and the latest is 23:59.
+ * Return the latest 24-hour time in "HH:MM" format. If no valid time can be made, return an empty string.
+ */
+ 
+public class Solution {
+    public string LargestTimeFromDigits(int[] arr) {
+        int i=2;
+        while(i>-1)
+        {
+            string ret=helper(arr,i);
+            if(ret!="")
+                return ret;
+            i--;
+        }
+        return "";
+    }
+    
+    private string helper(int[] arr,int val=2)
+    {
+        string ret="";
+        List<int> rr=arr.ToList();
+        rr.Sort();
+        if(rr[0]>2)
+            return "";
+        int tmp=greatestlessthan(rr,val);
+        if(tmp==-1)
+            return "";
+        ret+=tmp;
+        rr.Remove(tmp);
+        if(tmp==2)
+        {
+            tmp=greatestlessthan(rr,3);
+            if(tmp==-1)
+                return "";
+            ret+=tmp;
+            rr.Remove(tmp);
+        }   
+        else
+        {
+            ret+=rr[rr.Count-1];
+            rr.RemoveAt(rr.Count-1);
+        }
+        ret+=":";
+        tmp=greatestlessthan(rr,5);
+        if(tmp==-1)
+            return "";
+        ret+=tmp;
+        rr.Remove(tmp);
+        ret+=rr[rr.Count-1];
+        return ret;
+    }
+    
+    private int greatestlessthan(List<int> arr,int val)
+    {
+        int left=0,right=arr.Count-1,mid,par=-1;
+        while(left<=right)
+        {
+            mid=(left+right)/2;
+            if(val<arr[mid])
+                right=mid-1;
+            else
+            {
+                par=arr[mid];
+                left=mid+1;
+            }
+        }
+        return par;
+    }
+}
