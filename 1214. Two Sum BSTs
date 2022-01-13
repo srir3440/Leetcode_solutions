@@ -1,0 +1,48 @@
+/**
+ * Problem:
+ * Given the roots of two binary search trees, root1 and root2, return true if and only if there is a node in the first tree and a node in the second tree whose values sum up to a given integer target.
+ */
+ /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    private bool ans=false;
+    public bool TwoSumBSTs(TreeNode root1, TreeNode root2, int target) {
+        checksum(root1,root2,target);
+        return ans;
+    }
+    
+    private void checksum(TreeNode node1,TreeNode root2,int target)
+    {
+        if(node1==null)
+            return;
+        searchTarget(root2,target-node1.val);
+        checksum(node1.left,root2,target);
+        checksum(node1.right,root2,target);
+    }
+    
+    private void searchTarget(TreeNode node,int val)
+    {
+        if(node==null || ans)
+            return;
+        if(node.val==val)
+        {
+            ans=true;
+            return;
+        }
+        if(val<node.val)
+            searchTarget(node.left,val);
+        else
+            searchTarget(node.right,val);
+    }
+}
