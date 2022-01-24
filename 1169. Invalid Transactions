@@ -1,0 +1,81 @@
+/** 
+ * Problem:
+ * A transaction is possibly invalid if:
+
+ *   the amount exceeds $1000, or;
+ *   if it occurs within (and including) 60 minutes of another transaction with the same name in a different city.
+
+ * You are given an array of strings transaction where transactions[i] consists of comma-separated values representing the name, time (in minutes), amount, and city of the transaction.
+
+ * Return a list of transactions that are possibly invalid. You may return the answer in any order.
+ */
+ 
+ public class details
+{
+    public int index;
+    public string city;
+    public int time;
+    public details(int index,string city,int time)
+    {
+        this.index=index;
+        this.time=time;
+        this.city=city;
+    }
+}
+
+
+public class Solution {
+    public IList<string> InvalidTransactions(string[] transactions) {
+        List<string> ret= new List<string>();
+        Dictionary<string,List<details>> dict=new Dictionary<string,List<details>>();
+        for(int i=0;i<transactions.Length;i++)
+        {
+            string[] temp=transactions[i].Split(",");
+            addtodict(ref dict,temp,i);
+        }
+        foreach(var key in dict.Keys)
+            foreach(var item in dict[key])
+                Console.Write(key+" "+item.time);
+        Console.WriteLine();
+        for(int i=0;i<transactions.Length;i++)
+        {
+            string[] temp=transactions[i].Split(",");
+            if(Int32.Parse(temp[2])>1000 || checkcond2(dict,temp,i))
+                ret.Add(transactions[i]);
+        }
+        return ret;
+    }
+    
+    private bool checkcond2(Dictionary<string,List<details>> dict,string[] trans,int index)
+    {
+        foreach(var key in dict.Keys)
+        {
+            if(key==trans[0])
+            {
+                foreach(var item in dict[key])
+                {
+                    Console.Write(item.index);
+                    if(index!=item.index && Math.Abs(item.time-Int32.Parse(trans[1]))<=60 && item.city!=trans[3])
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    private void addtodict(ref Dictionary<string,List<details>> dict,string[] trans,int index)
+    {
+        foreach(var key in dict.Keys)
+        {
+            if(key==trans[0])
+            {
+                dict[key].Add(new details(index,trans[3],Int32.Parse(trans[1])));
+                return;
+            }
+        }
+        details det=new details(index,trans[3],Int32.Parse(trans[1]));
+        List<details> addd=new List<details>();
+        addd.Add(det);
+        dict.Add(trans[0],addd);
+    }
+}
