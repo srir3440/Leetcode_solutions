@@ -1,0 +1,21 @@
+/** 
+ * Problem:
+ * Given an array nums containing n distinct numbers in the range [0, n], return the only number in the range that is missing from the array.
+ */
+ public class Solution {
+    public int MissingNumber(int[] nums) {
+        Array.Sort(nums);
+        int left=0,right=nums.Length-1,mid;
+        if(nums[nums.Length-1]<nums.Length)
+            return nums.Length;
+        while(left<right)
+        {
+            mid=(left+right)/2;
+            if(nums[mid]>mid)
+                right=mid;
+            else
+                left=mid+1;
+        }
+        return right;
+    }
+}
