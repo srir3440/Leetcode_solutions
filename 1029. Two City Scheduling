@@ -1,0 +1,121 @@
+/**
+ * Problem:
+ * A company is planning to interview 2n people. Given the array costs where costs[i] = [aCosti, bCosti], the cost of flying the ith person to city a is aCosti, and the cost of flying the ith person to city b is bCosti.
+
+ * Return the minimum cost to fly every person to a city such that exactly n people arrive in each city.
+ */
+ 
+ public class maxheap<T>
+{
+    private int s;
+    private List<T> a;
+    private List<int> key;
+    public maxheap()
+    {
+        this.s=-1;
+        this.a=new List<T>();
+        this.key=new List<int>();
+    }
+    
+    public int get_size()
+    {
+        return s+1;
+    }
+    
+    public void insert(T newa,int newkey)
+    {
+        s++;
+        this.a.Add(newa);
+        this.key.Add(newkey);
+        heapify_up(s);
+    }
+    
+    private void heapify_up(int i)
+    {
+        while(i>0)
+        {
+            if(key[i]>key[(i-1)/2])
+            {
+                swap(i,(i-1)/2);
+                i=(i-1)/2;
+            }
+            else
+                break;
+        }
+    }
+    
+    public T extract_max()
+    {
+        T temp=a[0];
+        swap(0,s);
+        this.a.RemoveAt(s);
+        this.key.RemoveAt(s);
+        s--;
+        heapify_down(0);
+        return temp;
+    }
+    
+    private void heapify_down(int i)
+    {
+        while((2*i+1)<=s)
+        {
+            if(2*i+2>s || key[2*i+1]>=key[2*i+2])
+            {
+                if(key[2*i+1]>key[i])
+                {
+                    swap(2*i+1,i);
+                    i=2*i+1;
+                }
+                else
+                    break;
+            }
+            else if(key[2*i+1]<key[2*i+2])
+            {
+                if(key[2*i+2]>key[i])
+                {
+                    swap(2*i+2,i);
+                    i=2*i+2;
+                }
+                else
+                    break;
+            }
+        }
+    }
+    
+    private void swap(int old,int neww)
+    {
+        T tmp=this.a[old];
+        this.a[old]=this.a[neww];
+        this.a[neww]=tmp;
+        int temp=this.key[old];
+        this.key[old]=this.key[neww];
+        this.key[neww]=temp;
+    }
+}
+
+public class Solution {
+    public int TwoCitySchedCost(int[][] costs) {
+        maxheap<int[]> maxheap=new maxheap<int[]>();
+        for(int i=0;i<costs.Length;i++)
+            maxheap.insert(costs[i],costs[i][0]-costs[i][1]);
+        Console.WriteLine(maxheap.get_size());
+        int pia=0,pib=0,totalcost=0;
+        while(maxheap.get_size()>0)
+        {
+            int[] temp=maxheap.extract_max();
+            Console.WriteLine(temp[0]+" "+temp[1]);
+            if(pib<costs.Length/2)
+            {
+                totalcost+=temp[1];
+                pib+=1;
+            }
+            else
+            {
+                totalcost+=temp[0];
+                pia+=1;
+            }
+              
+        }
+        return totalcost;
+    }
+}
