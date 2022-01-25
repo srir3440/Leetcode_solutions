@@ -1,0 +1,176 @@
+/**
+ * Problem:
+ * You are asked to cut off all the trees in a forest for a golf event. The forest is represented as an m x n matrix. In this matrix:
+
+ *   0 means the cell cannot be walked through.
+ *   1 represents an empty cell that can be walked through.
+ *   A number greater than 1 represents a tree in a cell that can be walked through, and this number is the tree's height.
+
+ * In one step, you can walk in any of the four directions: north, east, south, and west. If you are standing in a cell with a tree, you can choose whether to cut it off.
+
+ * You must cut off the trees in order from shortest to tallest. When you cut off a tree, the value at its cell becomes 1 (an empty cell).
+
+ * Starting from the point (0, 0), return the minimum steps you need to walk to cut off all the trees. If you cannot cut off all the trees, return -1.
+
+ * You are guaranteed that no two trees have the same height, and there is at least one tree needs to be cut off.
+ */
+ 
+ public class minheap<T>
+{
+    private int s;
+    private List<int> key;
+    private List<T> a;
+    public minheap()
+    {
+        this.s=-1;
+        this.a=new List<T>();
+        this.key=new List<int>();
+    }
+    
+    public int get_size()
+    {
+        return s+1;
+    }
+    public void insert(T newa,int newkey)
+    {
+        s+=1;
+        this.key.Add(newkey);
+        this.a.Add(newa);
+        heapify_up(s);
+    }
+    private void heapify_up(int i)
+    {
+        while(i>0)
+        {
+            if(key[i]<key[(i-1)/2])
+            {
+                swap(i,(i-1)/2);
+                i=(i-1)/2;
+            }
+            else
+                break;
+        }
+    }
+    
+    public T extract_min()
+    {
+        T ret=a[0];
+        swap(0,s);
+        this.a.RemoveAt(s);
+        this.key.RemoveAt(s);
+        s--;
+        heapify_down(0);
+        return ret;
+    }
+    
+    private void heapify_down(int i)
+    {
+        while((2*i+1)<=s)
+        {
+            if(2*i+2>s || key[2*i+1]<=key[2*i+2])
+            {
+                if(key[2*i+1]<key[i])
+                {
+                    swap(2*i+1,i);
+                    i=2*i+1;
+                }
+                else
+                    break;
+            }
+            else if(key[2*i+1]>key[2*i+2])
+            {
+                if(key[2*i+2]<key[i])
+                {
+                    swap(2*i+2,i);
+                    i=2*i+2;
+                }
+                else
+                    break;
+            }
+        }
+    }
+    
+    private void swap(int oldpos,int newpos)
+    {
+        T tmp=this.a[oldpos];
+        this.a[oldpos]=this.a[newpos];
+        this.a[newpos]=tmp;
+        int temp=this.key[oldpos];
+        this.key[oldpos]=this.key[newpos];
+        this.key[newpos]=temp;
+    }
+    
+}
+
+
+public class Solution {
+    public int CutOffTree(IList<IList<int>> forest) {
+        if(forest[0][0]==0)
+            return -1;
+        Queue<int[]> queue=new Queue<int[]>();
+        HashSet<string> visited=new HashSet<string>();
+        int step,cnt=-1,m=forest.Count,n=forest[0].Count,totalsteps=0;
+        int[] temp=new int[]{0,0};
+        minheap<int> minheap=getheap(forest,m,n);
+        int tofind=minheap.extract_min();
+        //Console.WriteLine(tofind+" "+minheap.get_size());
+        queue.Enqueue(temp);
+        visited.Add("0 0");
+        while(queue.Count!=0)
+        {
+                step=queue.Count;
+                cnt+=1;
+                for(int j=0;j<step;j++)
+                {
+                    temp=queue.Dequeue();
+                    //Console.Write(temp[0]+" "+temp[1]+"    ");
+                    if(forest[temp[0]][temp[1]]==tofind)
+                    {
+                        //Console.WriteLine("hii");
+                        totalsteps+=cnt;
+                        cnt=-1;
+                        queue=new Queue<int[]>();
+                        queue.Enqueue(temp);
+                        visited=new HashSet<string>();
+                        visited.Add(temp[0].ToString()+" "+temp[1].ToString());
+                        if(minheap.get_size()==0)
+                            return totalsteps;
+                        tofind=minheap.extract_min();
+                        break;
+                    }
+                    if(checkindex(temp[0]-1,temp[1],m,n,forest,ref visited))queue.Enqueue(new int[]{temp[0]-1,temp[1]});
+                    if(checkindex(temp[0],temp[1]-1,m,n,forest,ref visited))queue.Enqueue(new int[]{temp[0],temp[1]-1});
+                    if(checkindex(temp[0]+1,temp[1],m,n,forest,ref visited))queue.Enqueue(new int[]{temp[0]+1,temp[1]});
+                    if(checkindex(temp[0],temp[1]+1,m,n,forest,ref visited))queue.Enqueue(new int[]{temp[0],temp[1]+1});
+                }
+                //Console.WriteLine();
+            }
+        if(minheap.get_size()>0)
+            return -1;
+        return totalsteps;
+    }
+                              
+    private bool checkindex(int i,int j,int m,int n,IList<IList<int>> forest,ref HashSet<string> visited)
+    {
+        if(i>=0 && i<m && j>=0 && j<n && forest[i][j]>0 && !visited.Contains(i.ToString()+" "+j.ToString()))
+        {
+            visited.Add(i.ToString()+" "+j.ToString());
+            return true;
+        }       
+        return false;
+    }
+    
+    private minheap<int> getheap(IList<IList<int>> forest,int m,int n)
+    {
+        minheap<int> heap=new minheap<int>();
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(forest[i][j]>1)
+                    heap.insert(forest[i][j],forest[i][j]);
+            }
+        }  
+        return heap;
+    }
+}
