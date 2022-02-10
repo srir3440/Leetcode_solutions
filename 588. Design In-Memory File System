@@ -1,0 +1,98 @@
+public class directory
+{
+    public string name;
+    public Dictionary<string,directory> children;
+    private bool isFile;
+    public string content;
+    public directory(string name,bool isFile=false,string content=null)
+    {
+        this.name=name;
+        this.children=new Dictionary<string,directory>();
+        this.isFile=isFile;
+        this.content=content;
+    }
+    public bool IsFile()
+    {
+        return isFile;
+    }
+    public List<string> getchildren()
+    {
+        List<string> ret=new List<string>();
+        if(this.IsFile())
+        {
+            ret.Add(this.name);
+            return ret;
+        }
+        
+        foreach(var i in children.Keys)
+            ret.Add(children[i].name);
+        ret.Sort();
+        return ret;
+    }
+}
+
+public class FileSystem {
+    private directory root;
+    public FileSystem() {
+        root=new directory("/");
+    }
+    
+    public IList<string> Ls(string path) {
+        if(path.EndsWith("/"))
+            return root.getchildren();
+        string[] splits=path.Split("/");
+        directory temp=root;
+        for(int i=1;i<splits.Length;i++)
+        {
+            if(temp.children.ContainsKey(splits[i]))
+            {
+                if(!temp.IsFile())
+                    temp=temp.children[splits[i]];
+            }         
+        }
+        return temp.getchildren();
+    }
+    
+    public void Mkdir(string path) {
+        string[] splits=path.Split("/");
+        directory temp=root;
+        for(int i=1;i<splits.Length;i++)
+        {
+            if(!temp.children.ContainsKey(splits[i]))
+                temp.children.Add(splits[i],new directory(splits[i]));
+            temp=temp.children[splits[i]];
+        }
+    }
+    
+    public void AddContentToFile(string filePath, string content) {
+        string[] splits=filePath.Split("/");
+        directory temp=root;
+        for(int i=1;i<splits.Length;i++)
+        {
+            if(!temp.children.ContainsKey(splits[i]))
+            {
+                temp.children.Add(splits[i],new directory(splits[i],true,content));
+                return;
+            }
+            temp=temp.children[splits[i]];
+        }
+        temp.content+=content;
+    }
+    
+    public string ReadContentFromFile(string filePath) {
+        string[] splits=filePath.Split("/");
+        directory temp=root;
+        for(int i=1;i<splits.Length;i++)
+            temp=temp.children[splits[i]];
+        return temp.content;
+    }
+}
+
+/**
+ * Your FileSystem object will be instantiated and called as such:
+ * FileSystem obj = new FileSystem();
+ * IList<string> param_1 = obj.Ls(path);
+ * obj.Mkdir(path);
+ * obj.AddContentToFile(filePath,content);
+ * string param_4 = obj.ReadContentFromFile(filePath);
+ */
