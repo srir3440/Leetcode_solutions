@@ -1,0 +1,60 @@
+public class Solution {
+    public string NextClosestTime(string time) {
+        int[] temp=new int[]{(int)Char.GetNumericValue(time[0]),(int)Char.GetNumericValue(time[1]),(int)Char.GetNumericValue(time[3]),(int)Char.GetNumericValue(time[4])};
+        int[] temp2=new int[temp.Length];
+        Array.Copy(temp,temp2,temp.Length);
+        Array.Sort(temp);
+        int lgt,i=temp.Length-1;
+        StringBuilder s=new StringBuilder(time.Remove(2,1));
+        //Console.WriteLine(s.ToString());
+        while(i>-1)
+        {
+            lgt=binsearch(temp,temp2[i]);
+            //Console.WriteLine(i+" "+temp[i]+" "+lgt);
+            if(lgt>-1)
+            {
+                Console.WriteLine(lgt);
+                s[i]=(char)('0'+(char)lgt);
+                Console.WriteLine(s.ToString());
+                if(isvalid(s.ToString()))
+                {
+                    for(int j=i+1;j<temp.Length;j++)
+                        s[j]=(char)('0'+(char)temp[0]);
+                    return gettime(s.ToString());
+                }
+            }
+            s=new StringBuilder(time.Remove(2,1));
+            i--;
+        }
+        string b=temp[0].ToString();
+        return gettime(b+b+b+b);
+    }
+    
+    private string gettime(string a)
+    {
+        return a.Substring(0,2)+":"+a.Substring(2,2);
+    }
+    private int binsearch(int[] arr,int target)
+    {
+        if(target>=arr[arr.Length-1])
+            return -1;
+        int left=0,right=arr.Length-1,mid;
+        while(left<right)
+        {
+            mid=(left+right)/2;
+            if(target<arr[mid])
+                right=mid;
+            else
+                left=mid+1;
+        }
+        return arr[left];
+    }
+    
+    private bool isvalid(string time)
+    {
+        Console.WriteLine(Int32.Parse(time[0].ToString()+time[1].ToString()));
+        if(Int32.Parse(time[0].ToString()+time[1].ToString())>23 || time[2]>'5')
+            return false;
+        return true;
+    }
+}
