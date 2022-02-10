@@ -1,0 +1,79 @@
+/**
+ * // This is the interface that allows for creating nested lists.
+ * // You should not implement it, or speculate about its implementation
+ * interface NestedInteger {
+ *
+ *     // Constructor initializes an empty nested list.
+ *     public NestedInteger();
+ *
+ *     // Constructor initializes a single integer.
+ *     public NestedInteger(int value);
+ *
+ *     // @return true if this NestedInteger holds a single integer, rather than a nested list.
+ *     bool IsInteger();
+ *
+ *     // @return the single integer that this NestedInteger holds, if it holds a single integer
+ *     // Return null if this NestedInteger holds a nested list
+ *     int GetInteger();
+ *
+ *     // Set this NestedInteger to hold a single integer.
+ *     public void SetInteger(int value);
+ *
+ *     // Set this NestedInteger to hold a nested list and adds a nested integer to it.
+ *     public void Add(NestedInteger ni);
+ *
+ *     // @return the nested list that this NestedInteger holds, if it holds a nested list
+ *     // Return null if this NestedInteger holds a single integer
+ *     IList<NestedInteger> GetList();
+ * }
+ */
+public class Solution {
+    private int ans=0;
+    private int maxdepth;
+    public int DepthSumInverse(IList<NestedInteger> nestedList) {
+        this.maxdepth=getmaxdepth(nestedList);
+        Console.WriteLine(this.maxdepth);
+        foreach(var a in nestedList)
+            dfs(a,1);
+        return ans;
+    }
+    
+    private void dfs(NestedInteger ni,int depth)
+    {
+        if(ni.IsInteger())
+        {
+            ans+=ni.GetInteger()*(this.maxdepth-depth+1);
+            return;
+        }
+        foreach(var a in ni.GetList())
+        {
+            dfs(a,depth+1);
+        }
+    }
+    
+    
+    private int getmaxdepth(IList<NestedInteger> nestedList)
+    {
+        Queue<NestedInteger> queue=new Queue<NestedInteger>();
+        int cnt=0;
+        foreach(var a in nestedList)
+        {
+            queue.Enqueue(a);
+        }
+        while(queue.Count!=0)
+        {
+            int size=queue.Count;
+            for(int i=0;i<size;i++)
+            {
+                NestedInteger temp=queue.Dequeue();
+                if(!temp.IsInteger())
+                {
+                    foreach(var a in temp.GetList())
+                        queue.Enqueue(a);
+                }
+            }
+            cnt+=1;
+        }
+        return cnt;
+    }
+}
