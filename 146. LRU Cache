@@ -1,0 +1,52 @@
+public class LRUCache {
+    private Dictionary<int,LinkedListNode<int[]>> cache;
+    private int capacity;
+    private LinkedList<int[]> lru;
+    public LRUCache(int capacity) {
+        this.cache=new Dictionary<int,LinkedListNode<int[]>>(capacity);
+        this.capacity=capacity;
+        this.lru=new LinkedList<int[]>();
+    }
+    
+    public int Get(int key) {
+        if(this.cache.ContainsKey(key))
+        {
+            modifylru(this.cache[key]);
+            return this.cache[key].Value[1];
+        }
+        return -1;
+    }
+    
+    public void Put(int key, int value) {
+        if(this.cache.ContainsKey(key))
+        {
+            modifylru(this.cache[key]);
+            this.cache[key].Value[1]=value;
+            return;
+        }
+        this.cache.Add(key,new LinkedListNode<int[]>(new int[]{key,value}));
+        if(this.cache.Count>capacity)
+        {
+            this.lru.AddFirst(this.cache[key]);
+            this.cache.Remove(lru.Last.Value[0]);
+            lru.RemoveLast();
+            return;
+        }
+        modifylru(this.cache[key]);
+    }
+    
+    private void modifylru(LinkedListNode<int[]> node)
+    {   
+        if(node.Previous!=null)
+            lru.Remove(node);
+        if(lru.First!=node)
+            lru.AddFirst(node);
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.Get(key);
+ * obj.Put(key,value);
+ */
