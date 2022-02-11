@@ -1,0 +1,68 @@
+public class customer
+{
+    public int custId;
+    public string cistation;
+    public int cistime;
+    public customer(int id,string cistname,int citime)
+    {
+        this.custId=id;
+        this.cistation=cistname;
+        this.cistime=citime;
+    }
+}
+public class station
+{
+    public string destname;
+    public int totaltime;
+    public int customercnt;
+    public station(string dname,int time)
+    {
+        this.destname=dname;
+        this.totaltime=time;
+        this.customercnt=1;
+    }
+}
+public class UndergroundSystem {
+    private Dictionary<int,customer> checkedin;
+    private Dictionary<string,Dictionary<string,station>> stodstations;
+    public UndergroundSystem() {
+        checkedin=new Dictionary<int,customer>();
+        stodstations=new Dictionary<string,Dictionary<string,station>>();
+    }
+    
+    public void CheckIn(int id, string stationName, int t) {
+        if(checkedin.ContainsKey(id))
+        {
+            checkedin[id].cistation=stationName;
+            checkedin[id].cistime=t;
+        }
+        else
+            checkedin.Add(id,new customer(id,stationName,t));
+        if(!stodstations.ContainsKey(stationName))
+            stodstations.Add(stationName,new Dictionary<string,station>());
+    }
+    
+    public void CheckOut(int id, string stationName, int t) {
+        string temp=checkedin[id].cistation;
+        if(stodstations[temp].ContainsKey(stationName))
+        {
+            stodstations[temp][stationName].customercnt+=1;
+            stodstations[temp][stationName].totaltime+=t-checkedin[id].cistime;
+            return;
+        }
+        stodstations[temp].Add(stationName,new station(stationName,t-checkedin[id].cistime));    
+    }
+    
+    public double GetAverageTime(string startStation, string endStation) {
+        station s=stodstations[startStation][endStation];
+        return ((double)s.totaltime/(double)s.customercnt);
+    }
+}
+
+/**
+ * Your UndergroundSystem object will be instantiated and called as such:
+ * UndergroundSystem obj = new UndergroundSystem();
+ * obj.CheckIn(id,stationName,t);
+ * obj.CheckOut(id,stationName,t);
+ * double param_3 = obj.GetAverageTime(startStation,endStation);
+ */
