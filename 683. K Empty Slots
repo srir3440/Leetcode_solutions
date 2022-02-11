@@ -1,0 +1,31 @@
+public class Solution {
+    public int KEmptySlots(int[] bulbs, int k) {
+        bool[] arr=new bool[bulbs.Length+1];
+        arr[bulbs[0]]=true;
+        for(int i=1;i<bulbs.Length;i++)
+        {
+            Console.WriteLine(bulbs[i]);
+            arr[bulbs[i]]=true;
+            if(checkkbulbs(arr,bulbs[i]-1,-1,k) || checkkbulbs(arr,bulbs[i]+1,1,k))
+                return i+1;
+        }
+        return -1; 
+    }
+    
+    private bool checkkbulbs(bool[] arr, int start, int step,int k)
+    {
+        int cnt=0,i;
+        Console.WriteLine(start+" "+step);
+        for(i=start;i>=1 && i<arr.Length;i+=step)
+        {
+            if(arr[i] || cnt>k)
+                break;
+            cnt++;
+        }
+        if(i<1 || i>=arr.Length)
+            return false;
+        if(arr[i] && cnt==k)
+            return true;
+        return false;
+    }
+}
