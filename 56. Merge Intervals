@@ -1,0 +1,27 @@
+public class Solution {
+    public int[][] Merge(int[][] intervals) {
+        PriorityQueue<int,int> leftheap=new PriorityQueue<int,int>();
+        PriorityQueue<int,int> rightheap=new PriorityQueue<int,int>();
+        for(int i=0;i<intervals.Length;i++)
+        {
+            leftheap.Enqueue(intervals[i][0],intervals[i][0]);
+            rightheap.Enqueue(intervals[i][1],intervals[i][1]);
+        }
+        int left=leftheap.Peek(),right=Int32.MaxValue,temp;
+        List<int[]> ans=new List<int[]>(); 
+        //Console.WriteLine(leftheap.Peek()+" "+rightheap.Peek());
+        while(leftheap.Count!=0 || rightheap.Count!=0)
+        {
+            temp=leftheap.Dequeue();
+            if(temp>right)
+            {
+                ans.Add(new int[]{left,right});
+                left=temp;
+            }  
+            right=rightheap.Dequeue();
+            Console.WriteLine(left+" "+right);
+        }
+        ans.Add(new int[]{left,right});
+        return ans.ToArray();
+    }
+}
