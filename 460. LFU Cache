@@ -1,0 +1,118 @@
+public class keynode
+{
+    public int counter;
+    public int value;
+    public int key;
+    public keynode(int counter,int key,int value)
+    {
+        this.counter=counter;
+        this.key=key;
+        this.value=value;
+    }
+}
+
+
+public class LFUCache {
+    private Dictionary<int,LinkedListNode<keynode>> pagenodemap;
+    private Dictionary<int,LinkedListNode<LinkedList<keynode>>> pagecountermap; 
+    private LinkedList<LinkedList<keynode>> counterlrumap;
+    private int capacity;
+    public LFUCache(int capacity) {
+        this.pagenodemap=new Dictionary<int,LinkedListNode<keynode>>();
+        this.pagecountermap=new Dictionary<int,LinkedListNode<LinkedList<keynode>>>();
+        this.counterlrumap=new LinkedList<LinkedList<keynode>>();
+        this.capacity=capacity;
+    }
+    
+    public int Get(int key) {
+        //printkeys();
+        if(capacity==0 || !pagenodemap.ContainsKey(key))
+            return -1;
+        var page=pagenodemap[key];
+        pagecountermap[page.Value.counter].Value.Remove(page);
+        addcounterhelper(page);
+        //Console.WriteLine(pagenodemap[key].Value.value);
+        //printkeys();
+        return pagenodemap[key].Value.value;
+    }
+    
+    public void Put(int key, int value) {
+        if(capacity==0)
+            return;
+        //printkeys();
+        if(pagenodemap.ContainsKey(key))
+        {
+            var pagee=pagenodemap[key];
+            pagee.Value.value=value;
+            pagecountermap[pagee.Value.counter].Value.Remove(pagee);
+            addcounterhelper(pagee);
+            return;
+        }
+        pagenodemap.Add(key,new LinkedListNode<keynode>(new keynode(0,key,value)));
+        var page=pagenodemap[key];
+        if(pagenodemap.Count<=capacity)
+        {
+            addcounterhelper(page);
+            return;
+        }
+        LinkedListNode<keynode> temp=counterlrumap.First.Value.Last;
+        if(counterlrumap.First.Value.Count==1)
+        {
+            counterlrumap.Remove(counterlrumap.First);
+            pagecountermap.Remove(temp.Value.counter);
+        }
+        else
+            counterlrumap.First.Value.Remove(counterlrumap.First.Value.Last);
+        pagenodemap.Remove(temp.Value.key);
+        addcounterhelper(page);
+    }
+    
+    private void addcounterhelper(LinkedListNode<keynode> page)
+    {
+        page.Value.counter+=1;
+        if(pagecountermap.ContainsKey(page.Value.counter))
+        {
+            pagecountermap[page.Value.counter].Value.AddFirst(page);
+        }
+        else
+        {
+            LinkedList<keynode> nodelist=new LinkedList<keynode>();
+            nodelist.AddFirst(page);
+            pagecountermap.Add(page.Value.counter,new LinkedListNode<LinkedList<keynode>>(nodelist));
+            if(page.Value.counter==1)
+                counterlrumap.AddFirst(pagecountermap[page.Value.counter]);
+            else
+                counterlrumap.AddAfter(pagecountermap[page.Value.counter-1],pagecountermap[page.Value.counter]);
+        }
+        if(page.Value.counter!=1 && pagecountermap[page.Value.counter-1].Value.Count==0)
+        {
+            counterlrumap.Remove(pagecountermap[page.Value.counter-1]);
+            pagecountermap.Remove(page.Value.counter-1);
+        }
+            
+    }
+    
+    private void printkeys()
+    {
+        foreach(var ke in pagenodemap.Keys)
+            Console.Write(pagenodemap[ke].Value.key+" ");
+        Console.Write("                     ");
+        foreach(var ke in pagecountermap.Keys)
+            Console.Write(ke+" ");
+        Console.Write("                     ");
+        var node=counterlrumap.First;
+        while(node!=null)
+        {
+            Console.Write(node.Value.Count+" ");
+            node=node.Next;
+        }
+        Console.WriteLine();
+    }
+}
+
+/**
+ * Your LFUCache object will be instantiated and called as such:
+ * LFUCache obj = new LFUCache(capacity);
+ * int param_1 = obj.Get(key);
+ * obj.Put(key,value);
+ */
