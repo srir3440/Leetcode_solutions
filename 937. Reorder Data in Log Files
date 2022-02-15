@@ -1,0 +1,37 @@
+public class CustomComparer:Comparer<string>
+{
+    public override int Compare(string a,string b)
+    {
+        int i,j;
+        for(i=0;a[i]!=' ';i++);
+        for(j=0;b[j]!=' ';j++);
+        //Console.WriteLine(a.Substring(i)+" "+b.Substring(j));
+        if(String.Compare(a.Substring(i),b.Substring(j))!=0)
+            return String.Compare(a.Substring(i),b.Substring(j));
+        else if(a.Substring(0,i-1).CompareTo(b.Substring(0,j-1))!=0)
+            return a.Substring(0,i-1).CompareTo(b.Substring(0,j-1));
+        else
+            return 0;
+    }
+}
+
+public class Solution {
+    public string[] ReorderLogFiles(string[] logs) {
+        PriorityQueue<string,string> letterlogs=new PriorityQueue<string,string>(new CustomComparer());
+        List<string> digitlogs=new List<string>();
+        for(int i=0;i<logs.Length;i++)
+        {
+            string[] temp=logs[i].Split(" ");
+            if(!Char.IsDigit(temp[1][0]))
+                letterlogs.Enqueue(logs[i],logs[i]);     
+            else
+                digitlogs.Add(logs[i]);
+        }
+        int j=letterlogs.Count;
+        for(int i=0;i<j;i++)
+            logs[i]=letterlogs.Dequeue();
+        for(int i=0;i<digitlogs.Count;i++)
+            logs[i+j]=digitlogs[i];
+        return logs;
+    }
+}
