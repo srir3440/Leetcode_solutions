@@ -1,0 +1,46 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public int DeepestLeavesSum(TreeNode root) {
+        Queue<TreeNode> queue=new Queue<TreeNode>();
+        int sum=0;
+        bool flag=false;
+        queue.Enqueue(root);
+        while(queue.Count!=0)
+        {
+            sum=0;
+            for(int i=queue.Count;i>0;i--)
+            {
+                TreeNode temp=queue.Dequeue();
+                sum+=temp.val;
+                if(!isleaf(temp))
+                    flag=false;
+                if(temp.left!=null)
+                    queue.Enqueue(temp.left);
+                if(temp.right!=null)
+                    queue.Enqueue(temp.right);
+            }
+            if(flag)
+                return sum;
+        }
+        return sum;
+    }
+    
+    private bool isleaf(TreeNode node)
+    {
+        if(node.left==null && node.right==null)
+            return true;
+        return false;
+    }
+}
