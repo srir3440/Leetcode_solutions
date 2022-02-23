@@ -1,0 +1,35 @@
+public class Solution {
+    public int[] AnagramMappings(int[] nums1, int[] nums2) {
+        return getarrayofindex(populatedict(nums2),nums1);
+    }
+    
+    private Dictionary<int,List<int>> populatedict(int[] nums)
+    {
+        Dictionary<int,List<int>> indexes=new Dictionary<int,List<int>>();
+        for(int i=0;i<nums.Length;i++)
+        {
+            if(!indexes.ContainsKey(nums[i]))
+            {
+                List<int> temp=new List<int>();
+                temp.Add(i);
+                indexes.Add(nums[i],temp);
+            }
+            else
+            {
+                indexes[nums[i]].Add(i);
+            }
+        }
+        return indexes;
+    }
+    
+    private int[] getarrayofindex(Dictionary<int,List<int>> indexes,int[] nums)
+    {
+        int[] ans=new int[nums.Length];
+        for(int i=0;i<nums.Length;i++)
+        {
+            ans[i]=indexes[nums[i]].Last();
+            indexes[nums[i]].Remove(indexes[nums[i]].Count-1);
+        }
+        return ans;
+    }
+}
