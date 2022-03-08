@@ -15,18 +15,18 @@ public class Solution {
             {
                 int j=i;
                 i++;
-                while(i<path.Length && path[i]=='.')
+                while(i<path.Length && path[i]!='/')
                     i++;
                 //Console.WriteLine(i+ "  " +j);
-                if(i-j==1 && (i==path.Length || (i<path.Length && path[i]=='/')))
+                if(i-j==1)
                 {
                     char temp=stack.Peek();
                     while(stack.Peek()!=temp)
                         stack.Pop();
                 }
-                else if(i-j==2 && (i==path.Length || (i<path.Length && path[i]=='/')))
+                else if(i-j==2)
                 {
-                    if(stack.Count!=1 && stack.Peek()=='/')
+                    if(stack.Count!=1)
                         stack.Pop();
                     while(stack.Peek()!='/')
                         stack.Pop();
