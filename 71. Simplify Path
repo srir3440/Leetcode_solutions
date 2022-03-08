@@ -1,0 +1,72 @@
+public class Solution {
+    public string SimplifyPath(string path) {
+        Stack<char> stack=new Stack<char>();
+        stack.Push(path[0]);
+        int i=1;
+        while(i<path.Length)
+        {
+            //Console.WriteLine(i);
+            if(path[i]=='/' && stack.Peek()=='/')
+            {
+                while(i<path.Length && path[i]=='/')
+                    i++;
+            }
+            else if(path[i]=='.' && stack.Peek()=='/')
+            {
+                int j=i;
+                i++;
+                while(i<path.Length && path[i]=='.')
+                    i++;
+                //Console.WriteLine(i+ "  " +j);
+                if(i-j==1 && (i==path.Length || (i<path.Length && path[i]=='/')))
+                {
+                    char temp=stack.Peek();
+                    while(stack.Peek()!=temp)
+                        stack.Pop();
+                }
+                else if(i-j==2 && (i==path.Length || (i<path.Length && path[i]=='/')))
+                {
+                    if(stack.Count!=1 && stack.Peek()=='/')
+                        stack.Pop();
+                    while(stack.Peek()!='/')
+                        stack.Pop();
+                    //Console.Write(stack.Count);
+                }
+                else
+                {
+                    while(j<i)
+                    {
+                        stack.Push(path[j]);
+                        j++;
+                    }
+                        
+                }
+            }
+            else
+            {
+                stack.Push(path[i]);
+                i++;
+            }
+            
+        }
+        if(stack.Peek()=='/')
+            stack.Pop();
+        return getstring(stack);
+    }
+    
+    private string getstring(Stack<char> stack)
+    {
+        if(stack.Count==0)
+            return "/";
+        StringBuilder s=new StringBuilder();
+        while(stack.Count!=0)
+            s.Append(stack.Pop());
+        for(int i=0,j=s.Length-1;i<=j;i++,j--)
+        {
+            char t=s[i];
+            s[i]=s[j];
+            s[j]=t;
+        }
+        return s.ToString();
+    }
+}
