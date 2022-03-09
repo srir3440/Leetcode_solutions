@@ -1,0 +1,36 @@
+public class temp
+{
+    public int val;
+    public int minsofar;
+    public int maxprofit;
+    public temp(int val)
+    {
+        this.val=val;
+        this.minsofar=Int32.MaxValue;
+        this.maxprofit=Int32.MinValue;
+    }
+}
+
+public class Solution {
+    public int MaxProfit(int[] prices) {
+        Stack<temp> stack=new Stack<temp>();
+        stack.Push(new temp(prices[0]));
+        for(int i=0;i<prices.Length;i++)
+        {
+            temp ree=stack.Peek();
+            temp two=new temp(prices[i]);
+            if(prices[i]<ree.minsofar)
+                two.minsofar=prices[i];
+            else
+                two.minsofar=ree.minsofar;
+            if(prices[i]-ree.minsofar>ree.maxprofit)
+                two.maxprofit=prices[i]-ree.minsofar;
+            else
+                two.maxprofit=ree.maxprofit;
+            stack.Push(two);
+        }
+        if(stack.Peek().maxprofit>0)
+            return stack.Peek().maxprofit;
+        return 0;
+    }
+}
