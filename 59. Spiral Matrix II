@@ -1,0 +1,81 @@
+public class Solution {
+    public int[][] GenerateMatrix(int n) {
+        int[][] ret=new int[n][];
+        for(int g=0;g<n;g++)
+            ret[g]=new int[n];
+        int[] limit=getlimits(n);
+        //for(int g=0;g<limit.Length;g++)
+            //Console.WriteLine(limit[g]);
+        int i,j,k=0,a=-1,end=(n%2==0)?n/2:n/2+1;
+        for(int m=0;m<end;m++)
+        {
+            i=m;
+            j=m;
+            //Console.WriteLine(m);
+            a++;
+            while(true)
+            {
+                k++;
+                ret[i][j]=k;
+                //Console.WriteLine(k+" ");
+                //print(ret);
+                if(k>=limit[a])
+                    break;
+                if(j==n-1-m && i!=n-1-m)
+                    i++;
+                else if(i==n-1-m && j!=m)
+                    j--;
+                else if(i==m)
+                    j++;
+                else
+                    i--;
+                
+            }
+        }
+        return ret;
+    }
+    
+    private int[] getlimits(int n)
+    {
+        int[] limit;
+        if(n%2==1)
+        {
+            limit=new int[n/2+1];
+            for(int i=0;i<n/2+1;i++)
+            {
+                if(i!=0)
+                    limit[i]=8*i;
+                else
+                    limit[i]=1;
+            }
+            for(int i=0,j=limit.Length-1;i<=j;i++,j--)
+            {
+                int tmp=limit[i];
+                limit[i]=limit[j];
+                limit[j]=tmp;
+            }
+        }
+        else
+        {
+            limit=new int[n/2];
+            for(int i=n/2;i>0;i--)
+            {
+                limit[n/2-i]=2*2*i+2*(2*i-2);
+            }
+        }
+        for(int i=1;i<limit.Length;i++)
+            limit[i]+=limit[i-1];
+        return limit;
+    }
+    
+    private void print(int[][] ret)
+    {
+        for(int i=0;i<ret.Length;i++)
+        {
+            for(int j=0;j<ret[i].Length;j++)
+                Console.Write(ret[i][j]+ " ");
+            Console.WriteLine();
+        }
+        Console.WriteLine();
+    }
+}
