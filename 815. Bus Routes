@@ -1,0 +1,115 @@
+public class Solution {
+    public int NumBusesToDestination(int[][] routes, int source, int target) {
+        Dictionary<int,List<int>> routebusmap=preparedict(routes);
+        HashSet<int> visited=new HashSet<int>();
+        Queue<int> queue=new Queue<int>();
+        for(int i=0;i<routes.Length;i++)
+        {
+            if(bushasroute(routes[i],source))
+            {
+                if(source==target)
+                    return 0;
+                queue.Enqueue(i);
+                visited.Add(i);
+            }
+        }
+        //printqueue(queue.ToArray());
+        int cnt=0;
+        while(queue.Count!=0)
+        {
+            cnt++;
+            for(int i=queue.Count;i>0;i--)
+            {
+                int bus=queue.Dequeue();
+                List<int> switchablebuses=getswitchbus(routebusmap,target,routes[bus],visited);
+                if(switchablebuses==null)
+                    return cnt;
+                for(int j=0;j<switchablebuses.Count;j++)
+                {
+                    queue.Enqueue(switchablebuses[j]);
+                }
+            }
+            //printqueue(queue.ToArray());
+        }
+        return -1;
+    }
+    
+    private List<int> getswitchbus(Dictionary<int,List<int>> routebusmap,int target,int[] routes,HashSet<int> visited)
+    {
+        if(bushasroute(routes,target))
+            return null;
+        List<int> ret=new List<int>();
+        for(int i=0;i<routes.Length;i++)
+        {
+            if(routebusmap.ContainsKey(routes[i]))
+            {
+                for(int j=0;j<routebusmap[routes[i]].Count;j++)
+                {
+                    if(!visited.Contains(routebusmap[routes[i]][j]))
+                    {
+                        ret.Add(routebusmap[routes[i]][j]);
+                        visited.Add(routebusmap[routes[i]][j]);
+                    }
+                        
+                }
+            }
+        }
+        return ret;
+    }
+    
+    private bool bushasroute(int[] routes,int target)
+    {
+        int left=0,right=routes.Length-1,mid;
+        while(left<=right)
+        {
+            mid=(left+right)/2;
+            if(routes[mid]==target)
+                return true;
+            else if(target<routes[mid])
+                right=mid-1;
+            else
+                left=mid+1;
+        }
+        return false;
+    }
+    
+    private Dictionary<int,List<int>> preparedict(int[][] routes)
+    {
+        Dictionary<int,List<int>> ret=new Dictionary<int,List<int>>();
+        for(int i=0;i<routes.Length;i++)
+        {
+            for(int j=0;j<routes[i].Length;j++)
+            {
+                if(ret.ContainsKey(routes[i][j]))
+                    ret[routes[i][j]].Add(i);
+                else
+                {
+                    List<int> tmp=new List<int>();
+                    tmp.Add(i);
+                    ret.Add(routes[i][j],tmp);
+                }
+                    
+            }
+        }
+        //printdict(ret);
+        return ret;
+    }
+    
+    private void printdict(Dictionary<int,List<int>> dict)
+    {
+        foreach(var key in dict.Keys)
+        {
+            Console.Write(key+ "- ");
+            for(int i=0;i<dict[key].Count;i++)
+                Console.Write(dict[key][i]+" ");
+            Console.WriteLine();
+        }
+    }
+    
+    private void printqueue(int[] queue)
+    {
+        for(int i=0;i<queue.Length;i++)
+            Console.Write(queue[i]+" ");
+        Console.WriteLine();
+    }
+}
