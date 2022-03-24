@@ -1,0 +1,67 @@
+/*
+// Definition for a QuadTree node.
+public class Node {
+    public bool val;
+    public bool isLeaf;
+    public Node topLeft;
+    public Node topRight;
+    public Node bottomLeft;
+    public Node bottomRight;
+
+    public Node() {
+        val = false;
+        isLeaf = false;
+        topLeft = null;
+        topRight = null;
+        bottomLeft = null;
+        bottomRight = null;
+    }
+    
+    public Node(bool _val, bool _isLeaf) {
+        val = _val;
+        isLeaf = _isLeaf;
+        topLeft = null;
+        topRight = null;
+        bottomLeft = null;
+        bottomRight = null;
+    }
+    
+    public Node(bool _val,bool _isLeaf,Node _topLeft,Node _topRight,Node _bottomLeft,Node _bottomRight) {
+        val = _val;
+        isLeaf = _isLeaf;
+        topLeft = _topLeft;
+        topRight = _topRight;
+        bottomLeft = _bottomLeft;
+        bottomRight = _bottomRight;
+    }
+}
+*/
+
+public class Solution {
+    public Node Construct(int[][] grid) {
+        return Cons(grid,0,0,grid.Length);
+    }
+    
+    private Node Cons(int[][] grid,int rs,int cs,int len)
+    {
+        //Console.WriteLine(rs+" "+cs);
+        if(len==1)
+            return new Node(getval(grid[rs][cs]),true);
+        Node node=new Node(getval(grid[rs][cs]),false);
+        node.topLeft=Cons(grid,rs,cs,len/2);
+        //Console.Write(node.topLeft.isLeaf+" ");
+        node.topRight=Cons(grid,rs,cs+len/2,len/2);
+        node.bottomLeft=Cons(grid,rs+len/2,cs,len/2);
+        node.bottomRight=Cons(grid,rs+len/2,cs+len/2,len/2);
+        if (node.topLeft.isLeaf && node.topRight.isLeaf && node.bottomLeft.isLeaf && node.bottomRight.isLeaf
+           && node.topLeft.val == node.topRight.val && node.topRight.val == node.bottomLeft.val && node.bottomLeft.val == node.bottomRight.val) {
+            node=new Node(node.topLeft.val,true);
+        }
+        return node;
+    }
+    
+    private bool getval(int a)
+    {
+        return a==0?false:true;
+    }
+}
