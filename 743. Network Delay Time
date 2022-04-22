@@ -1,0 +1,179 @@
+public class minheap<T>
+{
+    List<T> a;
+    Dictionary<T,int> p;
+    List<int> key;
+    int s;
+    public minheap()
+    {
+        a=new List<T>();
+        p=new Dictionary<T,int>();
+        key=new List<int>();
+        s=-1;
+    }
+    public void insert(T a,int key)
+    {
+        s++;
+        this.p.Add(a,s);
+        this.a.Add(a);
+        this.key.Add(key);
+        if(s<1)
+            return;
+        heapify_up(s);
+    }
+    
+    public void decrease_key(T node,int newkey)
+    {
+        key[p[node]]=newkey;
+        if(s<1)
+            return;
+        heapify_up(p[node]);
+    }
+    
+    private void heapify_up(int i)
+    {
+        while(i>0)
+        {
+            if(key[(i-1)/2]>key[i])
+            {
+                swap((i-1)/2,i);
+                i=(i-1)/2;
+            }
+            else
+                break;
+        }
+    }
+    
+    public T extract_min()
+    {
+        if(s<0)
+            return default;
+        T tmp=a[0];
+        swap(0,s);
+        p.Remove(a[s]);
+        a.RemoveAt(s);
+        key.RemoveAt(s);
+        s--;
+        if(s>=1)
+            heapify_down(0);
+        return tmp;
+    }
+    
+    private void heapify_down(int i)
+    {
+        while(2*i+1<=this.s)
+        {
+            if(2*i+2>this.s || key[2*i+1]<key[2*i+2])
+            {
+                if(key[2*i+1]<key[i])
+                {
+                    swap(2*i+1,i);
+                    i=2*i+1;    
+                }
+                else
+                    break;
+            }
+            else
+            {
+                if(key[2*i+2]<key[i])
+                {
+                    swap(2*i+2,i);
+                    i=2*i+2;
+                }
+                else
+                    break;
+            }
+        }
+    }
+    
+    private void swap(int start,int end)
+    {
+        T temp;int tmp;
+        tmp=p[a[start]];
+        p[a[start]]=p[a[end]];
+        p[a[end]]=tmp;
+        temp=a[start];
+        a[start]=a[end];
+        a[end]=temp;
+        tmp=key[start];
+        key[start]=key[end];
+        key[end]=tmp;
+    }
+    
+    public T peek()
+    {
+        if(s<0)
+            return default;
+        return this.a[0];
+    }
+    
+    public int getkey(T node)
+    {
+        if(!p.ContainsKey(node))
+            return -1;
+        return this.key[p[node]];
+    }
+}
+
+public class ele
+{
+    public int to;
+    public int w;
+    public ele(int to,int w)
+    {
+        this.to=to;
+        this.w=w;
+    }
+}
+
+public class Solution {
+    public int NetworkDelayTime(int[][] times, int n, int k) {
+        minheap<int> mh=new minheap<int>();
+        HashSet<int> visited=new HashSet<int>();
+        HashSet<int> s =new HashSet<int>();
+        Dictionary<int,List<ele>> adj=buildadjmatrix(times,n, s, k);
+        
+        if (s.Count != n)
+            return -1;
+        
+        for(int i=1;i<=n;i++)
+        {
+            if(i!=k)
+                mh.insert(i,Int32.MaxValue);
+            else
+                mh.insert(i,0);
+        }
+        //for(int i=1;i<=n;i++)
+            //Console.WriteLine(mh.peek() + " " + mh.extract_min());
+        int u,du=0;
+        while(visited.Count<n)
+        {
+            du=mh.getkey(mh.peek());
+            u=mh.extract_min();
+            visited.Add(u);
+            for(int i=0;i<adj[u].Count;i++)
+            {
+                if(!visited.Contains(adj[u][i].to) && du+adj[u][i].w<mh.getkey(adj[u][i].to))
+                    mh.decrease_key(adj[u][i].to,du+adj[u][i].w);
+            }
+        }
+        return du;
+    }
+    
+    private Dictionary<int,List<ele>> buildadjmatrix(int[][] times, int n, HashSet<int> s, int k)
+    {
+        Dictionary<int,List<ele>> adj=new Dictionary<int,List<ele>>();
+        
+        s.Add(k);
+        for(int i=1;i<=n;i++)
+            adj.Add(i,new List<ele>());
+        for(int i=0;i<times.Length;i++)
+        {
+            s.Add(times[i][1]);
+            adj[times[i][0]].Add(new ele(times[i][1],times[i][2]));
+            
+        }
+                    
+        return adj;
+    }
+}
