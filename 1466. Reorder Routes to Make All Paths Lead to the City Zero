@@ -1,0 +1,61 @@
+public class Solution {
+    public int MinReorder(int n, int[][] connections) {
+        Queue<int> queue=new Queue<int>();
+        queue.Enqueue(0);
+        int[] visited=new int[n];
+        visited[0]=1;
+        Dictionary<int,List<int>> adjmatrix=getadjmatrix(connections,n);
+        //print(adjmatrix);
+        int cnt=0;
+        while(queue.Count!=0)
+        {
+            for(int i=queue.Count;i>0;i--)
+            {
+                int temp=queue.Dequeue();
+                //Console.Write(temp+ " ");
+                foreach(var j in adjmatrix[temp])
+                {
+                    if(j<0 && visited[-j]==0)
+                    {
+                        cnt++;
+                        visited[-j]=1;
+                        queue.Enqueue(-j);
+                    }
+                    else if(j>0 && visited[j]==0)
+                    {
+                        visited[j]=1;
+                        queue.Enqueue(j);
+                    }
+                        
+                }
+            }
+            //Console.WriteLine();
+        }
+        return cnt;
+    }
+    
+    private Dictionary<int,List<int>> getadjmatrix(int[][] connections, int n)
+    {
+        Dictionary<int,List<int>> adjlist=new Dictionary<int,List<int>>();
+        for(int i=0;i<n;i++)
+            adjlist.Add(i,new List<int>());
+        for(int i=0;i<connections.Length;i++)
+        {
+            adjlist[connections[i][0]].Add(-connections[i][1]);
+            adjlist[connections[i][1]].Add(connections[i][0]);
+        }
+            
+        return adjlist;
+    }
+    
+    private void print(Dictionary<int,List<int>> adj)
+    {
+        foreach(int i in adj.Keys)
+        {
+            Console.Write(i+ "->  ");
+            for(int j=0;j<adj[i].Count;j++)
+                Console.Write(adj[i][j]+ " ");
+            Console.WriteLine();
+        }
+    }
+}
