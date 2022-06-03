@@ -1,0 +1,51 @@
+/**
+ * // This is BinaryMatrix's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * class BinaryMatrix {
+ *     public int Get(int row, int col) {}
+ *     public IList<int> Dimensions() {}
+ * }
+ */
+
+class Solution {
+    public int LeftMostColumnWithOne(BinaryMatrix binaryMatrix) {
+        List<int> dim=binaryMatrix.Dimensions().ToList();
+        int[] minindex=new int[dim[0]];
+        for(int i=0;i<dim[0];i++)
+            minindex[i]=binsearch(binaryMatrix,i,dim[1]);
+        
+        int min=101;
+        for(int i=0;i<dim[0];i++)
+        {
+            //Console.Write(minindex[i]+" ");
+            //Console.WriteLine();
+            if(min>minindex[i])
+                min=minindex[i];
+        }
+        if(min==dim[1])
+            return -1;
+        return min;
+    }
+    
+    private int binsearch(BinaryMatrix bin,int row,int col)
+    {
+    
+        int left=0,right=col-1,mid;
+        int parent=col;
+        //Console.WriteLine(left+" "+right );
+        while(left<=right)
+        {
+            mid=(left+right)/2;
+            //Console.WriteLine(row+" "+mid);
+            if(bin.Get(row,mid)==1)
+            {
+                parent=mid;
+                right=mid-1;
+            }
+                
+            else
+                left=mid+1;
+        }
+        return parent;
+    }
+}
