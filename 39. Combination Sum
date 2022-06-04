@@ -1,0 +1,54 @@
+public class Solution {
+    private IList<IList<int>> ans=new List<IList<int>>();
+    private HashSet<string> visited=new HashSet<string>();
+    private List<int> nos=new List<int>();
+    public IList<IList<int>> CombinationSum(int[] candidates, int target) {
+        Array.Sort(candidates);
+        dfs(candidates,target);
+        return ans;
+    }
+    
+    private void dfs(int[] c,int target)
+    {
+        //Console.WriteLine(target);
+        if(target==0)
+        {
+            string s=getcntarr(c,nos);
+            if(!visited.Contains(s))
+            {
+                //print(nos);
+                ans.Add(nos.ToList());
+                visited.Add(s);
+            }
+            return;
+        }
+        for(int i=0;i<c.Length;i++)
+        {
+            if(target<c[i])
+                break;
+            nos.Add(c[i]);
+            dfs(c,target-c[i]);
+            nos.RemoveAt(nos.Count-1);
+        }
+    }
+    
+    private void print(List<int> nos)
+    {
+        for(int i=0;i<nos.Count;i++)
+            Console.Write(nos[i]+" " );
+        Console.WriteLine();
+    }
+    
+    private string getcntarr(int[] c,List<int> nos)
+    {
+        int[] arr=new int[201];
+        //print(nos);
+        for(int i=0;i<nos.Count;i++)
+            arr[nos[i]]++;
+        string s="";
+        for(int i=0;i<c.Length;i++)
+            s+=arr[c[i]];
+        //Console.WriteLine(s);
+        return s;
+    }
+}
