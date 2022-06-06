@@ -1,0 +1,21 @@
+public class Solution {
+    
+    public int NumEquivDominoPairs(int[][] dominoes) {
+        int[,] cnt=new int[10,10];
+        int total=0;
+        for(int i=dominoes.Length-1;i>=0;i--)
+        {
+            int a=dominoes[i][0];
+            int b=dominoes[i][1];
+            if(a>b)
+            {
+                int tmp=a;
+                a=b;
+                b=tmp;
+            }
+            total+=cnt[a,b];
+            cnt[a,b]++;
+        }
+        return total;
+}
+}
