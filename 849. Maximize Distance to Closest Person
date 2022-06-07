@@ -1,0 +1,59 @@
+public class Solution {
+    public int MaxDistToClosest(int[] seats) {
+        List<int> lst=new List<int>();
+        HashSet<int> hs=new HashSet<int>();
+        for(int i=0;i<seats.Length;i++)
+        {
+            if(seats[i]==1)
+            {
+                lst.Add(i);
+                hs.Add(i);
+            }
+        }
+        for(int i=0;i<seats.Length;i++)
+        {
+            if(hs.Contains(i))
+                continue;
+            int gless=binsearch(lst,i);
+            if(gless==-1)
+                seats[i]=Math.Abs(lst[0]-i);
+            else
+                seats[i]=Math.Abs(min(i-lst[gless],lst[gless+1]-i));      
+        }
+        return getmax(seats);
+    }
+    
+    private int min(int a,int b)
+    {
+        return a<b?a:b;
+    }
+    
+    private int binsearch(List<int> lst,int i)
+    {
+        int left=0,right=lst.Count-1,mid,parent=-1;
+        while(left<right)
+        {
+            mid=(left+right)/2;
+            if(i<lst[mid])
+                right=mid;
+            else
+            {
+                parent=mid;
+                left=mid+1;
+            }
+        }
+        return parent;
+    }
+    
+    private int getmax(int[] arr)
+    {
+        int maxx=-1;
+        for(int i=0;i<arr.Length;i++)
+        {
+            //Console.WriteLine(seats[i]);
+            if(maxx<arr[i])
+                maxx=arr[i];
+        }
+        return maxx;
+    }
+}
