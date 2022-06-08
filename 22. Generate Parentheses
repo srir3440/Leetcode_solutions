@@ -1,0 +1,76 @@
+public class Solution {
+    private HashSet<string> visited=new HashSet<string>();
+    private IList<string> ans=new List<string>();
+    public IList<string> GenerateParenthesis(int n) {
+        dfs("()",1,n);
+        return ans;
+    }
+    
+    private void dfs(string s,int i,int n)
+    {
+        
+        if(i==n)
+        {
+            
+            if(!visited.Contains(s))
+            {
+                
+                ans.Add(s);
+                visited.Add(s);
+            }
+            return;
+        }
+        foreach(string ss in addtoright(s))
+            dfs(ss,i+1,n);
+            
+        foreach(string ss in addwithin(s))
+            dfs(ss,i+1,n);
+    }
+    
+    private List<string> addtoright(string s)
+    {
+        Console.WriteLine(s.ToString()+" "+s.Length);
+        Stack<char> stack=new Stack<char>();
+        List<string> ret=new List<string>();
+        stack.Push(s[0]);
+        int i=1;
+        while(i<s.Length)
+        {
+            
+            if(stack.Count!=0 && stack.Peek()=='(' && s[i]==')')
+            {
+                stack.Pop();
+                ret.Add(s.Insert(i+1,"()"));
+            }
+            stack.Push(s[i]);
+            i++;
+        }
+        return ret;
+    }
+    
+    private List<string> addwithin(string s)
+    {
+        
+        Stack<char> stack=new Stack<char>();
+        List<string> ret=new List<string>();
+        stack.Push(s[0]);
+        int i=1;
+        while(i<s.Length)
+        {
+        
+            if(stack.Count!=0 && stack.Peek()=='(' && s[i]==')')
+            {
+                stack.Pop();
+                ret.Add(s.Insert(i,"()"));
+            }
+            stack.Push(s[i]);
+            i++;
+        }
+        return ret;
+    }
+    
+    
+}
+/*()
+()()   (())
+(())()   ()()()  ()(())  (()())  ((()))*/
