@@ -1,0 +1,25 @@
+public class Solution {
+    public string CustomSortString(string order, string s) {
+        int[] chars=new int[26];
+        string ans="";
+        for(int i=0;i<s.Length;i++)
+            chars[s[i]-'a']++;
+        for(int i=0;i<order.Length;i++)
+        {
+            while(chars[order[i]-'a']>0)
+            {
+                ans+=order[i];
+                chars[order[i]-'a']--;
+            }
+        }
+        for(int i=0;i<26;i++)
+        {
+            while(chars[i]>0)
+            {
+                ans+=(char)(i+'a');
+                chars[i]--;
+            }
+        }
+        return ans;
+    }
+}
