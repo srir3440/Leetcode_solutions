@@ -1,0 +1,43 @@
+public class Solution {
+    public int[] PrisonAfterNDays(int[] cells, int n) {
+        //Console.WriteLine(tostring(cells)+" "+n);
+        int[] temp=new int[8];
+        Dictionary<string,int> hs=new Dictionary<string,int>();
+        int i;
+        for(i=1;i<=n;i++)
+        {
+            //Console.WriteLine(i);
+            Array.Copy(cells,temp,8);
+            if(!hs.ContainsKey(tostring(cells)))
+                hs.Add(tostring(cells),i);
+            else
+                break;
+            cells[0]=0;cells[cells.Length-1]=0;
+            for(int j=1;j<cells.Length-1;j++)
+            {
+                if((temp[j-1]&temp[j+1])==1 || (temp[j-1]|temp[j+1])==0)
+                    cells[j]=1;
+                else
+                    cells[j]=0;
+            }
+        }
+        //Console.WriteLine(i);
+        if(i>n)
+            return cells;
+        else
+        {
+            //Console.WriteLine(tostring(cells)+" "+hs[tostring(cells)]+" "+i);
+            n-=hs[tostring(cells)]-1;
+            n%=i-hs[tostring(cells)];
+            return PrisonAfterNDays(cells,n);
+        }
+    }
+    
+    private string tostring(int[] cells)
+    {
+        string s="";
+        for(int i=0;i<cells.Length;i++)
+            s+=cells[i];
+        return s;
+    }
+}
