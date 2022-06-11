@@ -10,34 +10,36 @@ To determine how you "say" a digit string, split it into the minimal number of g
 For example, the saying and conversion for digit string "3322251":
 
 Given a positive integer n, return the nth term of the count-and-say sequence.
+
+
 public class Solution {
     public string CountAndSay(int n) {
-        return say(n);
+        return recur("1",n,1);
     }
     
-    private string say(int n)
+    private string recur(string s,int n,int i)
     {
-        if(n==1)
-            return "1";
-        string str=say(n-1);
-        //Console.WriteLine(str);
-        char a=str[0];
-        int i=1,cnt=1;
-        string ret="";
-        while(true)
+        if(i==n)
+            return s;
+        return recur(say(s),n,i+1);
+    }
+    
+    private string say(string s)
+    {
+        StringBuilder news=new StringBuilder();
+        int cnt=0;
+        for(int i=0;i<s.Length;)
         {
-            while(i<str.Length && a==str[i])
+            char a=s[i];
+            while(i<s.Length && s[i]==a)
             {
                 cnt++;
                 i++;
             }
-            Console.WriteLine(i);
-            ret=ret+cnt.ToString()+a.ToString();
-            if(i>=str.Length)
-                break;
-            a=str[i];
+            news.Append(cnt.ToString()+a.ToString());
             cnt=0;
         }
-        return ret;
+        //Console.WriteLine(s+" "+news.ToString());
+        return news.ToString();
     }
 }
