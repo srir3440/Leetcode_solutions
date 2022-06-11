@@ -1,0 +1,57 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public int WidthOfBinaryTree(TreeNode root) {
+        Queue<TreeNode> queue=new Queue<TreeNode>();
+        root.val=1;
+        queue.Enqueue(root);
+        int firstIndex=-1,lastIndex=-1,max=-1;
+        while(queue.Count!=0)
+        {
+            int step=queue.Count;
+            firstIndex=-1;
+            lastIndex=-1;
+            //cnt++;
+            for(int i=0;i<step;i++)
+            {
+                TreeNode tmp=queue.Dequeue();
+                Console.Write(tmp.val+" ");
+                TreeNode t=isvalid(tmp.left,tmp);
+                if(t!=null)
+                    queue.Enqueue(t);
+                t=isvalid(tmp.right,tmp);
+                if(t!=null)
+                    queue.Enqueue(t);
+                if(firstIndex==-1)
+                    firstIndex=tmp.val;
+                lastIndex=tmp.val;
+            }
+            Console.WriteLine();
+            if(max<(lastIndex-firstIndex+1))
+                max=lastIndex-firstIndex+1;
+        }
+        return max;
+    }
+    
+    private TreeNode isvalid(TreeNode node,TreeNode parent)
+    {
+        if(node==null)
+            return null;
+        if(node==parent.left)
+            node.val=parent.val*2;
+        else
+            node.val=parent.val*2+1;
+        return node;
+    }
+}
