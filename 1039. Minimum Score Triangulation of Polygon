@@ -1,0 +1,78 @@
+public class Solution {
+    public int MinScoreTriangulation(int[] values) {
+        if(values.Length==3)
+            return product(values);
+        int low,high;
+        lowindexes(values,out low,out high);
+        Console.WriteLine(low+" "+high);
+        if(low>high)
+        {
+            int temp=low;
+            low=high;
+            high=temp;
+        }
+        int[] splitwithin=splitwit(values,low,high);
+        int[] splitbeyond=splitbey(values,low,high);
+        print(splitwithin);
+        print(splitbeyond);
+        Console.WriteLine("____________________");
+        return MinScoreTriangulation(splitwithin)+MinScoreTriangulation(splitbeyond);
+    }
+    
+    private void lowindexes(int[] values,out int low,out int high)
+    {
+        int minsum=Int32.MaxValue;
+        low=0;high=0;
+        for(int i=0;i<values.Length;i++)
+        {
+            for(int j=0;j<values.Length;j++)
+            {
+                if(i!=j && i!=j+1 && i!=j-1 && i+j+1!=values.Length && minsum>values[i]*values[j])
+                {
+                    //Console.WriteLine(i+" "+j);
+                    low=i;
+                    high=j;
+                    minsum=values[i]*values[j];
+                }
+            }
+        }
+    }
+    
+    
+    private int product(int[] values)
+    {
+        int prod=1;
+        for(int i=0;i<values.Length;i++)
+            prod*=values[i];
+        return prod;
+    }
+    
+    private int[] splitwit(int[] values,int start,int end)
+    {
+        int[] ret=new int[end-start+1];
+        for(int i=start;i<=end;i++)
+            ret[i-start]=values[i];
+        return ret;
+    }
+    
+    private int[] splitbey(int[] values,int start,int end)
+    {
+        int[] ret=new int[values.Length-end+start+1];
+        //Console.WriteLine(start+" "+end+" "+ret.Length);
+        int k=0;
+        for(int i=end;i<end+ret.Length;i++)
+        {
+            //Console.WriteLine(i%values.Length);
+            ret[k++]=values[i%values.Length];
+        }
+            
+        return ret;
+    }
+    
+    private void print(int[] arr)
+    {
+        for(int i=0;i<arr.Length;i++)
+            Console.Write(arr[i]+" ");
+        Console.WriteLine();
+    }
+}
