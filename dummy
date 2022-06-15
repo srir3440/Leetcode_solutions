@@ -1,0 +1,148 @@
+public class maxheap<T>
+{
+    private List<T> a;
+    public Dictionary<T,int> p;
+    public List<int> key;
+    public int s;
+    public maxheap()
+    {
+        a=new List<T>();
+        p=new Dictionary<T,int>();
+        key=new List<int>();
+        s=-1;
+    }
+    
+    public void insert(T newa,int newkey)
+    {
+        s++;
+        a.Add(newa);
+        p.Add(newa,s);
+        key.Add(newkey);
+        heapify_up(s);
+    }
+    
+    private void heapify_up(int i)
+    {
+        while(i>0)
+        {
+            if(key[i]>key[i/2])
+            {
+                swap(i,i/2);
+                i/=2;
+            }
+            else
+                break;
+        }
+    }
+    
+    public T extract_max()
+    {
+        T tmp=a[0];
+        swap(0,s);
+        p.Remove(a[s]);
+        a.RemoveAt(s);
+        key.RemoveAt(s);
+        s--;
+        heapify_down(0);
+        return tmp;
+    }
+    
+    private void heapify_down(int i)
+    {
+        while(2*i+1<=s)
+        {
+            if(2*i+2>s || (key[2*i+1]>key[2*i+2]))
+            {
+                if(key[2*i+1]>key[i])
+                {
+                    swap(2*i+1,i);
+                    i=2*i+1;
+                }
+                else
+                    break;
+            }
+            else
+            {
+                if(key[2*i+2]>key[i])
+                {
+                    swap(2*i+2,i);
+                    i=2*i+2;
+                }
+                else
+                    break;
+            }
+        }
+    }
+    
+    public void update_key(T a,int newkey)
+    {
+        if(newkey==-1)
+            key[p[a]]=102;
+        else
+            key[p[a]]+=newkey;
+        heapify_up(p[a]);
+    }
+    
+    private void swap(int old,int neww)
+    {
+        int o=p[a[old]];
+        p[a[old]]=p[a[neww]];
+        p[a[neww]]=o;
+        T tmp=a[old];
+        a[old]=a[neww];
+        a[neww]=tmp;
+        int temp=key[old];
+        key[old]=key[neww];
+        key[neww]=temp;
+    }
+    
+    public int peek()
+    {
+        return key[0];
+    }
+}
+
+
+public class Leaderboard {
+    private maxheap<int> pmap;
+    private List<int> l;
+    public Leaderboard() {
+        this.pmap=new maxheap<int>();
+        this.l=new List<int>();
+    }
+    
+    public void AddScore(int playerId, int score) {
+        if(pmap.p.ContainsKey(playerId))
+            pmap.update_key(playerId,score);
+        else
+            pmap.insert(playerId,score);
+        print();
+    }
+    
+    public int Top(int K) {
+        for(int i=0;i<=pmap.s;i++)
+            Console.WriteLine(pmap.peek()+" "+pmap.extract_max());
+        Console.WriteLine();
+        return 0;
+    }
+    
+    public void Reset(int playerId) {
+        pmap.update_key(playerId,-1);
+        Console.WriteLine(pmap.extract_max());
+    }
+    
+    private void print()
+    {
+        for(int i=0;i<pmap.a.Count;i++)
+            Console.Write(pmap.a[i]+" "+pmap.key[pmap.p[pmap.a[i]]]+" ");
+        Console.WriteLine();
+    }
+}
+
+/**
+ * Your Leaderboard object will be instantiated and called as such:
+ * Leaderboard obj = new Leaderboard();
+ * obj.AddScore(playerId,score);
+ * int param_2 = obj.Top(K);
+ * obj.Reset(playerId);
+ */
