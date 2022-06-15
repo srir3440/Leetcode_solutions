@@ -1,0 +1,54 @@
+/**
+ * Definition for Node.
+ * public class Node {
+ *     public int val;
+ *     public Node left;
+ *     public Node right;
+ *     public Node random;
+ *     public Node(int val=0, Node left=null, Node right=null, Node random=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *         this.random = random;
+ *     }
+ * }
+ */
+
+public class Solution {
+    private Dictionary<Node,NodeCopy> map=new Dictionary<Node,NodeCopy>();
+    public NodeCopy CopyRandomBinaryTree(Node root) {
+        NodeCopy rootcopy=copytree(root);
+        //print(map);
+        helper(root,rootcopy);
+        return rootcopy;
+    }
+    
+    private NodeCopy copytree(Node node)
+    {
+        if(node==null)
+            return null;
+        NodeCopy nodecopy=new NodeCopy(node.val);
+        map.Add(node,nodecopy);
+        nodecopy.left=copytree(node.left);
+        nodecopy.right=copytree(node.right);
+        return nodecopy;
+    }
+    
+    private void helper(Node node, NodeCopy nodecopy)
+    {
+        if(node==null)
+            return;
+        nodecopy.random=null;
+        if(node.random!=null)
+            nodecopy.random=map[node.random];
+        helper(node.left,nodecopy.left);
+        helper(node.right,nodecopy.right);
+    }
+    
+    
+    private void print(Dictionary<Node,NodeCopy> map)
+    {
+        foreach(var key in map.Keys)
+            Console.WriteLine(key.val+" "+map[key].val);
+    }
+}
