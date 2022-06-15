@@ -1,0 +1,46 @@
+public class maxheapComparer:Comparer<int>
+{
+    public override int Compare(int a,int b)
+    {
+        if(a.CompareTo(b)!=0)
+            return -a.CompareTo(b);
+        else
+            return 0;
+    }
+}
+
+public class Solution {
+    public int[] FrequencySort(int[] nums) {
+        Dictionary<int,int> dict=new Dictionary<int,int>();
+        for(int i=0;i<nums.Length;i++)
+        {
+            if(dict.ContainsKey(nums[i]))
+                dict[nums[i]]++;
+            else
+                dict.Add(nums[i],1);
+        }
+        //Console.WriteLine(dict.Keys.Count);
+        List<int> ret=new List<int>();
+        for(int i=1;ret.Count!=nums.Length;i++)
+        {
+            List<int> tmp=new List<int>();
+            foreach(var key in dict.Keys)
+            {
+                if(dict[key]==i)
+                {
+                    //Console.WriteLine(key);
+                    int j=i;
+                    while(j>0)
+                    {
+                        tmp.Add(key);
+                        j--;
+                    }
+                        
+                }
+            }
+            tmp.Sort(new maxheapComparer());
+            ret.AddRange(tmp);
+        }
+        return ret.ToArray();
+    }
+}
