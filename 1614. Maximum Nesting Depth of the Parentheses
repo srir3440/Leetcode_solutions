@@ -1,0 +1,28 @@
+public class Solution {
+    public int MaxDepth(string s) {
+        if(!s.Contains('('))
+            return 0;
+        Stack<char> stack=new Stack<char>();
+        int i=0,max=0,cnt=0;
+        while(i<s.Length)
+        {
+            Console.WriteLine(s[i]+" "+cnt);
+            if(s[i]=='(')
+            {
+                stack.Push(s[i]);
+                cnt++;
+            }
+            else if(stack.Count!=0 && stack.Peek()=='(' && s[i]==')')
+            {
+                stack.Pop();
+                Console.WriteLine(cnt);
+                if(max<cnt)
+                    max=cnt;
+                cnt=stack.Count;
+            }
+            i++;
+        }
+        //Console.WriteLine("___________________");
+        return max;
+    }
+}
