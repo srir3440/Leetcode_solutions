@@ -1,0 +1,39 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode SwapNodes(ListNode head, int k) {
+        int lllen=0;
+        ListNode curr=head;
+        while(curr!=null)
+        {
+            lllen++;
+            curr=curr.next;
+        }
+        curr=head;
+        ListNode swap1=null,swap2=null;
+        int tostop=lllen-k,i=0;
+        while(swap2==null || swap1==null)
+        {
+            if(i==k-1)
+                swap1=curr;
+            if(i==tostop)
+                swap2=curr;
+            curr=curr.next;
+            i++;
+        }
+        Console.WriteLine(swap1.val+" "+swap2.val);
+        int temp=swap1.val;
+        swap1.val=swap2.val;
+        swap2.val=temp;
+        return head;
+    }
+}
