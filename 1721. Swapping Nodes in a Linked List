@@ -11,26 +11,21 @@
  */
 public class Solution {
     public ListNode SwapNodes(ListNode head, int k) {
-        int lllen=0;
-        ListNode curr=head;
+        ListNode swap1=null,swap2=null,curr=head;
+        int i=1;
         while(curr!=null)
         {
-            lllen++;
-            curr=curr.next;
-        }
-        curr=head;
-        ListNode swap1=null,swap2=null;
-        int tostop=lllen-k,i=0;
-        while(swap2==null || swap1==null)
-        {
-            if(i==k-1)
+            if(i==k)
+            {
                 swap1=curr;
-            if(i==tostop)
-                swap2=curr;
+                swap2=new ListNode(0,head);
+            }
+            if(swap2!=null)
+                swap2=swap2.next;
             curr=curr.next;
             i++;
         }
-        Console.WriteLine(swap1.val+" "+swap2.val);
+        //Console.WriteLine(swap1.val+" "+swap2.val);
         int temp=swap1.val;
         swap1.val=swap2.val;
         swap2.val=temp;
