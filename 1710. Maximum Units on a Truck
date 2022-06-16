@@ -1,0 +1,33 @@
+public class MaxComparer:Comparer<int>
+{
+    public override int Compare(int a,int b)
+    {
+        if(a.CompareTo(b)!=0)
+            return -a.CompareTo(b);
+        return 0;
+    }
+}
+
+
+public class Solution {
+    public int MaximumUnits(int[][] boxTypes, int truckSize) {
+        PriorityQueue<int[],int> maxheap=new PriorityQueue<int[],int>(new MaxComparer());
+        for(int i=0;i<boxTypes.Length;i++)
+            maxheap.Enqueue(boxTypes[i],boxTypes[i][1]);   
+        int boxestaken=0,units=0;
+        while(maxheap.Count!=0 && boxestaken<truckSize)
+        {
+            int[] temp=maxheap.Dequeue();
+            if(temp[0]>0)
+            {   
+                boxestaken++;
+                units+=temp[1];
+                temp[0]--;
+                maxheap.Enqueue(new int[]{temp[0],temp[1]},temp[1]);
+            }
+            //Console.WriteLine();
+            //Console.WriteLine(units);
+        }
+        return units;
+    }
+}
