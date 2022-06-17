@@ -1,0 +1,52 @@
+public class Solution {
+    private int[,,] opt;
+    private int dimx,dimy;
+    public int LongestLine(int[][] mat) {
+        int max=0;
+        dimx=mat.Length;dimy=mat[0].Length;
+        opt=new int[mat.Length,mat[0].Length,4];
+        for(int i=mat.Length-1;i>=0;i--)
+        {
+            for(int j=mat[i].Length-1;j>=0;j--)
+            {
+                if(mat[i][j]!=0)
+                {
+                    opt[i,j,0]=isvalid(i+1,j,0)+1;
+                    opt[i,j,1]=isvalid(i+1,j+1,1)+1;
+                    opt[i,j,2]=isvalid(i,j+1,2)+1;
+                    //if(max<Math.Max(opt[i,j,0],Math.Max(opt[i,j,1],opt[i,j,2])))
+                        //max=Math.Max(opt[i,j,0],Math.Max(opt[i,j,1],opt[i,j,2]));
+                }
+            }
+            for(int j=0;j<mat[i].Length;j++)
+            {
+                if(mat[i][j]!=0)
+                {
+                    opt[i,j,3]=isvalid(i+1,j-1,3)+1;
+                        if(max<Math.Max(Math.Max(opt[i,j,0],opt[i,j,1]),Math.Max(opt[i,j,2],opt[i,j,3])))
+                                                                    max=Math.Max(Math.Max(opt[i,j,0],opt[i,j,1]),Math.Max(opt[i,j,2],opt[i,j,3]));
+                }
+            }
+        }
+        //print();
+        return max;
+    }
+    
+    private int isvalid(int i,int j,int k)
+    {
+        if(i<0 || i>=dimx || j<0 || j>=dimy)
+            return 0;
+        return opt[i,j,k];
+    }
+    
+    private void print()
+    {
+        for(int i=0;i<dimx;i++)
+        {
+            for(int j=0;j<dimy;j++)
+                Console.Write(Math.Max(Math.Max(opt[i,j,0],opt[i,j,1]),Math.Max(opt[i,j,2],opt[i,j,3]))+" ");
+            Console.WriteLine();
+        }
+        Console.WriteLine("_________________________________________________________________");
+    }
+}
