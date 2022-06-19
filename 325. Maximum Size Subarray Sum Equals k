@@ -1,0 +1,44 @@
+public class Solution {
+    int[,] opt;
+    public int MaxSubArrayLen(int[] nums, int k) {
+        int max=0;
+        opt=new int[nums.Length+1,nums.Length+1];
+        for(int i=0;i<nums.Length;i++)
+        {
+            opt[i+1,i+1]=nums[i];
+            if(opt[i+1,i+1]==k)
+                max=1;
+        }
+        //print(nums.Length+1);
+        for(int i=1;i<nums.Length;i++)
+        {
+            opt[i,i+1]=opt[i,i]+opt[i+1,i+1];
+            if(opt[i,i+1]==k)
+                max=2;
+        }
+        //print(nums.Length+1);
+        for(int l=3;l<=nums.Length;l++)
+        {
+            for(int i=1;i<nums.Length-l+2;i++)
+            {
+                opt[i,i+l-1]=opt[i,i+l-2]+opt[i+l-2,i+l-1]-opt[i+l-2,i+l-2];
+                if(opt[i,i+l-1]==k)
+                    max=l;
+            }
+        }
+        
+        //print(nums.Length+1);
+        return max;
+    }
+    
+    private void print(int n)
+    {
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+                Console.Write(opt[i,j]+"   ");
+            Console.WriteLine();
+        }
+        Console.WriteLine("________________________________________________");
+    }
+}
