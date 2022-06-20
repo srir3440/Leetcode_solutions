@@ -1,0 +1,45 @@
+public class Solution {
+    public IList<int> SpiralOrder(int[][] matrix) {
+        int i=0,j=0,cnt=0,round=0;
+        //[right,down,left,up]
+        int[] ans=new int[matrix.Length*matrix[0].Length];
+        while(cnt<matrix.Length*matrix[0].Length)
+        {
+            while(i==round && j<matrix[0].Length-round && cnt<matrix.Length*matrix[0].Length)
+            {
+                //Console.WriteLine("0" + i+" "+j);
+                ans[cnt++]=matrix[i][j];
+                j++;
+            }
+            j--;
+            i++;
+            //Console.WriteLine(i+" "+j);
+            while(j==matrix[0].Length-round-1 && i<matrix.Length-round && cnt<matrix.Length*matrix[0].Length)
+            {
+                //Console.WriteLine("1" + i+" "+j);
+                ans[cnt++]=matrix[i][j];
+                i++;
+            }
+            i--;
+            j--;
+            while(i==matrix.Length-round-1 && j>=round && cnt<matrix.Length*matrix[0].Length)
+            {
+                //Console.WriteLine("2" + i+" "+j);
+                ans[cnt++]=matrix[i][j];
+                j--;
+            }
+            j++;
+            i--;
+            while(j==round && i>=round+1 && cnt<matrix.Length*matrix[0].Length)
+            {
+                //Console.WriteLine("3" + i+" "+j);
+                ans[cnt++]=matrix[i][j];
+                i--;
+            }
+            i++;
+            j++;
+            round++;
+        }
+        return ans.ToList();
+    }
+}
