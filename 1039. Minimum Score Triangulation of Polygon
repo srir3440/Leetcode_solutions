@@ -1,78 +1,29 @@
 public class Solution {
     public int MinScoreTriangulation(int[] values) {
-        if(values.Length==3)
-            return product(values);
-        int low,high;
-        lowindexes(values,out low,out high);
-        Console.WriteLine(low+" "+high);
-        if(low>high)
+        int[,] matrices=new int[values.Length-1,2];
+        for(int i=0;i<values.Length-1;i++)
         {
-            int temp=low;
-            low=high;
-            high=temp;
+            matrices[i,0]=values[i];
+            matrices[i,1]=values[i+1];
+            //Console.WriteLine(matrices[i,0]+" "+matrices[i,1]);
         }
-        int[] splitwithin=splitwit(values,low,high);
-        int[] splitbeyond=splitbey(values,low,high);
-        print(splitwithin);
-        print(splitbeyond);
-        Console.WriteLine("____________________");
-        return MinScoreTriangulation(splitwithin)+MinScoreTriangulation(splitbeyond);
-    }
-    
-    private void lowindexes(int[] values,out int low,out int high)
-    {
-        int minsum=Int32.MaxValue;
-        low=0;high=0;
-        for(int i=0;i<values.Length;i++)
+        int[,] opt=new int[values.Length,values.Length];
+        for(int l=2;l<values.Length;l++)
         {
-            for(int j=0;j<values.Length;j++)
+            for(int i=1;i<values.Length-l+1;i++)
             {
-                if(i!=j && i!=j+1 && i!=j-1 && i+j+1!=values.Length && minsum>values[i]*values[j])
+                int j=i+l-1;
+                opt[i,j]=Int32.MaxValue;
+                for(int k=i;k<j;k++)
                 {
-                    //Console.WriteLine(i+" "+j);
-                    low=i;
-                    high=j;
-                    minsum=values[i]*values[j];
+                    //Console.WriteLine(l+" "+i+" "+j+" "+k);
+                    int tmp=opt[i,k]+opt[k+1,j]+(matrices[i-1,0]*matrices[k-1,1]*matrices[j-1,1]);
+                    if(opt[i,j]>tmp)
+                        opt[i,j]=tmp;
                 }
             }
         }
-    }
-    
-    
-    private int product(int[] values)
-    {
-        int prod=1;
-        for(int i=0;i<values.Length;i++)
-            prod*=values[i];
-        return prod;
-    }
-    
-    private int[] splitwit(int[] values,int start,int end)
-    {
-        int[] ret=new int[end-start+1];
-        for(int i=start;i<=end;i++)
-            ret[i-start]=values[i];
-        return ret;
-    }
-    
-    private int[] splitbey(int[] values,int start,int end)
-    {
-        int[] ret=new int[values.Length-end+start+1];
-        //Console.WriteLine(start+" "+end+" "+ret.Length);
-        int k=0;
-        for(int i=end;i<end+ret.Length;i++)
-        {
-            //Console.WriteLine(i%values.Length);
-            ret[k++]=values[i%values.Length];
-        }
-            
-        return ret;
-    }
-    
-    private void print(int[] arr)
-    {
-        for(int i=0;i<arr.Length;i++)
-            Console.Write(arr[i]+" ");
-        Console.WriteLine();
+        return opt[1,values.Length-1];
+        //Console.WriteLine("__________________________________");
     }
 }
