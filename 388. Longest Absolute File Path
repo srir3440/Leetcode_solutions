@@ -1,0 +1,43 @@
+public class Solution {
+    private int maxlen=0;
+    public int LengthLongestPath(string input) {
+        if(!input.Contains("."))
+            return 0;
+        dfs("\n"+input,"\n",0);
+        //Console.WriteLine("_______________________________________");
+        return maxlen;
+    }
+    
+    private string dfs(string input,string tosplit,int len)
+    {  
+        if(!input.StartsWith(tosplit))
+            return input;
+        while(input.Length!=0)
+        {
+            input=input.Substring(tosplit.Length);
+            int index=findnextslash(input);
+            //Console.Write(input+" "+len+" ");
+            //Console.WriteLine(index+" "+input.Substring(0,index)+" "+maxlen+" "+(len+index));
+            if(input.Substring(0,index).Contains(".") && maxlen<len+index)
+                maxlen=len+index;
+            input=input.Substring(index);
+            input=dfs(input,tosplit+"\t",len+index+1);
+            if(!input.StartsWith(tosplit))
+                break;
+        }
+        return input;
+    }
+    
+    private int findnextslash(string s)
+    {
+        int i;
+        //Console.WriteLine(s);
+        for(i=0;i<s.Length;i++)
+        {
+            if(s[i]=='\n')
+                break;
+        }
+        //Console.WriteLine(i);
+        return i;
+    }
+}
