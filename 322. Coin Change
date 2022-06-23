@@ -1,0 +1,16 @@
+public class Solution {
+    public int CoinChange(int[] coins, int amount) {
+        int[] opt=new int[amount+1];
+        for(int i=1;i<=amount;i++)
+        {
+            int min=amount+1;
+            for(int j=0;j<coins.Length;j++)
+            {
+                if(i-coins[j]>=0 && min>opt[i-coins[j]])
+                    min=opt[i-coins[j]];
+            }
+            opt[i]=min+1;
+        }
+        return opt[amount]>amount?-1:opt[amount];
+    }
+}
