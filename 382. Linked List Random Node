@@ -11,25 +11,29 @@
  */
 public class Solution {
     private ListNode head=null;
-    private List<int> arr;
     private int len=0;
     private Random obj;
     public Solution(ListNode head) {
         this.head=head;
         this.obj=new Random();
-        this.arr=new List<int>();
         ListNode curr=head;
         while(curr!=null)
         {
-            arr.Add(curr.val);
             this.len++;
             curr=curr.next;
         }
-        Console.WriteLine(arr.Count);
+        //Console.WriteLine(arr.Count);
     }
     
     public int GetRandom() {
-        return arr[obj.Next(len)];
+        ListNode curr=this.head;
+        int rand=obj.Next(len)+1;
+        while(rand>1)
+        {
+            curr=curr.next;
+            rand--;
+        }
+        return curr.val;
     }
 }
 
