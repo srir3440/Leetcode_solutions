@@ -1,30 +1,20 @@
 public class Solution {
     public int PivotIndex(int[] nums) {
-        int[,] opt=new int[nums.Length+2,nums.Length+2];
-        for(int i=1;i<=nums.Length;i++)
-            opt[i,i]=nums[i-1];
-        for(int l=1;l<=nums.Length;l++)
+        int sum=0,i;
+        for(i=0;i<nums.Length;i++)
+            sum+=nums[i];
+        int leftsum=0,rightsum=sum-nums[0];
+        for(i=0;i<nums.Length-1;i++)
         {
-            for(int i=1;i<=nums.Length-l+1;i++)
-            {
-                opt[i,i+l-1]=opt[i,i+l-2]+opt[i+l-1,i+l-1];
-            }
-        }
-        //print(opt,nums.Length+2);
-        for(int i=0;i<nums.Length;i++)
-        {
-            if(opt[1,i]==opt[i+2,nums.Length])
+            //Console.WriteLine(leftsum+" "+rightsum);
+            if(leftsum==rightsum)
                 return i;
+            leftsum+=nums[i];
+            rightsum-=nums[i+1];
         }
+        if(sum-nums[nums.Length-1]==0)
+            return nums.Length-1;
+        return -1;
     }
-    
-    private void print(int[,] opt,int n)
-    {
-        for(int i=0;i<n;i++)
-        {
-            for(int j=0;j<n;j++)
-                Console.Write(opt[i,j]+" ");
-            Console.WriteLine();
-        }
-    }
+
 }
