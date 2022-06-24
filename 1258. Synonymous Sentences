@@ -1,0 +1,54 @@
+public class Solution {
+    
+    private Dictionary<string,List<string>> dict=new Dictionary<string,List<string>>(); 
+    private HashSet<string> visited=new HashSet<string>();
+    private Queue<string> queue=new Queue<string>();
+    
+    public IList<string> GenerateSentences(IList<IList<string>> synonyms, string text) {
+        
+        
+        for(int i=0;i<synonyms.Count;i++)
+        {
+            if(!dict.ContainsKey(synonyms[i][0]))
+                dict.Add(synonyms[i][0],new List<string>());
+            dict[synonyms[i][0]].Add(synonyms[i][1]);
+            if(!dict.ContainsKey(synonyms[i][1]))
+                dict.Add(synonyms[i][1],new List<string>());
+            dict[synonyms[i][1]].Add(synonyms[i][0]);
+        }
+        
+        visited.Add(text);
+        queue.Enqueue(text);
+        
+        while(queue.Count!=0)
+        {
+            string[] temp=queue.Dequeue().Split(" ");
+            for(int i=0;i<temp.Length;i++)
+            {
+                if(dict.ContainsKey(temp[i]))
+                {
+                    List<string> tmp=dict[temp[i]];
+                    //for(int j=0;j<tmp.Count;j++)
+                        //Console.WriteLine(tmp[j]+" "+dict[temp[i]][j]);
+                    for(int j=0;j<tmp.Count;j++)
+                    {
+                        temp[i]=tmp[j];
+                        string str=String.Join(" ",temp);
+                        if(!visited.Contains(str))
+                        {
+                            visited.Add(str);
+                            queue.Enqueue(str);    
+                        }
+                        
+                    }
+                }
+            }
+        }
+        string[] ans=new string[visited.Count];
+        visited.CopyTo(ans,0);
+        Array.Sort(ans,StringComparer.Ordinal);
+        return ans.ToList();
+        
+    }
+
+}
