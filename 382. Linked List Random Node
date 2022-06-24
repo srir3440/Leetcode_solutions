@@ -1,0 +1,40 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    private ListNode head=null;
+    private List<int> arr;
+    private int len=0;
+    private Random obj;
+    public Solution(ListNode head) {
+        this.head=head;
+        this.obj=new Random();
+        this.arr=new List<int>();
+        ListNode curr=head;
+        while(curr!=null)
+        {
+            arr.Add(curr.val);
+            this.len++;
+            curr=curr.next;
+        }
+        Console.WriteLine(arr.Count);
+    }
+    
+    public int GetRandom() {
+        return arr[obj.Next(len)];
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(head);
+ * int param_1 = obj.GetRandom();
+ */
