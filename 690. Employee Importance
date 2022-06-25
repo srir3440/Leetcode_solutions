@@ -1,0 +1,30 @@
+/*
+// Definition for Employee.
+class Employee {
+    public int id;
+    public int importance;
+    public IList<int> subordinates;
+}
+*/
+
+class Solution {
+    private Dictionary<int,Employee> emps=new Dictionary<int,Employee>();
+    public int GetImportance(IList<Employee> employees, int id) {
+        Queue<int> queue=new Queue<int>();
+        for(int i=0;i<employees.Count;i++)
+            emps.Add(employees[i].id,employees[i]);
+        queue.Enqueue(id);
+        int cnt=0;
+        while(queue.Count!=0)
+        {
+            for(int i=queue.Count;i>0;i--)
+            {
+                Employee tmp=emps[queue.Dequeue()];
+                cnt+=tmp.importance;
+                for(int j=0;j<tmp.subordinates.Count;j++)
+                    queue.Enqueue(tmp.subordinates[j]);
+            }
+        }
+        return cnt;
+    }
+}
