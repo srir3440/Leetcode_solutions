@@ -1,0 +1,53 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public bool IsCompleteTree(TreeNode root) {
+        Queue<TreeNode> queue=new Queue<TreeNode>();
+        queue.Enqueue(root);
+        bool flag=false;
+        while(true)
+        {
+            for(int i=queue.Count;i>0;i--)
+            {
+                TreeNode temp=queue.Dequeue();
+                //Console.Write(temp.val+" ");
+                if(temp.val==0)
+                {
+                    flag=true;
+                    break;
+                }
+                if(temp.left==null)
+                    queue.Enqueue(new TreeNode());
+                else
+                    queue.Enqueue(temp.left);
+                if(temp.right==null)
+                    queue.Enqueue(new TreeNode());
+                else
+                    queue.Enqueue(temp.right);
+            }
+            if(flag)
+                break;
+            //Console.WriteLine();
+        }
+        //Console.WriteLine(queue.Count);
+        int tmp=0;
+        while(queue.Count!=0)
+        {
+            tmp=queue.Peek().val;
+            if(queue.Dequeue().val!=0)
+                break;
+        }
+        return tmp==0 && queue.Count==0;
+    }
+}
