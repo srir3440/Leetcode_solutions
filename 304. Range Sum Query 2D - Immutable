@@ -1,0 +1,47 @@
+public class NumMatrix {
+    private int[,,] opt;
+    public NumMatrix(int[][] matrix) {
+        //Console.WriteLine(matrix.Length+" "+matrix[0].Length);
+        opt=new int[matrix.Length,matrix[0].Length+1,matrix[0].Length+1];
+        for(int i=0;i<matrix.Length;i++)
+        {
+            for(int j=1;j<=matrix[0].Length;j++)
+                opt[i,j,j]=matrix[i][j-1];
+        }
+        //print(matrix.Length,matrix[0].Length+1);
+        for(int j=0;j<matrix.Length;j++)
+        {
+            for(int l=2;l<=matrix[0].Length;l++)
+            {
+                for(int i=1;i<matrix[0].Length-l+2;i++)
+                    opt[j,i,i+l-1]=opt[j,i,i+l-2]+opt[j,i+l-1,i+l-1];
+            }
+        }
+        //Console.WriteLine();
+        //print(matrix[0].Length+1,matrix.Length+1);
+    }
+    
+    public int SumRegion(int row1, int col1, int row2, int col2) {
+        int sum=0;
+        for(int i=row1;i<=row2;i++)
+            sum+=opt[i,col1+1,col2+1];
+        return sum;
+    }
+    
+    
+    private void print(int m,int n)
+    {
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+                Console.Write(opt[0,i,j]);
+            Console.WriteLine();
+        }
+    }
+}
+
+/**
+ * Your NumMatrix object will be instantiated and called as such:
+ * NumMatrix obj = new NumMatrix(matrix);
+ * int param_1 = obj.SumRegion(row1,col1,row2,col2);
+ */
