@@ -1,9 +1,4 @@
 /**
- * Problem:
- * You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
- * You may assume the two numbers do not contain any leading zero, except the number 0 itself
- */
-/**
  * Definition for singly-linked list.
  * public class ListNode {
  *     public int val;
@@ -16,93 +11,66 @@
  */
 public class Solution {
     public ListNode AddTwoNumbers(ListNode l1, ListNode l2) {
-        int len1=len(l1);
-        int len2=len(l2);
-        if(len1>len2)
-            l2=addzeros(l2,len1-len2);
-        else if(len2>len1)
-            l1=addzeros(l1,len2-len1);
-        print(l1);
-        print(l2);
-        ListNode ret=new ListNode(l1.val+l2.val);
-        ListNode head=ret;
-        ListNode curr1=l1.next;
-        ListNode curr2=l2.next;
+        int len1=len(l1),len2=len(l2);
+        if(len1<len2)
+            l1=padzeros(l1,len2-len1);
+        else
+            l2=padzeros(l2,len1-len2);
+        ListNode newhead=null,curr=null,curr1=l1,curr2=l2;
+        int sum=0,carry=0;
         while(curr1!=null)
         {
-            ret.next=new ListNode(curr1.val+curr2.val);
+            sum=curr1.val+curr2.val+carry;
+            carry=0;
+            if(sum>9)
+            {
+                carry=1;
+                sum-=10;
+            }
+            ListNode tmp=new ListNode(sum);
+            if(curr!=null)
+            {
+                curr.next=tmp;
+                curr=curr.next;
+            }
+                
+            else
+                curr=tmp;
+            if(newhead==null)
+                newhead=curr;
             curr1=curr1.next;
             curr2=curr2.next;
-            ret=ret.next;
         }
-        print(head);
-        ListNode curr=head;
-        while(curr!=null)
-        {
-            if(curr.val>9)
-            {
-                curr.val-=10;
-                if(curr.next==null)
-                    curr.next=new ListNode(1);
-                else
-                    curr.next.val+=1;
-            }
-            curr=curr.next;
-        }
-        return head;
+        if(carry==1)
+            curr.next=new ListNode(1);
+        //Console.WriteLine("sss");
+        return newhead;
     }
     
-    private ListNode reverse(ListNode head)
+    private ListNode padzeros(ListNode head,int n)
     {
-        ListNode currhead=head;
-        while(head.next!=null)
-        {
-            ListNode p=head.next;
-            head.next=p.next;
-            p.next=currhead;
-            currhead=p;
-        }
-        return currhead;
-    }
-    
-    private ListNode addzeros(ListNode head,int len)
-    {
+        int i=0;
         ListNode curr=head;
         while(curr.next!=null)
             curr=curr.next;
-        ListNode temp=new ListNode(0);
-        ListNode head1=temp;
-        while(len>1)
+        while(i<n)
         {
-            temp.next=new ListNode(0);
-            temp=temp.next;
-            len--;
-        }
-        curr.next=head1;
-        print(head);
-        return head;
-    }
-    
-    private void print(ListNode head)
-    {
-        ListNode curr=head;
-        while(curr!=null)
-        {
-            Console.Write(curr.val+" ");
+            curr.next=new ListNode(0);
             curr=curr.next;
+            i++;
         }
-        Console.WriteLine();
+        return head;
     }
     
     private int len(ListNode head)
     {
-        int cnt=0;
         ListNode curr=head;
+        int len=0;
         while(curr!=null)
         {
-            cnt++;
+            len++;
             curr=curr.next;
         }
-        return cnt;
+        return len;
     }
 }
