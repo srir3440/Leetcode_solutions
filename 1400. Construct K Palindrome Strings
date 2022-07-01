@@ -1,0 +1,75 @@
+public class Solution {
+    private bool ans=false;
+    private Stack<char> twos=new Stack<char>();
+    private Stack<char> ones=new Stack<char>();
+    private HashSet<string> visited=new HashSet<string>();
+    public bool CanConstruct(string s, int k) {
+        if(k>s.Length)
+            return false;
+        if(k==s.Length)
+            return true;
+        int[] chars=new int[26];
+        for(int i=0;i<s.Length;i++)
+            chars[s[i]-'a']++;
+        for(int i=0;i<26;i++)
+        {
+            while(chars[i]>=2)
+            {
+                twos.Push((char)('a'+i));
+                chars[i]-=2;
+            }
+            if(chars[i]==1)
+                ones.Push((char)('a'+i));
+        }
+        Console.WriteLine(ones.Count+" "+twos.Count);
+        dfs(k);
+        Console.WriteLine("______________________________");
+        return ans;
+    }
+    
+    private void dfs(int k)
+    {
+        //Console.WriteLine(k+" "+ones.Count+" "+twos.Count);
+        if(ans || visited.Contains(k.ToString()+" "+ones.Count.ToString()+" "+twos.Count.ToString()))
+            return;
+        visited.Add(k.ToString()+" "+ones.Count.ToString()+" "+twos.Count.ToString());
+        if(k==1)
+        {
+            ans=(ones.Count<=1);
+            return;
+        }
+        for(int i=0;i<4;i++)
+        {
+            if(i==0 && ones.Count>0)
+            {
+                char a=ones.Pop();
+                dfs(k-1);
+                ones.Push(a);
+            }
+            if(i==1 && twos.Count>0)
+            {
+                char a=twos.Pop();
+                dfs(k-1);
+                twos.Push(a);
+            }
+            if(i==2 && ones.Count>0 && twos.Count>0)
+            {
+                char a=ones.Pop();
+                char b=twos.Pop();
+                dfs(k-1);
+                ones.Push(a);
+                twos.Push(b);
+            }
+            if(i==3 && twos.Count>0)
+            {
+                char a=twos.Pop();
+                ones.Push(a);
+                dfs(k-1);
+                ones.Pop();
+                twos.Push(a);
+            }
+            if(ans)
+                break;
+        }
+    }
+}
