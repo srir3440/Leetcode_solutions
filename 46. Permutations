@@ -1,0 +1,29 @@
+public class Solution {
+    private IList<IList<int>> ans=new List<IList<int>>();
+    private List<int> nos=new List<int>();
+    private HashSet<int> visited=new HashSet<int>();
+    public IList<IList<int>> Permute(int[] nums) {
+        dfs(nums);
+        return ans;
+    }
+    
+    private void dfs(int[] nums)
+    {
+        if(nos.Count==nums.Length)
+        {
+            ans.Add(new List<int>(nos));
+            return;
+        }
+        for(int i=0;i<nums.Length;i++)
+        {
+            if(!visited.Contains(nums[i]))
+            {
+                visited.Add(nums[i]);
+                nos.Add(nums[i]);
+                dfs(nums);
+                nos.RemoveAt(nos.Count-1);
+                visited.Remove(nums[i]);
+            }
+        }
+    }
+}
