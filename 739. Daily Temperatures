@@ -1,0 +1,30 @@
+public class tmp
+{
+    public int index;
+    public int val;
+    public tmp(int index,int val)
+    {
+        this.index=index;
+        this.val=val;
+    }
+}
+
+
+public class Solution {
+    public int[] DailyTemperatures(int[] temperatures) {
+        Stack<tmp> stack=new Stack<tmp>();
+        int[] ans=new int[temperatures.Length];
+        for(int i=0;i<temperatures.Length;i++)
+        {
+            while(stack.Count!=0 && temperatures[i]>stack.Peek().val)
+            {
+                tmp temp=stack.Pop();
+                ans[temp.index]=i-temp.index;
+            }
+            if(stack.Count==0)
+                ans[i]=0;
+            stack.Push(new tmp(i,temperatures[i]));
+        }
+        return ans;
+    }
+}
