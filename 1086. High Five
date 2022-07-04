@@ -1,0 +1,47 @@
+public class customComparer:Comparer<int>
+{
+    public override int Compare(int a,int b)
+    {
+        if(a.CompareTo(b)!=0)
+            return -a.CompareTo(b);
+        return 0;
+    }
+}
+
+public class temp
+{
+    public int top5;
+    public PriorityQueue<int,int> queue;
+    public temp()
+    {
+        this.top5=0;
+        queue=new PriorityQueue<int,int>(new customComparer());
+    }
+}
+
+public class Solution {
+    private SortedDictionary<int,temp> main=new SortedDictionary<int,temp>(); 
+    public int[][] HighFive(int[][] items) {
+        int i;
+        for(i=0;i<items.Length;i++)
+        {
+            if(!main.ContainsKey(items[i][0]))
+                main.Add(items[i][0],new temp());
+            main[items[i][0]].queue.Enqueue(items[i][1],items[i][1]);
+        }
+        foreach(var key in main.Keys)
+        {
+            int avg=0;
+            //Console.WriteLine(main[key].queue.Count);
+            for(i=0;i<5;i++)
+                avg+=main[key].queue.Dequeue();
+            avg/=5;
+            main[key].top5=avg;
+        }
+        int[][] ans=new int[main.Count][];
+        i=0;
+        foreach(var key in main.Keys)
+            ans[i++]=new int[]{key,main[key].top5};
+        return ans;
+    }
+}
