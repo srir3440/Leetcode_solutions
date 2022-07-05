@@ -1,0 +1,74 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    private Dictionary<TreeNode,TreeNode> dict=new Dictionary<TreeNode,TreeNode>();
+    private TreeNode nodetodelete=null;
+    public TreeNode CorrectBinaryTree(TreeNode root){
+        bfs(root);
+        traverseandremove(root);
+        return root;
+    }
+    
+    private void bfs(TreeNode root)
+    {
+        Queue<TreeNode> queue=new Queue<TreeNode>();
+        queue.Enqueue(root);
+        bool flag=false;
+        while(queue.Count!=0)
+        {
+            for(int i=queue.Count;i>0;i--)
+            {
+                TreeNode tmp=queue.Dequeue();
+                //Console.WriteLine(tmp.right.val+" "+((int)Math.Pow(2,cnt)+i));
+                if(dict.ContainsKey(tmp))
+                {
+                    nodetodelete=dict[tmp];
+                    flag=true;
+                    break;
+                }
+                if(tmp.left!=null)
+                    queue.Enqueue(tmp.left);
+                if(tmp.right!=null)
+                {
+                    dict.Add(tmp.right,tmp);
+                    queue.Enqueue(tmp.right);
+                }
+                    
+            }
+            if(flag)
+                break;
+            dict=new Dictionary<TreeNode,TreeNode>();
+        }
+        //Console.WriteLine(nodetodelete.val);
+    }
+    
+    private void traverseandremove(TreeNode node)
+    {
+        if(node==null)
+            return;
+        if(node.left==nodetodelete)
+        {
+            node.left=null;
+            return;
+        }
+        if(node.right==nodetodelete)
+        {
+            node.right=null;
+            return;
+        }
+        
+        traverseandremove(node.left);
+        traverseandremove(node.right);
+    }
+}
