@@ -10,7 +10,7 @@ public class Solution {
                 temp+=s[i];
             }
         }
-        Console.WriteLine(temp);
+        //Console.WriteLine(temp);
         return lcs(s,temp);
     }
     
