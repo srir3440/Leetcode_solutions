@@ -1,0 +1,44 @@
+public class comp:Comparer<clas>
+{
+    public override int Compare(clas a,clas b)
+    {
+        if(a.freq.CompareTo(b.freq)!=0)
+            return -a.freq.CompareTo(b.freq);
+        else
+        {
+            if(a.str.CompareTo(b.str)!=0)
+                return a.str.CompareTo(b.str);
+            return 0;
+        }
+    }
+}
+
+public class clas
+{
+    public int freq;
+    public string str;
+    public clas(int val,string str)
+    {
+        this.freq=val;
+        this.str=str;
+    }
+}
+
+public class Solution {
+    private Dictionary<string,int> map=new Dictionary<string,int>();
+    private PriorityQueue<string,clas> maxheap=new PriorityQueue<string,clas>(new comp()); 
+    public IList<string> TopKFrequent(string[] words, int k) {
+        for(int i=0;i<words.Length;i++)
+        {
+            if(!map.ContainsKey(words[i]))
+                map.Add(words[i],0);
+            map[words[i]]++;
+        }
+        foreach(var key in map.Keys)
+            maxheap.Enqueue(key,new clas(map[key],key));
+        IList<string> ans=new List<string>();
+        for(int i=k;i>0;i--)
+            ans.Add(maxheap.Dequeue());
+        return ans;
+    }
+}
