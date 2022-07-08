@@ -1,0 +1,150 @@
+public class op
+{
+    public string opeleft;
+    public string operight;
+    public string operate;
+    public int opsleft;
+    public int opsright;
+    public op(string op1="n",string opera="n",string op2="n",int ops1=-1,int ops2=-1)
+    {
+        this.opeleft=op1;
+        this.operight=op2;
+        this.operate=opera;
+        this.opsleft=ops1;
+        this.opsright=ops2;
+    }
+}
+/**
+ * This is the interface for the expression tree Node.
+ * You should not remove it, and you can define some classes to implement it.
+ */
+
+public abstract class Node {
+    public abstract int evaluate();
+    // define your fields here
+    public string val;
+    public Node left;
+    public Node right;
+};
+
+public class TreeNode:Node
+{
+    public TreeNode(string val,TreeNode left=null,TreeNode right=null)
+    {
+        this.val=val;
+        this.left=left;
+        this.right=right;
+    }
+    
+    public override int evaluate()
+    {
+        if(this==null)
+            return 0;
+        int left=this.left==null?0:this.left.evaluate();
+        int right=this.right==null?0:this.right.evaluate();
+        return operateon(this.val,left,right);
+    }
+    
+    private int operateon(string c,int a,int b)
+    {
+        if(Char.IsDigit(c[0]))
+            return Int32.Parse(c);
+        switch(c[0])
+        {
+            case '+':return a+b;
+            case '-':return a-b;
+            case '*':return a*b;
+            case '/':return a/b;
+        }
+        return 0;
+    }
+    
+    private void print(Node node)
+    {
+        if(node==null)
+            return;
+        Console.WriteLine(node.val);
+        print(node.left);
+        print(node.right);
+    }
+}
+/**
+ * This is the TreeBuilder class.
+ * You can treat it as the driver code that takes the postinfix input 
+ * and returns the expression tree represnting it as a Node.
+ */
+
+public class TreeBuilder {
+    private Stack<string> stack=new Stack<string>();
+    private SortedDictionary<int,op> dict=new SortedDictionary<int,op>();
+    //private TreeNode root=null;
+    public Node buildTree(string[] postfix) {
+        parsetodict(postfix);
+        /*foreach(var key in dict.Keys)
+        {
+            Console.Write(key+" "+dict[key].opeleft+" "+dict[key].operight+" "+dict[key].operate+" "+dict[key].opsleft+" "+dict[key].opsright);
+            Console.WriteLine();
+        }
+        Console.WriteLine("_____________________________");*/
+        if(dict.Count==0)
+            return new TreeNode(postfix[postfix.Length-1]);
+        return dfs(1);
+        //return new TreeNode(2);
+    }
+    
+    private TreeNode dfs(int key)
+    {
+        //Console.WriteLine(key);
+        TreeNode tmp=new TreeNode(dict[key].operate);
+        if(dict[key].opsleft!=-1)
+            tmp.left=dfs(dict[key].opsleft);
+        else 
+            tmp.left=new TreeNode(dict[key].opeleft);
+        if(dict[key].opsright!=-1)
+            tmp.right=dfs(dict[key].opsright);
+        else
+            tmp.right=new TreeNode(dict[key].operight);
+        return tmp;
+    }
+    
+    private void parsetodict(string[] postfix)
+    {
+        int cnt=0;
+        for(int i=0;i<postfix.Length;i++)
+        {
+            if(!Char.IsDigit(postfix[i][0]))
+                cnt++;
+        }
+        //Console.WriteLine(cnt);
+        int j=cnt;
+        for(int i=0;i<postfix.Length;i++)
+        {
+            if(!Char.IsDigit(postfix[i][0]))
+            {
+                op tmp=new op();
+                if(stack.Peek()[0]=='o')
+                    tmp.opsright=Int32.Parse(stack.Pop().Substring(1));
+                else
+                    tmp.operight=stack.Pop();
+                if(stack.Peek()[0]=='o')
+                    tmp.opsleft=Int32.Parse(stack.Pop().Substring(1));
+                else
+                    tmp.opeleft=stack.Pop();
+                tmp.operate=postfix[i];
+                dict.Add(j,tmp);
+                stack.Push("o"+j.ToString());
+                j--;
+            }
+            else
+                stack.Push(postfix[i]);    
+        }
+    }
+}
+
+
+/**
+ * Your TreeBuilder object will be instantiated and called as such:
+ * TreeBuilder obj = new TreeBuilder();
+ * Node expTree = obj.buildTree(postfix);
+ * int ans = expTree.evaluate();
+ */
