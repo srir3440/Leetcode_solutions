@@ -1,0 +1,113 @@
+public class data
+{
+    public int val;
+    public int index;
+    public data(int val,int index)
+    {
+        this.val=val;
+        this.index=index;
+    }
+}
+
+public class FreqStack {
+    private List<LinkedList<data>> counterheadmap;
+    private Dictionary<int,List<LinkedListNode<data>>> frequentvalmap;
+    private Dictionary<int,int> countervalmap;
+    private int cnt;
+    public FreqStack() {
+        counterheadmap=new List<LinkedList<data>>();
+        frequentvalmap=new Dictionary<int,List<LinkedListNode<data>>>();
+        countervalmap=new Dictionary<int,int>();
+        this.cnt=0;
+    }
+    
+    public void Push(int val) {
+        cnt++;
+        LinkedListNode<data> temp=new LinkedListNode<data>(new data(val,cnt));
+        if(!countervalmap.ContainsKey(val))
+        {
+            frequentvalmap.Add(val,new List<LinkedListNode<data>>());
+            countervalmap.Add(val,1); 
+        }
+        else
+        {
+            int currcnt=countervalmap[val];
+            countervalmap[val]++;
+            counterheadmap[currcnt-1].Remove(frequentvalmap[val][frequentvalmap[val].Count-1]);
+        }
+        frequentvalmap[val].Add(temp);
+        //Console.WriteLine(counterheadmap.Count+" "+countervalmap[val]);
+        if(counterheadmap.Count==countervalmap[val]-1)
+            counterheadmap.Add(new LinkedList<data>());
+        //Console.WriteLine(counterheadmap[countervalmap[val]-1].First.Value.val);
+        counterheadmap[countervalmap[val]-1].AddFirst(temp);
+        /*Console.WriteLine(counterheadmap.Count+" "+countervalmap[val]+" "+counterheadmap[countervalmap[val]-1].Count+" "+temp.Value.val);
+        for(int i=0;i<counterheadmap.Count;i++)
+        {
+            Console.Write(i+"     ");
+            print(counterheadmap[i]);
+        }*/
+            
+        
+    }
+    
+    public int Pop() {
+        //cnt--;
+        int valtoremove=counterheadmap[counterheadmap.Count-1].First.Value.val;
+        //Console.WriteLine(valtoremove+" "+counterheadmap[counterheadmap.Count-1].Count+" "+countervalmap[valtoremove]+" "+frequentvalmap[valtoremove].Count);
+        counterheadmap[counterheadmap.Count-1].Remove(counterheadmap[counterheadmap.Count-1].First);
+        if(counterheadmap[counterheadmap.Count-1].Count==0)
+            counterheadmap.RemoveAt(counterheadmap.Count-1);
+        countervalmap[valtoremove]--;
+        frequentvalmap[valtoremove].RemoveAt(frequentvalmap[valtoremove].Count-1);
+        if(countervalmap[valtoremove]==0)
+        {
+            countervalmap.Remove(valtoremove);
+            frequentvalmap.Remove(valtoremove);
+        }
+        else
+            inserttolist(counterheadmap[countervalmap[valtoremove]-1],frequentvalmap[valtoremove][frequentvalmap[valtoremove].Count-1]);
+        /*for(int i=0;i<counterheadmap.Count;i++)
+        {
+            Console.Write(i+"     ");
+            print(counterheadmap[i]);
+        }*/
+        return valtoremove;
+    }
+    
+    private void inserttolist(LinkedList<data> list,LinkedListNode<data> node)
+    {
+        //Console.WriteLine("list count: "+list.Count+" "+list.First.Value.val+" "+list.First.Value.index+" "+node.Value.index);
+        if(list.First==null)
+        {
+            list.AddFirst(node);
+            return;
+        }
+        LinkedListNode<data> curr=list.First;
+        
+        while(curr!=null && curr.Value.index>node.Value.index)
+            curr=curr.Next;
+        if(curr==null)
+            list.AddLast(node);
+        else
+            list.AddBefore(curr,node);
+    }
+    
+    private void print(LinkedList<data> list)
+    {
+        LinkedListNode<data> curr=list.First;
+        while(curr!=null)
+        {
+            Console.Write(curr.Value.val+" ");
+            curr=curr.Next;
+        }
+        Console.WriteLine();
+    }
+}
+
+/**
+ * Your FreqStack object will be instantiated and called as such:
+ * FreqStack obj = new FreqStack();
+ * obj.Push(val);
+ * int param_2 = obj.Pop();
+ */
