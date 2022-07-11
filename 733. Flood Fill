@@ -1,0 +1,29 @@
+public class Solution {
+    private HashSet<string> visited=new HashSet<string>();
+    private int c;
+    private int initialColor;
+    public int[][] FloodFill(int[][] image, int sr, int sc, int color) {
+        c=color;
+        initialColor=image[sr][sc];
+        dfs(image,sr,sc);
+        return image;
+    }
+    
+    private void dfs(int[][] image,int i,int j)
+    {
+        //Console.WriteLine(i+" "+j);
+        if(i<0 || i>image.Length-1 || j<0 || j>image[i].Length-1 || visited.Contains(tostring(i,j)) || image[i][j]!=initialColor || image[i][j]==c)
+            return;
+        visited.Add(tostring(i,j));
+        image[i][j]=c;
+        dfs(image,i+1,j);
+        dfs(image,i,j-1);
+        dfs(image,i-1,j);
+        dfs(image,i,j+1);
+    }
+    
+    private string tostring(int a,int b)
+    {
+        return a.ToString()+" "+b.ToString();
+    }
+}
