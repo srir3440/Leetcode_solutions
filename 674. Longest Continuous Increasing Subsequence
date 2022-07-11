@@ -1,0 +1,21 @@
+public class Solution {
+    public int FindLengthOfLCIS(int[] nums) {
+        if(nums.Length==1)
+            return 1;
+        int[] opt=new int[nums.Length+1];
+        opt[1]=1;
+        int max=-1;
+        for(int i=2;i<=nums.Length;i++)
+        {
+            if(nums[i-1]>nums[i-2])
+                opt[i]=opt[i-1]+1;
+            else
+                opt[i]=1;
+            max=Math.Max(opt[i],max);
+        }
+        /*for(int i=0;i<opt.Length;i++)
+            Console.Write(opt[i]+" ");
+        Console.WriteLine();*/
+        return max;
+    }
+}
