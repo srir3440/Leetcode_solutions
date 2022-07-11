@@ -1,0 +1,62 @@
+public class Solution {
+    private HashSet<string> visited;
+    private int max;
+    public int GetMaximumGold(int[][] grid) {
+        for(int i=0;i<grid.Length;i++)
+        {
+            for(int j=0;j<grid[i].Length;j++)
+            {
+                if(grid[i][j]!=0)
+                {
+                    visited=new HashSet<string>();
+                    visited.Add(tostring(i,j));
+                    dfs(grid,i,j,0);
+                    //Console.WriteLine("_____________");
+                }
+            }
+        }
+        return max;
+    }
+    
+    private void dfs(int[][] grid,int i,int j,int gold)
+    {
+        //Console.WriteLine(i+" "+j+" "+gold);
+        if(i<0 || i>=grid.Length || j<0 || j>=grid[i].Length || grid[i][j]==0)
+        {
+            max=Math.Max(gold,max);
+            return;
+        }
+        
+        gold+=grid[i][j];
+        if(!visited.Contains(tostring(i+1,j)))
+        {
+            visited.Add(tostring(i+1,j));
+            dfs(grid,i+1,j,gold);
+            visited.Remove(tostring(i+1,j));    
+        }
+        if(!visited.Contains(tostring(i,j-1)))
+        {
+            visited.Add(tostring(i,j-1));
+            dfs(grid,i,j-1,gold);
+            visited.Remove(tostring(i,j-1));    
+        }
+        if(!visited.Contains(tostring(i-1,j)))
+        {
+            visited.Add(tostring(i-1,j));
+            dfs(grid,i-1,j,gold);
+            visited.Remove(tostring(i-1,j));    
+        }
+        if(!visited.Contains(tostring(i,j+1)))
+        {
+            visited.Add(tostring(i,j+1));
+            dfs(grid,i,j+1,gold);
+            visited.Remove(tostring(i,j+1));    
+        }
+    }
+    
+    
+    private string tostring(int a,int b)
+    {
+        return a.ToString()+" "+b.ToString();
+    }
+}
