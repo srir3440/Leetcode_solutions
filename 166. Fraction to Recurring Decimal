@@ -1,0 +1,40 @@
+public class Solution {
+    public string FractionToDecimal(int numerator, int denominator) {
+        if(numerator==0)
+            return "0";
+        StringBuilder ans=new StringBuilder();
+        long d=(long)denominator,n=(long)numerator;
+        if(n<0 && d<0)
+        {
+            d=-d;
+            n=-n;
+        }
+        if(n<0 || d<0)
+        {
+            ans.Append("-");
+            d=-d;
+        }
+        ans.Append((long)n/d);
+        long remainder=n%d;
+        if(remainder!=0)
+            ans.Append(".");
+        Dictionary<long,int> dict=new Dictionary<long,int>();
+        while(remainder!=0)
+        {
+            //Console.WriteLine(remainder);
+            if(dict.ContainsKey(remainder))
+            {
+                ans.Insert(dict[remainder],"(");
+                ans.Append(")");
+                break;
+            }
+            dict.Add(remainder,ans.Length);
+            if(remainder/d==0)
+                remainder*=10;
+            ans.Append((remainder/d).ToString());
+            remainder%=d;
+        }
+        //Console.WriteLine("_______________________");
+        return ans.ToString();
+    }
+}
