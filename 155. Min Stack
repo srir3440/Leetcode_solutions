@@ -1,0 +1,51 @@
+public class element
+{
+    public int val;
+    public int minsofar;
+    public element(int val)
+    {
+        this.val=val;
+    }
+}
+public class MinStack {
+    private List<element> list;
+    public MinStack() {
+        list=new List<element>();
+    }
+    
+    public void Push(int val) {
+        if(list.Count==0)
+        {
+            list.Add(new element(val));
+            list[0].minsofar=val;
+            return;
+        }
+        element temp=new element(val);
+        if(val<=list[list.Count-1].minsofar)
+            temp.minsofar=val;
+        else
+            temp.minsofar=list[list.Count-1].minsofar;
+        list.Add(temp);
+    }
+    
+    public void Pop() {
+        list.RemoveAt(list.Count-1);
+    }
+    
+    public int Top() {
+        return list[list.Count-1].val;
+    }
+    
+    public int GetMin() {
+        return list[list.Count-1].minsofar;
+    }
+}
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack obj = new MinStack();
+ * obj.Push(val);
+ * obj.Pop();
+ * int param_3 = obj.Top();
+ * int param_4 = obj.GetMin();
+ */
