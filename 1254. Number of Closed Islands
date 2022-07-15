@@ -1,0 +1,62 @@
+public class Solution {
+    private Queue<int[]> queue=new Queue<int[]>();
+    private HashSet<string> visited=new HashSet<string>();
+    private int cnt=0;
+    public int ClosedIsland(int[][] grid) {
+        for(int i=0;i<grid.Length;i++)
+        {
+            for(int j=0;j<grid[i].Length;j++)
+            {
+                bool flag=true;
+                if(grid[i][j]==0 && !visited.Contains(tostring(i,j)))
+                {
+                    dfs(grid,i,j);
+                    //Console.WriteLine("queue count: "+queue.Count);
+                    while(queue.Count!=0)
+                    {
+                        int[] tmp=queue.Dequeue();
+                        if(!isvalid(grid,tmp[0]+1,tmp[1]) || !isvalid(grid,tmp[0],tmp[1]-1) || !isvalid(grid,tmp[0]-1,tmp[1]) || !isvalid(grid,tmp[0],tmp[1]+1))
+                        {
+                            flag=false;
+                            break;
+                        }        
+                    }
+                    if(queue.Count==0 && flag)
+                        cnt++;
+                    //Console.WriteLine("cnt: "+cnt);
+                    //Console.WriteLine("_____________________________");
+                    queue=new Queue<int[]>();
+                }
+            }
+        }
+        return cnt;
+    }
+    
+    private void dfs(int[][] grid,int i,int j)
+    {
+        
+        if(i<0 || i>=grid.Length || j<0 || j>=grid[i].Length || visited.Contains(tostring(i,j)) || grid[i][j]!=0)
+            return;
+        //Console.WriteLine(i+" "+j);
+        visited.Add(tostring(i,j));
+        queue.Enqueue(new int[]{i,j});
+        dfs(grid,i+1,j);
+        dfs(grid,i,j-1);
+        dfs(grid,i-1,j);
+        dfs(grid,i,j+1);
+    }
+    
+    private bool isvalid(int[][] grid,int i,int j)
+    {
+        if(visited.Contains(tostring(i,j)))
+            return true;
+        if(i<0 || i>=grid.Length || j<0 || j>=grid[i].Length || grid[i][j]!=1)
+            return false;
+        return true;
+    }
+    
+    private string tostring(int i,int j)
+    {
+        return i.ToString()+" "+j.ToString();
+    }
+}
