@@ -1,0 +1,47 @@
+/*
+// Definition for a Node.
+public class Node {
+    public int val;
+    public IList<Node> children;
+    
+    public Node() {
+        val = 0;
+        children = new List<Node>();
+    }
+
+    public Node(int _val) {
+        val = _val;
+        children = new List<Node>();
+    }
+    
+    public Node(int _val, List<Node> _children) {
+        val = _val;
+        children = _children;
+    }
+}
+*/
+
+public class Solution {
+    private HashSet<int> visited=new HashSet<int>();
+    public Node FindRoot(List<Node> tree) {
+        Node root=null;
+        for(int i=0;i<tree.Count;i++)
+        {
+            if(!visited.Contains(tree[i].val))
+            {
+                root=tree[i];
+                dfs(tree[i]);
+            }
+        }
+        return root;
+    }
+    
+    private void dfs(Node temp)
+    {
+        if(temp==null || visited.Contains(temp.val))
+            return;
+        visited.Add(temp.val);
+        foreach(var node in temp.children)
+            dfs(node);
+    }
+}
