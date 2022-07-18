@@ -1,0 +1,63 @@
+public class Solution {
+    public string Multiply(string num1, string num2) {
+        if((num2.Length==1 && num2[0]=='0') || (num1.Length==1 && num1[0]=='0'))
+            return "0";
+        string sum="";
+        string lvlsum="",temp="";
+        for(int i=num2.Length-1;i>=0;i--)
+        {
+            lvlsum=findprod(num1,(int)Char.GetNumericValue(num2[i]));
+            lvlsum+=temp;
+            temp+="0";
+            //Console.WriteLine(lvlsum);
+            if(i!=num2.Length-1)
+                sum=addnos(sum,lvlsum);
+            else
+                sum=lvlsum;
+        }
+        return sum;
+    }
+    
+    private string findprod(string a,int mul)
+    {
+        int carry=0;
+        string prod="";
+        for(int i=a.Length-1;i>=0;i--)
+        {
+            carry=((int)Char.GetNumericValue(a[i]))*mul+carry;
+            prod=carry%10+prod;
+            carry/=10;
+        }
+        if(carry!=0)
+            prod=carry+prod;
+        return prod;
+    }
+    
+    private string addnos(string a,string b)
+    {
+        //Console.WriteLine(a.Length+" "+b.Length);
+        string sum="";
+        int carry=0;
+        if(a.Length<b.Length)
+            a=pad(a,b.Length-a.Length);
+        else if(b.Length<a.Length)
+            b=pad(b,a.Length-b.Length);
+        //Console.WriteLine(a+" "+b);
+        for(int i=a.Length-1;i>=0;i--)
+        {
+            carry=(int)Char.GetNumericValue(a[i])+(int)Char.GetNumericValue(b[i])+carry;
+            sum=(carry%10).ToString()+sum;
+            carry/=10;
+        }
+        if(carry!=0)
+            sum=carry.ToString()+sum;
+        return sum;
+    }
+    
+    private string pad(string a,int cnt)
+    {
+        for(int i=0;i<cnt;i++)
+            a="0"+a;
+        return a;
+    }
+}
