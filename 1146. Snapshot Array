@@ -1,0 +1,63 @@
+public class SnapshotArray {
+    private int[] arr;
+    private Dictionary<int,int>[] changes; 
+    private int snaps;
+    public SnapshotArray(int length) {
+        //Console.WriteLine("_____________________");
+        arr=new int[length];
+        changes=new Dictionary<int,int>[length];
+        for(int i=0;i<length;i++)
+        {
+            changes[i]=new Dictionary<int,int>();
+            changes[i].Add(0,0);
+        }
+        snaps=0;
+    }
+    
+    public void Set(int index, int val) {
+        arr[index]=val;
+        if(!changes[index].ContainsKey(snaps))
+            changes[index].Add(snaps,0);
+        changes[index][snaps]=val;
+    }
+    
+    public int Snap() {
+        snaps++;
+        return snaps-1;
+    }
+    
+    public int Get(int index, int snap_id) {
+        //Console.WriteLine(index+" "+snap_id+" "+snaps);
+        int[] keys=changes[index].Keys.ToArray();
+        if(!changes[index].ContainsKey(snap_id))
+            return changes[index][keys[binsearch(keys,snap_id)]];
+        return changes[index][snap_id];
+    }
+    
+    private int binsearch(int[] arr,int target)
+    {
+        int parent=0;
+        int left=0,right=arr.Length-1,mid;
+        while(left<=right)
+        {
+            mid=(left+right)/2;
+            if(target<arr[mid])
+                right=mid-1;
+            else
+            {
+                parent=mid;
+                left=mid+1;
+            }      
+        }
+        //Console.WriteLine("parent: "+parent);
+        return parent;
+    }
+}
+
+/**
+ * Your SnapshotArray object will be instantiated and called as such:
+ * SnapshotArray obj = new SnapshotArray(length);
+ * obj.Set(index,val);
+ * int param_2 = obj.Snap();
+ * int param_3 = obj.Get(index,snap_id);
+ */
