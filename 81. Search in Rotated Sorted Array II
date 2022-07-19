@@ -1,0 +1,49 @@
+public class Solution {
+    private int pivot;
+    public bool Search(int[] nums, int target) {
+        int left=0,right=nums.Length-1,mid;
+        while(left<right)
+        {
+            mid=(left+right)/2;
+            if(nums[mid]>nums[right])
+                left=mid+1;
+            else if(nums[mid]<nums[right])
+                right=mid;
+            else
+                break;                
+        }
+        if(left!=right)
+            return search(nums,target);
+        pivot=left;
+        Console.WriteLine(pivot);
+        if(nums[pivot]==target)
+            return true;
+        return binsearch(nums,0,pivot-1,target) || binsearch(nums,pivot+1,nums.Length-1,target);
+    }
+    
+    private bool search(int[] nums,int target)
+    {
+        for(int i=0;i<nums.Length;i++)
+        {
+            if(nums[i]==target)
+                return true;
+        }
+        return false;
+    }
+    
+    private bool binsearch(int[] nums,int left,int right,int target)
+    {
+        int mid;
+        while(left<=right)
+        {
+            mid=(left+right)/2;
+            if(target==nums[mid])
+                return true;
+            if(target<nums[mid])
+                right=mid-1;
+            else
+                left=mid+1;
+        }
+        return false;
+    }
+}
