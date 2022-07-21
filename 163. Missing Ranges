@@ -1,0 +1,55 @@
+public class Solution {
+    private int lastinrange=-1;
+    private IList<string> ans=new List<string>();
+    public IList<string> FindMissingRanges(int[] nums, int lower, int upper) {
+        if(nums.Length==0)
+        {
+            ans.Add(tostring(lower,upper));
+            return ans;
+        }
+        int temp=lower;
+        for(int i=0;i<nums.Length;i++)
+        {
+            //Console.WriteLine(nums[i]+" "+temp);
+            if(nums[i]<lower || nums[i]>upper)
+                continue;
+            if(nums[i]!=temp)
+            {
+                lastinrange=glt(lower,upper,nums[i]);
+                ans.Add(tostring(temp,lastinrange));
+                temp=nums[i]+1;
+                //lastinrange=-1;
+            }
+            else
+                temp++;
+        }
+        if(nums[nums.Length-1]!=upper)
+            ans.Add(tostring(nums[nums.Length-1]+1,upper));
+        return ans;
+    }
+    
+    private string tostring(int a,int b)
+    {
+        if(a==b)
+            return a.ToString();
+        return a.ToString()+"->"+b.ToString();
+    }
+    
+    private int glt(int left,int right,int target)
+    {
+        int parent=-1;
+        int mid;
+        while(left<=right)
+        {
+            mid=(left+right)/2;
+            if(target<=mid)
+                right=mid-1;
+            else
+            {
+                parent=mid;
+                left=mid+1;
+            }     
+        }
+        return parent;
+    }
+}
