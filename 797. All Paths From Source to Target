@@ -1,0 +1,34 @@
+public class Solution {
+    private IList<IList<int>> ans=new List<IList<int>>();
+    private HashSet<int> visited=new HashSet<int>();
+    private List<int> nos=new List<int>();
+    private int src=0,dest;
+    public IList<IList<int>> AllPathsSourceTarget(int[][] graph) {
+        dest=graph.Length-1;
+        nos.Add(src);
+        dfs(graph,0);
+        return ans;
+    }
+    
+    private void dfs(int[][] graph,int curr)
+    {
+        if(nos.Count>graph.Length)
+            return;
+        if(curr==dest)
+        {
+            ans.Add(new List<int>(nos));
+            return;
+        }
+        for(int i=0;i<graph[curr].Length;i++)
+        {
+            if(!visited.Contains(graph[curr][i]))
+            {
+                visited.Add(graph[curr][i]);
+                nos.Add(graph[curr][i]);
+                dfs(graph,graph[curr][i]);
+                visited.Remove(graph[curr][i]);
+                nos.RemoveAt(nos.Count-1);
+            }
+        }
+    }
+}
