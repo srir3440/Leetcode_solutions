@@ -1,0 +1,63 @@
+public class domains
+{
+    public string val;
+    public int count;
+    public Dictionary<string,domains> subdomains;
+    public domains(string val,int count)
+    {
+        this.val=val;
+        this.count=count;
+        subdomains=new Dictionary<string,domains>();
+    }
+}
+
+public class Solution {
+    private Dictionary<string,domains> roots=new Dictionary<string,domains>(); 
+    private IList<string> ans=new List<string>();
+    private string[] splits;
+    private int cnt;
+    public IList<string> SubdomainVisits(string[] cpdomains) {
+        for(int i=0;i<cpdomains.Length;i++)
+        {
+            string[] isplit=cpdomains[i].Split(" ");
+            splits=isplit[1].Split(".");
+            cnt=Int32.Parse(isplit[0]);
+            dfs(roots);
+        }
+        //print(roots);
+        Queue<domains> queue=new Queue<domains>();
+        foreach(var key in roots.Keys)
+            queue.Enqueue(roots[key]);
+        while(queue.Count!=0)
+        {
+            for(int i=queue.Count;i>0;i--)
+            {
+                domains tmp=queue.Dequeue();
+                ans.Add(tostring(tmp));
+                foreach(var key in tmp.subdomains.Keys)
+                    queue.Enqueue(tmp.subdomains[key]);
+            }
+        }
+        return ans;
+    }
+    
+    private string tostring(domains d)
+    {
+        return d.count.ToString()+" "+d.val;
+    }
+    
+    private void dfs(Dictionary<string,domains> dict,string str="",int index=0)
+    {
+        int i=splits.Length-1-index;
+        if(i<0)
+            return;
+        if(dict==roots)
+            str+=splits[i];
+        else
+            str=splits[i]+"."+str;
+        if(!dict.ContainsKey(str))
+            dict.Add(str,new domains(str,0));
+        dict[str].count+=cnt;
+        dfs(dict[str].subdomains,str,index+1);
+    }
+}
