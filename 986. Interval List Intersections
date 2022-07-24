@@ -1,0 +1,27 @@
+public class Solution {
+    private List<int[]> ans=new List<int[]>();
+    public int[][] IntervalIntersection(int[][] firstList, int[][] secondList) {
+        int i=0,j=0,start,end;
+        while(i<firstList.Length && j<secondList.Length)
+        {
+            start=Math.Max(firstList[i][0],secondList[j][0]);
+            end=Math.Min(firstList[i][1],secondList[j][1]);
+            if(end>=start)
+                ans.Add(new int[]{start,end});
+            if(firstList[i][1]<secondList[j][1])
+                i++;
+            else if(firstList[i][1]>secondList[j][1])
+                j++;
+            else
+            {
+                i++;
+                j++;
+            }
+            
+        }
+        if(i==firstList.Length && j==secondList.Length)
+            return ans.ToArray();
+        
+        return ans.ToArray();
+    }
+}
