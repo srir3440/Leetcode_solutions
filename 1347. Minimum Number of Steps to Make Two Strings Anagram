@@ -1,0 +1,37 @@
+public class Solution {
+    private int[] chars1=new int[26];
+    private int[] chars2=new int[26];
+    public int MinSteps(string s, string t) {
+        for(int i=0;i<s.Length;i++)
+            chars1[s[i]-'a']++;
+        for(int i=0;i<t.Length;i++)
+            chars2[t[i]-'a']++;
+        int cnt=0;
+        for(int i=0;i<t.Length;i++)
+        {
+            while(chars1[t[i]-'a']!=chars2[t[i]-'a'])
+            {
+                int j=0;
+                int diff=chars1[t[i]-'a']-chars2[t[i]-'a'];
+                for(int k=0;k<26;k++)
+                {
+                    if(k!=t[i]-'a' && diff>0 && chars2[k]>chars1[k])
+                    {
+                        chars2[t[i]-'a']++;
+                        chars2[k]--;
+                        cnt++;
+                        break;
+                    }
+                    else if(k!=t[i]-'a' && diff<0 && chars2[k]<chars1[k])
+                    {
+                        chars2[t[i]-'a']--;
+                        chars2[k]++;
+                        cnt++;
+                        break;
+                    }
+                }
+            }
+        }
+        return cnt;
+    }
+}
