@@ -1,0 +1,48 @@
+public class Solution {
+    private int start=-1,end=-1;
+    public int[] SearchRange(int[] nums, int target) {
+        if(nums.Length==0)
+            return new int[]{start,end};
+        binsearch1(nums,target);
+        binsearch2(nums,target);
+        //Console.WriteLine(start);
+        return new int[]{start,end};
+    }
+    
+    private void binsearch1(int[] nums,int target)
+    {
+        
+        int left=0,right=nums.Length-1,mid;
+        while(left<right)
+        {
+            mid=(left+right)/2;
+            if(target<=nums[mid])
+            {
+                right=mid;
+            }
+            else
+                left=mid+1;
+        }
+        if(nums[left]==target)
+            start=left;
+    }
+    
+    private void binsearch2(int[] nums,int target)
+    {
+        int left=0,right=nums.Length-1,mid;
+        while(left<=right)
+        {
+            mid=(left+right)/2;
+            if(target>=nums[mid])
+            {
+                left=mid+1;
+                end=mid;
+            }
+                
+            else
+                right=mid-1;
+        }
+        if(end!=-1 && nums[end]!=target)
+            end=-1;
+    }
+}
