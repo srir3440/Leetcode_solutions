@@ -1,24 +1,25 @@
 public class Solution {
     public int SubarraySum(int[] nums, int k) {
         int cnt=0;
-        int[,] opt=new int[nums.Length+1,nums.Length+1];
+        int[,] opt=new int[2,nums.Length+1];
         for(int i=1;i<=nums.Length;i++)
         {
-            opt[i,i]=nums[i-1];
-            if(opt[i,i]==k)
+            opt[0,i]=nums[i-1];
+            if(opt[0,i]==k)
                 cnt++;
         }
-            
+        //print(opt,1,nums.Length);    
         for(int l=1;l<=nums.Length;l++)
         {
             for(int i=1;i<=nums.Length-l;i++)
             {
-                opt[i,i+l]=opt[i,i+l-1]+opt[i+l,i+l];
-                if(opt[i,i+l]==k)
+                opt[1,i]=opt[0,i]+nums[i+l-1];
+                if(opt[1,i]==k)
                     cnt++;
+                opt[0,i]=opt[1,i];
             }
         }
-        //print(opt,nums.Length,nums.Length);
+        //Console.WriteLine("____________________");
         return cnt;
     }
     
@@ -30,5 +31,6 @@ public class Solution {
                 Console.Write(opt[i,j]+" ");
             Console.WriteLine();
         }
+        Console.WriteLine();
     }
 }
