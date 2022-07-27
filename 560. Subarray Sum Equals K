@@ -1,0 +1,34 @@
+public class Solution {
+    public int SubarraySum(int[] nums, int k) {
+        int cnt=0;
+        int[,] opt=new int[nums.Length+1,nums.Length+1];
+        for(int i=1;i<=nums.Length;i++)
+        {
+            opt[i,i]=nums[i-1];
+            if(opt[i,i]==k)
+                cnt++;
+        }
+            
+        for(int l=1;l<=nums.Length;l++)
+        {
+            for(int i=1;i<=nums.Length-l;i++)
+            {
+                opt[i,i+l]=opt[i,i+l-1]+opt[i+l,i+l];
+                if(opt[i,i+l]==k)
+                    cnt++;
+            }
+        }
+        //print(opt,nums.Length,nums.Length);
+        return cnt;
+    }
+    
+    private void print(int[,] opt,int m,int n)
+    {
+        for(int i=0;i<=m;i++)
+        {
+            for(int j=0;j<=n;j++)
+                Console.Write(opt[i,j]+" ");
+            Console.WriteLine();
+        }
+    }
+}
