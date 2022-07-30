@@ -1,0 +1,24 @@
+public class Solution {
+    private PriorityQueue<int,int> minheap=new PriorityQueue<int,int>();
+    public string FindReplaceString(string s, int[] indices, string[] sources, string[] targets) {
+        StringBuilder sb=new StringBuilder(s);
+        int offset=-1,adj=0,index=-1;
+        int i;
+        for(i=0;i<indices.Length;i++)
+            minheap.Enqueue(i,indices[i]);
+        while(minheap.Count!=0)
+        {
+            i=minheap.Dequeue();
+            index=s.IndexOf(sources[i],indices[i]);
+            if(index!=-1 && index==indices[i])
+            {
+                if(offset!=-1)
+                    adj+=targets[offset].Length-sources[offset].Length;
+                sb=sb.Remove(indices[i]+adj,sources[i].Length);
+                sb=sb.Insert(indices[i]+adj,targets[i]); 
+                offset=i;
+            }
+        }
+        return sb.ToString();
+    }
+}
