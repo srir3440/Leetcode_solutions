@@ -1,0 +1,37 @@
+public class Solution {
+    private HashSet<string> perm=new HashSet<string>();
+    private StringBuilder sb=new StringBuilder();
+    private HashSet<int> visited=new HashSet<int>();
+    public bool CheckInclusion(string s1, string s2) {
+        findpermutations(s1);
+        foreach(var s in perm.ToList())
+            Console.WriteLine(s);
+        foreach(var s in perm.ToList())
+        {
+            if(s2.IndexOf(s)!=-1)
+                return true;
+        }
+        return false;
+    }
+    
+    private void findpermutations(string s)
+    {
+        if(sb.Length==s.Length)
+        {
+            perm.Add(sb.ToString());
+            return;
+        }
+        for(int i=0;i<s.Length;i++)
+        {
+            if(!visited.Contains(i))
+            {
+                sb.Append(s[i]);
+                visited.Add(i);
+                findpermutations(s);
+                visited.Remove(i);
+                sb.Remove(sb.Length-1,1);    
+            }
+            
+        }
+    }
+}
