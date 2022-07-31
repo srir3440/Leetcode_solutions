@@ -1,37 +1,27 @@
 public class Solution {
-    private HashSet<string> perm=new HashSet<string>();
-    private StringBuilder sb=new StringBuilder();
-    private HashSet<int> visited=new HashSet<int>();
     public bool CheckInclusion(string s1, string s2) {
-        findpermutations(s1);
-        foreach(var s in perm.ToList())
-            Console.WriteLine(s);
-        foreach(var s in perm.ToList())
+        int[] chars1=new int[26];
+        int[] chars2;
+        for(int i=0;i<s1.Length;i++)
+            chars1[s1[i]-'a']++;
+        for(int i=0;i<s2.Length;i++)
         {
-            if(s2.IndexOf(s)!=-1)
+            if(i+s1.Length>s2.Length)
+                break;
+            chars2=new int[26];
+            for(int j=i;j<i+s1.Length;j++)
+                chars2[s2[j]-'a']++;
+            for(int j=0;j<s1.Length;j++)
+                chars2[s1[j]-'a']--;
+            bool flag=true;
+            for(int j=0;j<26;j++)
+            {
+                if(chars2[j]!=0)
+                    flag=false;
+            }
+            if(flag)
                 return true;
         }
         return false;
-    }
-    
-    private void findpermutations(string s)
-    {
-        if(sb.Length==s.Length)
-        {
-            perm.Add(sb.ToString());
-            return;
-        }
-        for(int i=0;i<s.Length;i++)
-        {
-            if(!visited.Contains(i))
-            {
-                sb.Append(s[i]);
-                visited.Add(i);
-                findpermutations(s);
-                visited.Remove(i);
-                sb.Remove(sb.Length-1,1);    
-            }
-            
-        }
     }
 }
