@@ -1,0 +1,156 @@
+public class Solution {
+    private HashSet<string> strs=new HashSet<string>();
+    private int len;
+    private char[] ops=new char[]{'*','+','&'};
+    private IList<string> ret=new List<string>();
+    public IList<string> AddOperators(string num, int target) 
+    {
+        if(target>0 && target.ToString().Length==num.Length)
+        {
+            if(target.ToString()==num)
+                ret.Add(num);
+            return ret;
+        }
+        if(target<0 && target.ToString().Length==num.Length+1)
+            return ret;
+        StringBuilder sb=new StringBuilder(num);
+        for(int i=0;i<sb.Length-1;i+=2)
+            sb=sb.Insert(i+1," ");
+        //Console.WriteLine(sb);
+        len=sb.Length;
+        //for(int i=1;i<num.Length;i++)
+        dfs(sb.ToString(),1,0);
+        strs.Remove(" ");
+        foreach(var s in strs)
+        {
+            if(eval(new StringBuilder(s),target))
+                ret.Add(modify(new StringBuilder(s)));
+        }
+        //Console.WriteLine(ret.Count);
+        //Console.WriteLine(eval(new StringBuilder("2+3+45&6*7"),target));
+        return ret;
+    }
+    
+    private void dfs(string exp,int index,int offset)
+    {
+        if(index>=len)
+        {
+            //strs.Add(exp);
+            return;
+        }
+        for(int i=0;i<4;i++)
+        {
+            //Console.WriteLine(exp+" "+index+" "+i+" "+offset);
+            StringBuilder tmp=new StringBuilder(exp);
+            if(i==0)
+            {
+                if(tmp.Remove(index-offset,1).ToString().Split(' ').Length==1)
+                    strs.Add(tmp.ToString());
+                //Console.WriteLine(tmp);
+                dfs(tmp.ToString(),index+2,offset+1);
+            }
+            else
+            {
+                tmp[index-offset]=ops[i-1];
+                //Console.WriteLine(tmp);
+                if(tmp.ToString().Split(' ').Length==1)
+                    strs.Add(tmp.ToString());
+                dfs(tmp.ToString(),index+2,offset);
+            }
+                
+        }
+            
+    }
+    
+    private bool eval(StringBuilder sb,int target)
+    {
+        int index,index2,index3,n;
+        string temp,op1,op2;
+        //Console.WriteLine();
+        while(true)
+        {
+            temp=sb.ToString();
+            //Console.Write(temp+" ");
+            index=findop(temp,0,'*');
+            if(index==-1)
+                index=findanyop(temp,0);
+            if(index==-1)
+                break;
+            index2=findanyop(temp,index+1);
+            index3=findanyoprev(temp,index-1);
+            //Console.Write(index+" "+index2+" "+index3+" ");
+            op1=temp.Substring(Math.Max(0,index3+1),index-index3-1);
+            if(op1.Length!=1 && op1[0]=='0')
+                return false;
+            //Console.Write(op1+" ");
+            if(index2==-1)
+            {
+                index2=temp.Length;
+                op2=temp.Substring(index+1);
+            }
+            else
+                op2=temp.Substring(index+1,index2-index-1);
+            if(op2.Length!=1 && op2[0]=='0')
+                return false;
+            //Console.Write(op2+" ");
+            n=getval(sb[index],Int32.Parse(op1),Int32.Parse(op2));
+            //Console.WriteLine(n);
+            sb=sb.Remove(Math.Max(index3+1,0),index2-index3-1);
+            sb=sb.Insert(index3+1,n);
+        }
+        if(sb.ToString()==target.ToString())
+            return true;
+        if(sb.Length>9 || (sb.Length>1 && sb[0]=='0'))
+            return false;
+        return Int32.Parse(sb.ToString())==target;
+    }
+    
+    private int getval(char op,int op1,int op2)
+    {
+        if(op=='+')
+            return op1+op2;
+        else if(op=='&')
+            return op1-op2;
+        return op1*op2;
+    }
+    
+    private int findop(string s,int start,char op)
+    {
+        for(int i=start;i<s.Length;i++)
+        {
+            if(s[i]==op)
+                return i;
+        }
+        return -1;
+    }
+
+    private int findanyop(string s,int start)
+    {
+        for(int i=start;i<s.Length;i++)
+        {
+            if(s[i]=='+' || s[i]=='&' || s[i]=='*')
+                return i;
+        }
+        return -1;
+    }
+
+    private int findanyoprev(string s,int start)
+    {
+        for(int i=start;i>=0;i--)
+        {
+            if(s[i]=='+' || s[i]=='&' || s[i]=='*')
+                return i;
+        }
+        return -1;
+    }
+    
+    private string modify(StringBuilder sb)
+    {
+        for(int i=0;i<sb.Length;i++)
+        {
+            if(sb[i]=='&')
+                sb[i]='-';
+        }
+        return sb.ToString();
+    }
+}
