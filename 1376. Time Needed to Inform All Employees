@@ -1,31 +1,147 @@
-public class Solution {
-    private Queue<int[]> queue=new Queue<int[]>();
-    private Dictionary<int,List<int>> tree=new Dictionary<int,List<int>>(); 
-    public int NumOfMinutes(int n, int headID, int[] manager, int[] informTime) {
-        int max=0;
-        int[] tmp=new int[]{headID,0};
-        for(int i=0;i<manager.Length;i++)
+public class minheap<T>
+{
+    List<T> a;
+    Dictionary<T,int> p;
+    List<int> key;
+    int s;
+    public minheap()
+    {
+        a=new List<T>();
+        p=new Dictionary<T,int>();
+        key=new List<int>();
+        s=-1;
+    }
+    public void insert(T a,int key)
+    {
+        s++;
+        this.p.Add(a,s);
+        this.a.Add(a);
+        this.key.Add(key);
+        if(s<1)
+            return;
+        heapify_up(s);
+    }
+    
+    public void decrease_key(T node,int newkey)
+    {
+        key[p[node]]=newkey;
+        if(s<1)
+            return;
+        heapify_up(p[node]);
+    }
+    
+    private void heapify_up(int i)
+    {
+        while(i>0)
         {
-            if(!tree.ContainsKey(manager[i]))
-                tree.Add(manager[i],new List<int>());
-            tree[manager[i]].Add(i);
-        }
-        //Console.WriteLine(tree.Keys.Count);
-        queue.Enqueue(tmp);
-        while(queue.Count!=0)
-        {
-            for(int i=queue.Count;i>0;i--)
+            if(key[(i-1)/2]>key[i])
             {
-                tmp=queue.Dequeue();
-                max=Math.Max(tmp[1],max);
-                if(!tree.ContainsKey(tmp[0]))
-                    continue;
-                //Console.WriteLine(tmp[0]+" "+tmp[1]+" "+max+" "+tree[tmp[0]].Count);
-                for(int j=0;j<tree[tmp[0]].Count;j++)
-                    queue.Enqueue(new int[]{tree[tmp[0]][j],tmp[1]+informTime[tmp[0]]});
+                swap((i-1)/2,i);
+                i=(i-1)/2;
             }
-                
+            else
+                break;
         }
-        return max;
+    }
+    
+    public T extract_min()
+    {
+        if(s<0)
+            return default;
+        T tmp=a[0];
+        swap(0,s);
+        p.Remove(a[s]);
+        a.RemoveAt(s);
+        key.RemoveAt(s);
+        s--;
+        if(s>=1)
+            heapify_down(0);
+        return tmp;
+    }
+    
+    private void heapify_down(int i)
+    {
+        while(2*i+1<=this.s)
+        {
+            if(2*i+2>this.s || key[2*i+1]<key[2*i+2])
+            {
+                if(key[2*i+1]<key[i])
+                {
+                    swap(2*i+1,i);
+                    i=2*i+1;    
+                }
+                else
+                    break;
+            }
+            else
+            {
+                if(key[2*i+2]<key[i])
+                {
+                    swap(2*i+2,i);
+                    i=2*i+2;
+                }
+                else
+                    break;
+            }
+        }
+    }
+    
+    private void swap(int start,int end)
+    {
+        T temp;int tmp;
+        tmp=p[a[start]];
+        p[a[start]]=p[a[end]];
+        p[a[end]]=tmp;
+        temp=a[start];
+        a[start]=a[end];
+        a[end]=temp;
+        tmp=key[start];
+        key[start]=key[end];
+        key[end]=tmp;
+    }
+    
+    public T peek()
+    {
+        if(s<0)
+            return default;
+        return this.a[0];
+    }
+    
+    public int getkey(T node)
+    {
+        if(!p.ContainsKey(node))
+            return -1;
+        return this.key[p[node]];
+    }
+}
+
+public class Solution {
+    private int[] d;
+    private HashSet<int> visited=new HashSet<int>();
+    private minheap<int> nodes=new minheap<int>();
+    public int NumOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+        d=new int[n];
+        int u=0;
+        for(int i=0;i<n;i++)
+        {
+            if(i!=headID)
+                d[i]=Int32.MaxValue;
+            nodes.insert(i,d[i]);
+        }
+        while(visited.Count!=n)
+        {
+            u=nodes.extract_min();
+            Console.WriteLine(u+" "+d[u]);
+            visited.Add(u);
+            for(int i=0;i<n;i++)
+            {
+                if(!visited.Contains(i) && manager[i]==u && d[u]+informTime[u]<d[i])
+                {
+                    d[i]=d[u]+informTime[u];
+                    nodes.decrease_key(i,d[i]);
+                }
+            }
+        }
+        return d[u];
     }
 }
