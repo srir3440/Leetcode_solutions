@@ -1,0 +1,54 @@
+public class Solution {
+    private Queue<int> queue=new Queue<int>();
+    private Dictionary<int,List<int>> adjlist=new Dictionary<int,List<int>>(); 
+    private int[] indegree;
+    private HashSet<int> visited=new HashSet<int>();
+    public int MinimumSemesters(int n, int[][] relations) {
+        indegree=new int[n];
+        for(int i=0;i<relations.Length;i++)
+        {
+            if(!adjlist.ContainsKey(relations[i][0]))
+                adjlist.Add(relations[i][0],new List<int>());
+            adjlist[relations[i][0]].Add(relations[i][1]);
+            indegree[relations[i][1]-1]++;
+        }
+        for(int i=1;i<=n;i++)
+        {
+            //Console.WriteLine(indegree[i-1]);
+            if(indegree[i-1]==0)
+            {
+                queue.Enqueue(i);
+                visited.Add(i);
+            }
+                
+        }
+        int step=0;
+        //Console.WriteLine(queue.Count);
+        while(queue.Count!=0)
+        {
+            step++;
+            for(int i=queue.Count;i>0;i--)
+            {
+                int tmp=queue.Dequeue();
+                //Console.Write(tmp+" ");
+                if(!adjlist.ContainsKey(tmp))
+                    continue;
+                for(int j=0;j<adjlist[tmp].Count;j++)
+                    indegree[adjlist[tmp][j]-1]--;
+                for(int j=0;j<indegree.Length;j++)
+                {
+                    if(indegree[j]==0 && !visited.Contains(j+1))
+                    {
+                        queue.Enqueue(j+1);
+                        visited.Add(j+1);
+                    }
+                        
+                }
+            }
+            //Console.WriteLine();
+        }
+        if(visited.Count!=n)
+            return -1;
+        return step;
+    }
+}
