@@ -1,0 +1,31 @@
+public class Solution {
+    private Queue<int[]> queue=new Queue<int[]>();
+    private Dictionary<int,List<int>> tree=new Dictionary<int,List<int>>(); 
+    public int NumOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+        int max=0;
+        int[] tmp=new int[]{headID,0};
+        for(int i=0;i<manager.Length;i++)
+        {
+            if(!tree.ContainsKey(manager[i]))
+                tree.Add(manager[i],new List<int>());
+            tree[manager[i]].Add(i);
+        }
+        //Console.WriteLine(tree.Keys.Count);
+        queue.Enqueue(tmp);
+        while(queue.Count!=0)
+        {
+            for(int i=queue.Count;i>0;i--)
+            {
+                tmp=queue.Dequeue();
+                max=Math.Max(tmp[1],max);
+                if(!tree.ContainsKey(tmp[0]))
+                    continue;
+                //Console.WriteLine(tmp[0]+" "+tmp[1]+" "+max+" "+tree[tmp[0]].Count);
+                for(int j=0;j<tree[tmp[0]].Count;j++)
+                    queue.Enqueue(new int[]{tree[tmp[0]][j],tmp[1]+informTime[tmp[0]]});
+            }
+                
+        }
+        return max;
+    }
+}
