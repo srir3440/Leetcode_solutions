@@ -1,0 +1,37 @@
+public class Solution {
+    private PriorityQueue<int[],int> minheap=new PriorityQueue<int[],int>();
+    private Dictionary<int,int> map=new Dictionary<int,int>();
+    public bool CarPooling(int[][] trips, int capacity) {
+        int end=-1,start=1001;
+        for(int i=0;i<trips.Length;i++)
+        {
+            minheap.Enqueue(trips[i],trips[i][1]);
+            if(!map.ContainsKey(trips[i][2]))
+                map.Add(trips[i][2],0);
+            map[trips[i][2]]+=trips[i][0];
+            end=Math.Max(end,trips[i][2]);
+            start=Math.Min(start,trips[i][1]);
+        }
+        //Console.WriteLine("start: "+start+" "+"end: "+end);
+        //print();
+        for(int i=start;i<=end && minheap.Count>0;i++)
+        {
+            //Console.WriteLine(capacity);
+            if(map.ContainsKey(i))
+                capacity+=map[i];
+            if(minheap.Peek()[1]>i)
+                continue;
+            while(minheap.Count!=0 && minheap.Peek()[1]==i)
+                capacity-=minheap.Dequeue()[0];
+            if(capacity<0)
+                return false;
+        }
+        return true;
+    }
+    
+    private void print()
+    {
+        foreach(var key in map.Keys)
+            Console.WriteLine(key+" "+map[key]);
+    }
+}
