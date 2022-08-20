@@ -1,0 +1,74 @@
+public class TopVotedCandidate {
+    private Dictionary<int,LinkedList<int>> cnt=new Dictionary<int,LinkedList<int>>();
+    private Dictionary<int,LinkedListNode<int>> map=new Dictionary<int,LinkedListNode<int>>();
+    private Dictionary<int,int> cntermap=new Dictionary<int,int>();
+    private Dictionary<int,int> ansmap=new Dictionary<int,int>();
+    private int freqmax=0;
+    public TopVotedCandidate(int[] persons, int[] times) {
+        for(int i=0;i<persons.Length;i++)
+        {
+            if(!map.ContainsKey(persons[i]))
+            {
+                map.Add(persons[i],new LinkedListNode<int>(persons[i]));
+                if(!cnt.ContainsKey(0))
+                    cnt.Add(0,new LinkedList<int>());
+                cntermap.Add(persons[i],0);
+                cnt[0].AddLast(map[persons[i]]);
+            }
+            int freq=cntermap[persons[i]];
+            cnt[freq].Remove(map[persons[i]]);
+            if(!cnt.ContainsKey(freq+1))
+                cnt.Add(freq+1,new LinkedList<int>());
+            cnt[freq+1].AddLast(map[persons[i]]);
+            freqmax=Math.Max(freq+1,freqmax);
+            cntermap[persons[i]]++;
+            ansmap.Add(times[i],cnt[freqmax].Last.Value);
+            //print();
+        }
+    }
+    
+    public int Q(int t) {
+        List<int> tmp=ansmap.Keys.ToList();
+        int left=0,right=tmp.Count-1,mid,parent=0;
+        while(left<=right)
+        {
+            mid=(left+right)/2;
+            if(t==tmp[mid])
+            {
+                parent=mid;
+                break;
+            }
+            if(t<tmp[mid])
+                right=mid-1;
+            else
+            {
+                parent=mid;
+                left=mid+1;
+            }  
+        }
+        //Console.WriteLine(tmp[parent]);
+        return ansmap[tmp[parent]];
+    }
+    
+    private void print()
+    {
+        foreach(var key in cnt.Keys)
+        {
+            var tmp=cnt[key].First;
+            Console.Write(key+"   ");
+            while(tmp!=null)
+            {
+                Console.Write(tmp.Value+" ");
+                tmp=tmp.Next;
+            }
+            Console.WriteLine();
+        }
+        Console.WriteLine();
+    }
+}
+
+/**
+ * Your TopVotedCandidate object will be instantiated and called as such:
+ * TopVotedCandidate obj = new TopVotedCandidate(persons, times);
+ * int param_1 = obj.Q(t);
+ */
