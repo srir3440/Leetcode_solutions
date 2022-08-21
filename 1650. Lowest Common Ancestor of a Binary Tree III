@@ -1,0 +1,54 @@
+/*
+// Definition for a Node.
+public class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node parent;
+}
+*/
+
+public class Solution {
+    private Node s,ans;
+    private HashSet<int> visited=new HashSet<int>();
+    public Node LowestCommonAncestor(Node p, Node q) {
+        Node root=findroot(p);
+        search(root,p,q);
+        traverse(q);
+        traverse(p);
+        return ans;
+    }
+    
+    private Node findroot(Node node)
+    {
+        if(node.parent==null)
+            return node;
+        return findroot(node.parent);
+    }
+    
+    private void traverse(Node node)
+    {
+        if(node==null)
+            return;
+        if(visited.Contains(node.val))
+        {
+            ans=node;
+            return;
+        }
+        visited.Add(node.val);
+        traverse(node.parent);
+    }
+    
+    private void search(Node node,Node val1,Node val2=null)
+    {
+        if(s!=null || node==null)
+            return;
+        if(node.val==val1.val || node.val==val2.val)
+        {
+            s=node;
+            return;
+        }
+        search(node.left,val1,val2);
+        search(node.right,val1,val2);
+    }
+}
