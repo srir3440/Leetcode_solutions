@@ -1,0 +1,62 @@
+public class Solution {
+    private Dictionary<string,List<string>> dict=new Dictionary<string,List<string>>();
+    private Dictionary<string,HashSet<string>> visited=new Dictionary<string,HashSet<string>>();
+    //private Dictionary<int,string> map=new Dictionary<int,string>(); 
+    private PriorityQueue<int,int> minheap=new PriorityQueue<int,int>();
+    public IList<string> MostVisitedPattern(string[] username, int[] timestamp, string[] website) {
+        List<string> tmp;
+        int i;
+        for(i=0;i<username.Length;i++)
+            minheap.Enqueue(i,timestamp[i]);
+        while(minheap.Count>0)
+        {
+            i=minheap.Dequeue();
+            //Console.WriteLine(username[i]+" "+timestamp[i]+" "+website[i]);
+            if(!dict.ContainsKey(username[i]))
+                dict.Add(username[i],new List<string>());
+            dict[username[i]].Add(website[i]);
+            tmp=dict[username[i]];
+            if(tmp.Count>2)
+                addtoset(username[i],website[i]);
+        }
+        //find max
+        int max=-1;
+        foreach(var s in visited.Keys)
+            max=Math.Max(max,visited[s].Count);
+        
+        tmp=new List<string>();
+        foreach(var s in visited.Keys)
+        {
+            if(visited[s].Count==max)
+                tmp.Add(s);
+        }
+        tmp.Sort();
+        return tmp[0].Split(" ").ToList();
+    }
+    
+    private void addtoset(string username,string website)
+    {
+        List<string> tmp=dict[username];
+        for(int j=0;j<tmp.Count-1;j++)
+        {
+            for(int k=j+1;k<tmp.Count-1;k++)
+            {
+                string s=tmp[j]+" "+tmp[k]+" "+website;
+                if(!visited.ContainsKey(s))
+                    visited.Add(s,new HashSet<string>());
+                visited[s].Add(username);
+            }
+        }
+    }
+    
+    private void print()
+    {
+        foreach(var key in dict.Keys)
+        {
+            Console.Write(key+" ");
+            foreach(var s in dict[key])
+                Console.Write(s+" ");
+            Console.WriteLine();
+        }
+    }
+}
