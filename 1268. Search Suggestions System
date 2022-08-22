@@ -1,0 +1,73 @@
+public class trienode
+{
+    public string word;
+    public SortedDictionary<string,trienode> children;
+    public bool isend;
+    public trienode(string s,bool isend=false)
+    {
+        this.word=s;
+        children=new SortedDictionary<string,trienode>();
+        this.isend=isend;
+    }
+}
+
+public class Solution {
+    private trienode root=new trienode("");
+    private IList<IList<string>> ans=new List<IList<string>>();
+    private IList<string> strs=new List<string>();
+    public IList<IList<string>> SuggestedProducts(string[] products, string searchWord) {
+        trienode tmp=null;
+        int j=0;
+        string s;
+        for(int i=0;i<products.Length;i++)
+        {
+            j=0;
+            tmp=root;
+            s="";
+            while(j<products[i].Length)
+            {
+                s+=products[i][j];
+                if(!tmp.children.ContainsKey(s))
+                    tmp.children.Add(s,new trienode(s));
+                if(j==products[i].Length-1)
+                    tmp.children[s].isend=true;
+                tmp=tmp.children[s];
+                j++;
+            }
+        }
+        //return null;
+        tmp=root;
+        for(int i=1;i<=searchWord.Length;i++)
+        {
+            strs=new List<string>();
+            string temp=searchWord.Substring(0,i);
+            if(!tmp.children.ContainsKey(temp))
+            {
+                ans.Add(strs);
+                continue;
+            }
+            tmp=tmp.children[temp];
+            //Console.WriteLine(tmp.word);
+            if(tmp.isend)
+                strs.Add(tmp.word);
+            //Console.WriteLine(tmp.word+" "+strs.Count);
+            dfs(tmp);
+            ans.Add(strs);
+        }
+        return ans;
+    }
+    
+    private void dfs(trienode node)
+    {
+        if(strs.Count>2)
+            return;
+        foreach(var key in node.children.Keys)
+        {
+            if(strs.Count>2)
+                break;
+            if(node.children[key].isend)
+                strs.Add(node.children[key].word);
+            dfs(node.children[key]);
+        }
+    }
+}
