@@ -1,61 +1,39 @@
-public class customer
+public class detail
 {
-    public int custId;
-    public string cistation;
-    public int cistime;
-    public customer(int id,string cistname,int citime)
+    public string snames;
+    public int time;
+    public detail(string sname,int time)
     {
-        this.custId=id;
-        this.cistation=cistname;
-        this.cistime=citime;
+        this.snames=sname;
+        this.time=time;
     }
 }
-public class station
-{
-    public string destname;
-    public int totaltime;
-    public int customercnt;
-    public station(string dname,int time)
-    {
-        this.destname=dname;
-        this.totaltime=time;
-        this.customercnt=1;
-    }
-}
+
 public class UndergroundSystem {
-    private Dictionary<int,customer> checkedin;
-    private Dictionary<string,Dictionary<string,station>> stodstations;
+    private Dictionary<int,detail> dict;
+    private Dictionary<string,double[]> stationtimemap;
     public UndergroundSystem() {
-        checkedin=new Dictionary<int,customer>();
-        stodstations=new Dictionary<string,Dictionary<string,station>>();
+        dict=new Dictionary<int,detail>();
+        stationtimemap=new Dictionary<string,double[]>();
     }
     
     public void CheckIn(int id, string stationName, int t) {
-        if(checkedin.ContainsKey(id))
-        {
-            checkedin[id].cistation=stationName;
-            checkedin[id].cistime=t;
-        }
-        else
-            checkedin.Add(id,new customer(id,stationName,t));
-        if(!stodstations.ContainsKey(stationName))
-            stodstations.Add(stationName,new Dictionary<string,station>());
+        if(!dict.ContainsKey(id))
+            dict.Add(id,new detail(stationName,t));
     }
     
     public void CheckOut(int id, string stationName, int t) {
-        string temp=checkedin[id].cistation;
-        if(stodstations[temp].ContainsKey(stationName))
-        {
-            stodstations[temp][stationName].customercnt+=1;
-            stodstations[temp][stationName].totaltime+=t-checkedin[id].cistime;
-            return;
-        }
-        stodstations[temp].Add(stationName,new station(stationName,t-checkedin[id].cistime));    
+        dict[id].snames+=" "+stationName;
+        dict[id].time=t-dict[id].time;
+        if(!stationtimemap.ContainsKey(dict[id].snames))
+            stationtimemap.Add(dict[id].snames,new double[]{0,0});
+        stationtimemap[dict[id].snames][1]+=dict[id].time;
+        stationtimemap[dict[id].snames][0]++;
+        dict.Remove(id);
     }
     
     public double GetAverageTime(string startStation, string endStation) {
-        station s=stodstations[startStation][endStation];
-        return ((double)s.totaltime/(double)s.customercnt);
+        return stationtimemap[startStation+" "+endStation][1]/stationtimemap[startStation+" "+endStation][0];
     }
 }
 
