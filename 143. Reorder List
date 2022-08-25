@@ -1,0 +1,73 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    ListNode revhead=null;
+    public void ReorderList(ListNode head) {
+        int len=getlength(head);
+        if(len<3)
+            return;
+        if(len==3)
+        {
+            ListNode curr=head,tmp=head.next;
+            curr.next=curr.next.next;
+            curr=curr.next;
+            tmp.next=null;
+            curr.next=tmp;
+            return;
+        }
+            
+        int i=0;
+        ListNode slow=head,fast=head;
+        while(i<len/2-1)
+        {
+            slow=slow.next;
+            fast=slow.next;
+            i++;
+        }
+        //Console.WriteLine(slow.val+" "+fast.val);
+        revhead=reverse(fast);
+        ListNode curr1=head,curr2=revhead;
+        while(curr2.next!=null)
+        {
+            ListNode p=curr1.next;
+            curr1.next=new ListNode(curr2.val);
+            curr1.next.next=p;
+            curr1=p;
+            curr2=curr2.next;
+        }
+    }
+    
+    private int getlength(ListNode head)
+    {
+        ListNode curr=head;
+        int len=0;
+        while(curr!=null)
+        {
+            len++;
+            curr=curr.next;
+        }
+        return len;
+    }
+    
+    private ListNode reverse(ListNode head)
+    {
+        ListNode curr=head,newhead=head,p;
+        while(curr.next!=null)
+        {
+            p=curr.next;
+            curr.next=p.next;
+            p.next=newhead;
+            newhead=p;
+        }
+        return newhead;
+    }
+}
