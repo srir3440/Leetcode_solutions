@@ -1,0 +1,64 @@
+public class PhoneDirectory {
+    private Dictionary<int,LinkedListNode<int>> map=new Dictionary<int,LinkedListNode<int>>();
+    private LinkedList<int> directory=new LinkedList<int>();
+    public PhoneDirectory(int maxNumbers) {
+        for(int i=1;i<=maxNumbers;i++)
+        {
+            directory.AddLast(new LinkedListNode<int>(i));
+            map.Add(i,directory.Last);
+        }
+            
+    }
+    
+    public int Get() {
+        //Console.Write("GET:   ");
+        if(directory.First.Value<0)
+            return -1;
+        var node=directory.First;
+        directory.Remove(directory.First);
+        int ret=node.Value;
+        node.Value=-node.Value;
+        directory.AddLast(node);
+        //print();
+        return ret-1;
+    }
+    
+    public bool Check(int number) {
+        //Console.Write("CHECK: "+(number+1)+"   ");
+        //print();
+        var node=map[number+1];
+        if(node.Value==number+1)
+            return true;
+        return false;
+    }
+    
+    public void Release(int number) {
+        //Console.Write("RELEASE: "+(number+1)+"   ");
+        if(Check(number))
+            return; 
+        var node=map[number+1];
+        node.Value=-node.Value;
+        directory.Remove(node);
+        directory.AddFirst(node);
+        //print();
+    }
+    
+    private void print()
+    {
+        LinkedListNode<int> curr=directory.First;
+        while(curr!=null)
+        {
+            Console.Write(curr.Value+" ");
+            curr=curr.Next;
+        }
+        Console.WriteLine();
+    }
+}
+
+/**
+ * Your PhoneDirectory object will be instantiated and called as such:
+ * PhoneDirectory obj = new PhoneDirectory(maxNumbers);
+ * int param_1 = obj.Get();
+ * bool param_2 = obj.Check(number);
+ * obj.Release(number);
+ */
