@@ -1,0 +1,43 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    private int ans=0;
+    private Dictionary<TreeNode,bool> map=new Dictionary<TreeNode,bool>();
+    public int CountUnivalSubtrees(TreeNode root) {
+        traverse(root);
+        return ans;
+    }
+    
+    private void traverse(TreeNode node)
+    {
+        if(node==null)
+            return;
+        map.Add(node,false);
+        traverse(node.left);
+        traverse(node.right);
+        if(checkValid(node.left,node.val) && checkValid(node.right,node.val))
+        {
+            ans+=1;
+            map[node]=true;
+        }
+            
+    }
+    
+    private bool checkValid(TreeNode node,int val)
+    {
+        if(node==null || (node!=null && node.val==val && map[node]))
+            return true;
+        return false;
+    }
+}
