@@ -1,23 +1,41 @@
 public class SparseVector {
-    private Dictionary<int,int> vec;
+    private List<int[]> vector;
     public SparseVector(int[] nums) {
-        vec=new Dictionary<int,int>();
+        this.vector=new List<int[]>();
         for(int i=0;i<nums.Length;i++)
         {
             if(nums[i]!=0)
-                vec.Add(i,nums[i]);
-        } 
+                vector.Add(new int[]{nums[i],i});
+        }
     }
     
     // Return the dotProduct of two sparse vectors
     public int DotProduct(SparseVector vec) {
-        int sum=0;
-        foreach(var i in this.vec.Keys)
+        int i=0,j=0,sum=0;
+        //print(this.vector);
+        //print(vec.vector);
+        while(i<this.vector.Count || j<vec.vector.Count)
         {
-            if(this.vec.ContainsKey(i) && vec.vec.ContainsKey(i))
-                sum+=this.vec[i]*vec.vec[i];    
+            //Console.WriteLine(i+" "+j+" "+sum);
+            if(i<this.vector.Count && j<vec.vector.Count && this.vector[i][1]==vec.vector[j][1])
+            {
+                sum+=this.vector[i][0]*vec.vector[j][0];
+                i++;
+                j++;
+            }
+            else if(j>=vec.vector.Count || (i<this.vector.Count && this.vector[i][1]<vec.vector[j][1]))
+                i++;
+            else
+                j++;
         }
         return sum;
+    }
+    
+    private void print(List<int[]> vec)
+    {
+        for(int i=0;i<vec.Count;i++)
+            Console.Write(vec[i][0]+" ");
+        Console.WriteLine();
     }
 }
 
