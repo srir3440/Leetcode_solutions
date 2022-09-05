@@ -1,0 +1,74 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    private Queue<TreeNode> queue=new Queue<TreeNode>();
+    private int j=0;
+    public IList<TreeNode> DelNodes(TreeNode root, int[] to_delete) {
+        if(root==null)
+            return queue.ToList();
+        queue.Enqueue(root);
+        while(j<to_delete.Length)
+        {
+            for(int i=queue.Count;i>0;i--)
+            {
+                if(j>=to_delete.Length)
+                    break;
+                TreeNode tmp=queue.Dequeue();
+                if(tmp.val==to_delete[j])
+                {
+                    j++;
+                    if(tmp.left!=null)
+                        queue.Enqueue(tmp.left);
+                    if(tmp.right!=null)
+                        queue.Enqueue(tmp.right);
+                    continue;
+                }   
+                //Console.Write(tmp.val+" ");
+                if(!dfs(tmp,tmp,to_delete[j]))
+                    queue.Enqueue(tmp);
+            }
+            //Console.WriteLine();
+        }
+        return queue.ToList();
+    }
+    
+    private bool dfs(TreeNode root,TreeNode node,int val)
+    {
+        if(node==null)
+            return false;
+        if(node.left!=null && node.left.val==val)
+        {
+            queue.Enqueue(root);
+            if(node.left.left!=null)
+                queue.Enqueue(node.left.left);
+            if(node.left.right!=null)
+                queue.Enqueue(node.left.right);
+            node.left=null;
+            j++;
+            return true;
+        }
+        if(node.right!=null && node.right.val==val)
+        {
+            queue.Enqueue(root);
+            if(node.right.left!=null)
+                queue.Enqueue(node.right.left);
+            if(node.right.right!=null)
+                queue.Enqueue(node.right.right);
+            node.right=null;
+            j++;
+            return true;
+        }
+        return dfs(root,node.left,val) || dfs(root,node.right,val);
+    }
+}
