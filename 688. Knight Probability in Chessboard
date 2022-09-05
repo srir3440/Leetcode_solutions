@@ -1,0 +1,70 @@
+public class Solution {
+    private int bounds,ans=0;
+    private decimal[,,] opt;
+    public double KnightProbability(int n, int k, int row, int column) {
+        if(k==0)
+            return 1;
+        bounds=n;
+        opt=new decimal[n,n,k+1];
+        populate(n);
+        //print(n,1);
+        for(int r=2;r<=k;r++)
+        {
+            //Console.WriteLine();
+            for(int i=0;i<n;i++)
+            {
+                for(int j=0;j<n;j++)
+                {
+                    if(isvalid(i-1,j-2)==1)
+                        opt[i,j,r]+=opt[i-1,j-2,r-1]/8;
+                    if(isvalid(i-2,j-1)==1)
+                        opt[i,j,r]+=opt[i-2,j-1,r-1]/8;
+                    if(isvalid(i-2,j+1)==1)
+                        opt[i,j,r]+=opt[i-2,j+1,r-1]/8;
+                    if(isvalid(i-1,j+2)==1)
+                        opt[i,j,r]+=opt[i-1,j+2,r-1]/8;
+                    if(isvalid(i+1,j+2)==1)
+                        opt[i,j,r]+=opt[i+1,j+2,r-1]/8;
+                    if(isvalid(i+2,j+1)==1)
+                        opt[i,j,r]+=opt[i+2,j+1,r-1]/8;
+                    if(isvalid(i+2,j-1)==1)
+                        opt[i,j,r]+=opt[i+2,j-1,r-1]/8;
+                    if(isvalid(i+1,j-2)==1)
+                        opt[i,j,r]+=opt[i+1,j-2,r-1]/8;
+                }
+            }
+            //print(n,r);
+        }
+        return Convert.ToDouble(opt[row,column,k]);///Math.Pow(8,k);
+    }
+        
+    private void populate(int n)
+    {
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                opt[i,j,1]=isvalid(i-1,j-2)+isvalid(i-2,j-1)+isvalid(i-2,j+1)+isvalid(i-1,j+2)+isvalid(i+1,j+2)+isvalid(i+2,j+1)+isvalid(i+2,j-1)+isvalid(i+1,j-2);
+                opt[i,j,1]/=8;
+            }
+        }
+    }
+    
+    public void print(int n,int k)
+    {
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+                Console.Write(opt[i,j,k]+" ");
+            Console.WriteLine();
+        }
+    }
+    
+    private int isvalid(int i,int j)
+    {
+        
+        if(i<0 || i>=bounds || j<0 || j>=bounds)
+            return 0;
+        return 1;
+    }
+}
