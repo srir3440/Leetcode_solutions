@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class temp
+{
+    public TreeNode node;
+    public long index;
+    public temp(TreeNode node,long index)
+    {
+        this.node=node;
+        this.index=index;
+    }
+}
+
+public class Solution {
+    private int sum=0;
+    private HashSet<long> depthset=new HashSet<long>();
+    private Queue<temp> queue=new Queue<temp>();
+    public int SumEvenGrandparent(TreeNode root) {
+        if(root==null)
+            return sum;
+        queue.Enqueue(new temp(root,0));
+        temp tmp;
+        while(queue.Count!=0)
+        {
+            for(int i=queue.Count;i>0;i--)
+            {
+                tmp=queue.Dequeue();
+                if(tmp.node.val%2==0)
+                    depthset.Add(tmp.index);
+                if(tmp.index>2 && depthset.Contains((long)(tmp.index-3)/4))
+                    sum+=tmp.node.val;
+                    
+                if(tmp.node.left!=null)
+                    queue.Enqueue(new temp(tmp.node.left,2*tmp.index+1));
+                if(tmp.node.right!=null)
+                    queue.Enqueue(new temp(tmp.node.right,2*tmp.index+2));
+            }
+        }
+        return sum;
+    }
+}
