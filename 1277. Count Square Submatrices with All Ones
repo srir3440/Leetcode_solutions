@@ -1,0 +1,47 @@
+public class Solution {
+    private int[,] opt;
+    public int CountSquares(int[][] matrix) {
+        opt=new int[matrix.Length,matrix[0].Length];
+        int max=0;
+        for(int i=0;i<matrix[0].Length;i++)
+        {
+            opt[0,i]=matrix[0][i]==1?1:0;
+            max=Math.Max(opt[0,i],max);
+        }
+            
+        for(int i=0;i<matrix.Length;i++)
+        {
+            opt[i,0]=matrix[i][0]==1?1:0;
+            max=Math.Max(opt[i,0],max);
+        }
+            
+        for(int i=1;i<matrix.Length;i++)
+        {
+            for(int j=1;j<matrix[i].Length;j++)
+            {
+                if(matrix[i][j]==1)
+                {
+                    opt[i,j]=Math.Min(opt[i-1,j],Math.Min(opt[i-1,j-1],opt[i,j-1]))+1;
+                    max=Math.Max(opt[i,j],max);
+                }
+            }
+        }
+        return print(matrix);
+        return max*max;
+    }
+    
+    private int print(int[][] matrix)
+    {
+        int cnt=0;
+        for(int i=0;i<matrix.Length;i++)
+        {
+            for(int j=0;j<matrix[i].Length;j++)
+            {
+                cnt+=opt[i,j];
+                //Console.Write(opt[i,j]+" ");
+            }
+            //Console.WriteLine();
+        }
+        return cnt;
+    }
+}
