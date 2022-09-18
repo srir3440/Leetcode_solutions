@@ -1,0 +1,63 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    private TreeNode last=null,firstRight;
+    public void Flatten(TreeNode root) {
+        if(root==null)
+            return;
+        firstRight=root.right;
+        traverse(root.left,root);
+        root.left=null;
+        //print(root);
+        if(last==null)
+        {
+            root.left=root.right;
+            root.right=null;
+            last=root;
+        }
+        else
+        {
+            root.left=last.right;
+            last.right=null;
+        }
+        //print(root);
+        firstRight=null;
+        traverse(root.left,last);
+        root.left=null;
+    }
+    
+    private void traverse(TreeNode node,TreeNode root)
+    {
+        if(node==null)
+            return;
+        traverse(node.right,root);
+        traverse(node.left,root);
+        //Console.WriteLine(node.val+" "+(firstRight!=null?firstRight.val:" ")+" "+root.val);
+        TreeNode tmp=new TreeNode(node.val);
+        if(last==null)
+            last=tmp;
+        tmp.right=firstRight;
+        root.right=tmp;
+        firstRight=tmp;
+    }
+    
+    private void print(TreeNode node)
+    {
+        if(node==null)
+            return;
+        Console.WriteLine(node.val);
+        print(node.left);
+        print(node.right);
+    }
+}
