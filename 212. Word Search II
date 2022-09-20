@@ -11,7 +11,7 @@ public class TrieNode{
 
 
 public class Solution {
-    private HashSet<string> hs=new HashSet<string>();
+    private IList<string> hs=new List<string>();
     private HashSet<string> visited=new HashSet<string>();
     private TrieNode root=new TrieNode("");
     private char[][] b;
@@ -28,7 +28,7 @@ public class Solution {
             }
         }
         //Console.WriteLine(hs.Count);
-        return hs.ToList();
+        return hs;
     }
     
     private void dfs(int i,int j,TrieNode node)
@@ -37,7 +37,7 @@ public class Solution {
         if(node.isend)
         {
             hs.Add(node.val);
-            //node.isend=false;
+            node.isend=false;
         }
             
         if(!isvalid(i,j))
@@ -50,6 +50,8 @@ public class Solution {
         dfs(i,j+1,node.children[b[i][j]]);
         dfs(i+1,j,node.children[b[i][j]]);
         visited.Remove(tostring(i,j));
+        if(node.children[b[i][j]].children.Count==0)
+            node.children.Remove(b[i][j]);
     }
     
     private string tostring(int a,int b)
