@@ -1,0 +1,51 @@
+public class Solution {
+    private int[] parent=new int[26];
+    public bool EquationsPossible(string[] equations) {
+        
+        for(int i=0;i<26;i++)
+            parent[i]=i;
+        
+        
+        for(int i=0;i<equations.Length;i++)
+        {
+            char op1=equations[i][0],op2=equations[i][3];
+            if(op1==op2)
+            {
+                if(equations[i][1]=='!')
+                    return false;
+                continue;
+            }
+            if(equations[i][1]=='!')
+                continue;
+            int root1=findroot(op1-'a');
+            int root2=findroot(op2-'a');
+            parent[root1]=root2;
+            
+            //hs[op2-'a']=hs[op1-'a'];
+        }
+        
+        //for(int i=0;i<26;i++)
+            //Console.WriteLine((char)('a'+i)+" "+(char)(parent[i]+'a')+" ");
+        
+        
+        for(int i=0;i<equations.Length;i++)
+        {
+            if(equations[i][1]=='=')
+                continue;
+            int root1=findroot(equations[i][0]-'a');
+            int root2=findroot(equations[i][3]-'a');
+            if(root1==root2)
+                return false;
+        }
+        return true;
+    }
+    
+    private int findroot(int node)
+    {
+        int tmp=node;
+        while(node!=parent[node])
+            node=parent[node];
+        
+        return node;
+    }
+}
