@@ -1,0 +1,26 @@
+public class Solution {
+    private int[,] opt;
+    public int LargestRectangleArea(int[] heights) {
+        Console.WriteLine(heights.Length);
+        opt=new int[heights.Length,heights.Length];
+        for(int i=0;i<heights.Length;i++)
+            opt[i,i]=heights[i];
+        for(int l=1;l<heights.Length;l++)
+        {
+            for(int i=0;i<heights.Length-l;i++)
+            {
+                opt[i,i+l]=Math.Min(opt[i,i+l-1],opt[i+1,i+l]);
+            }
+        }
+
+        int max=0;
+        for(int i=0;i<heights.Length;i++)
+        {
+            for(int j=0;j<heights.Length;j++)
+            {
+                max=Math.Max(opt[i,j]*(j-i+1),max);
+            }
+        }
+        return max;
+    }
+}
