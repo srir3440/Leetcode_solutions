@@ -1,0 +1,44 @@
+public class Solution {
+    private List<int> ans=new List<int>();
+    public IList<int> FindClosestElements(int[] arr, int k, int x) {
+        
+        int index=greatestlessthan(arr,x);
+        //Console.WriteLine(index);
+        merge(arr,index,index+1,x,k);
+        ans.Sort();
+        return ans;
+    }
+    
+    
+    private void merge(int[] arr,int ls,int rs,int target,int k)
+    {
+        Console.WriteLine(ls+" "+rs);
+        while(ans.Count<k)
+        {
+            if(rs>=arr.Length || (ls>=0 && target-arr[ls]<=arr[rs]-target))
+            {
+                ans.Add(arr[ls]);
+                ls--;
+            }
+            else
+            {
+                ans.Add(arr[rs]);
+                rs++;
+            }
+        }
+    }
+    
+    private int greatestlessthan(int[] arr,int target)
+    {
+        int left=0,right=arr.Length-1,mid;
+        while(left<=right)
+        {
+            mid=(left+right)/2;
+            if(target<arr[mid])
+                right=mid-1;
+            else
+                left=mid+1;
+        }
+        return right;
+    }
+}
