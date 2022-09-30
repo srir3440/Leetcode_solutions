@@ -1,0 +1,90 @@
+public class customComparer:Comparer<int[]>
+{
+    public override int Compare(int[] a,int[] b)
+    {
+        if(a[0].CompareTo(b[0])==0)
+        {
+            if(a[2]==0 && b[2]==0)        // both are start of a building, arrange heights in descending order
+                return -check(a[1],b[1]);
+            else if(a[2]==1 && b[2]==1)
+                return check(a[1],b[1]);   // both are ends of a building, arramge them in ascending order
+            else
+                return a[2].CompareTo(b[2]);    // one is start and other is end, sort height in descending order
+        }
+        return a[0].CompareTo(b[0]);
+    }
+    
+    private int check(int a,int b)
+    {
+        if(a>=b)
+            return 1;
+        return -1;
+    }
+}
+
+public class maxheapComparer:Comparer<int>
+{
+    public override int Compare(int a,int b)
+    {
+        if(a.CompareTo(b)!=0)
+            return -a.CompareTo(b);
+        return 0;
+    }
+}
+
+
+public class Solution {
+    
+    private PriorityQueue<int[],int[]> hs=new PriorityQueue<int[],int[]>(new customComparer());
+    private SortedDictionary<int,int> maxheap=new SortedDictionary<int,int>(new maxheapComparer());
+    private IList<IList<int>> ans=new List<IList<int>>();
+    public IList<IList<int>> GetSkyline(int[][] buildings) {
+        
+        for(int i=0;i<buildings.Length;i++)
+        {
+            hs.Enqueue(new int[]{buildings[i][0],buildings[i][2],0},new int[]{buildings[i][0],buildings[i][2],0});
+            hs.Enqueue(new int[]{buildings[i][1],buildings[i][2],1},new int[]{buildings[i][1],buildings[i][2],1});
+        }
+        
+        
+        
+        int max=0;
+        
+        maxheap.Add(0,0);
+        maxheap[0]++;
+        while(hs.Count>0)
+        {
+            int[] s=hs.Dequeue();
+            
+            //Console.WriteLine(s[0]+" "+s[1]+" "+s[2]);
+            
+            if(s[2]==0)
+            {
+                if(max<s[1])                                    // 0,3,3
+                    ans.Add(new int[]{s[0],s[1]}.ToList());
+                if(!maxheap.ContainsKey(s[1]))
+                    maxheap.Add(s[1],0);
+                maxheap[s[1]]++;
+                max=Math.Max(s[1],max);
+            }
+            else
+            {
+                maxheap[s[1]]--;
+                if(maxheap[s[1]]==0)
+                {
+                    maxheap.Remove(s[1]);
+                    max=maxheap.Keys.ToList()[0];
+                }
+                    
+                if(max<s[1])
+                    ans.Add(new int[]{s[0],max}.ToList());
+            }
+            /*foreach(var m in maxheap)
+                Console.Write(m+" ");
+            Console.WriteLine();*/
+        }
+        
+        
+        return ans;
+    }
+}
