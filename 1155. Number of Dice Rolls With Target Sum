@@ -1,34 +1,32 @@
 public class Solution {
+    
+    private Dictionary<string,int> dict=new Dictionary<string,int>();
+    private int mod=(int)Math.Pow(10,9)+7;
     public int NumRollsToTarget(int n, int k, int target) {
-        int[,] opt=new int[n+1,target+1];
-        //Console.WriteLine((Math.Pow(10,9)+7)<Int32.MaxValue);
-        opt[0,0]=1;
-        for(int i=1;i<=n;i++)
-        {
-            for(int j=1;j<=target;j++)
-            {
-                for(int m=1;m<=k;m++)
-                {
-                    if(j-m>=0)
-                    {
-                        opt[i,j]+=opt[i-1,j-m];
-                        opt[i,j]%=(int)Math.Pow(10,9)+7;
-                    }
-                }
-            }
-        }
-        print(opt,n+1,target+1);
-        return opt[n,target];
+        return dfs(n,k,target);
     }
     
-    private void print(int[,] opt,int m,int n)
+    private int dfs(int n,int k,int target)
     {
-        for(int i=0;i<m;i++)
+        string tmp=tostring(n,target);
+        if(dict.ContainsKey(tmp))
+            return dict[tmp];
+        if(n==0)
+            return target==0?1:0;
+        if(target<=0)
+            return 0;
+        int total=0;
+        for(int i=1;i<=k;i++)
         {
-            for(int j=0;j<n;j++)
-                Console.Write(opt[i,j]+" ");
-            Console.WriteLine();
-            //Console.WriteLine("____________________________________________________________");
+            total+=dfs(n-1,k,target-i);
+            total%=mod;
         }
+        dict[tmp]=total;
+        return total;
+    }
+    
+    private string tostring(int a,int b)
+    {
+        return a.ToString()+" "+b.ToString();
     }
 }
