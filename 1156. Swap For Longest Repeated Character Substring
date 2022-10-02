@@ -1,0 +1,71 @@
+public class Solution {
+    private Dictionary<char,int[]> opt;
+    public int MaxRepOpt1(string text) {
+        
+        int i;
+        opt=new Dictionary<char,int[]>();
+        for(i=0;i<text.Length;i++)
+        {
+            if(!opt.ContainsKey(text[i]))
+                opt.Add(text[i],new int[]{-1,-1});
+            if(opt[text[i]][0]==-1)
+                opt[text[i]][0]=i;
+            opt[text[i]][1]=i;
+        }
+        
+        
+        
+        int k=0,max=1,cnt;
+        while(k<text.Length)
+        {
+            char j=text[k];
+            //int ele=-1;
+            i=k;
+            cnt=0;
+            while(i<text.Length)
+            {
+                if(text[i]!=j)
+                {
+                    cnt++;
+                    if(cnt>1)
+                        break;
+                }
+                i++;
+            }
+            max=Math.Max(getmax(cnt,i,k,j),max);
+            k++; 
+        }
+        //Console.WriteLine();
+        
+        return max;
+    }
+    
+    private int getmax(int cnt,int i,int k,char j)
+    {
+        if(cnt==0)
+        {
+            if(opt[j][0]<k)
+                return i-k+1;
+            else
+                return i-k;
+        }
+            
+            
+        else if(cnt==1)
+        {
+            if(opt[j][0]<k)
+                return i-k;
+            else
+                return i-k-1;
+        }
+            
+        else
+        {
+            if(opt[j][0]<k || opt[j][1]>i)
+                return i-k;
+            else
+                return i-k-1;
+        }
+    }
+    
+}
