@@ -1,0 +1,27 @@
+public class Solution {
+    private int cnt=0;
+    public int MinCost(string colors, int[] neededTime) {
+        int i=0,j=0;
+        while(j<colors.Length)
+        {
+            j=i;
+            while(i<colors.Length && colors[j]==colors[i])
+                i++;
+            topKelements(neededTime,j,i);
+        }
+        
+        return cnt;
+    }
+    
+    private void topKelements(int[] arr,int start,int end)
+    {
+        PriorityQueue<int,int> minheap=new PriorityQueue<int,int>();
+        for(int i=start;i<end;i++)
+            minheap.Enqueue(arr[i],arr[i]);
+        while(start<end-1)
+        {
+            cnt+=minheap.Dequeue();
+            start++;
+        }
+    }
+}
