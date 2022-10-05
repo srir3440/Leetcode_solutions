@@ -1,0 +1,28 @@
+public class Solution {
+    private Stack<int> stack=new Stack<int>();
+    public string MinRemoveToMakeValid(string s) {
+        
+        int i=0;
+        while(i<s.Length)
+        {
+            if(s[i]!='(' && s[i]!=')')
+            {
+                i++;
+                continue;
+            }
+                
+            if(stack.Count!=0 && s[stack.Peek()]=='(' && s[i]==')')
+                stack.Pop();
+            else
+                stack.Push(i);
+            i++;
+        }
+        
+        
+        StringBuilder sb=new StringBuilder(s);
+        for(i=stack.Count;i>0;i--)
+            sb.Remove(stack.Pop(),1);
+        
+        return sb.ToString();
+    }
+}
