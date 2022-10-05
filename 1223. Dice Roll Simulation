@@ -1,0 +1,62 @@
+public class Solution {
+    private Dictionary<string,int> opt=new Dictionary<string,int>();
+    private int[] rollback=new int[6];
+    private int[] roll=new int[6];
+    private int N;
+    private int mod=(int)Math.Pow(10,9)+7;
+    public int DieSimulator(int n, int[] rollMax) {
+        N=n;
+        
+        for(int i=0;i<6;i++)
+        {
+            rollback[i]=rollMax[i];
+            roll[i]=rollMax[i];
+            //Console.Write(rollback[i]+" ");
+        }
+        //Console.WriteLine();
+        return dfs(n,-1);
+    }
+    
+    private int dfs(int n,int last)
+    {
+        
+        if(n==0)
+            return 1;
+        string temp=n.ToString()+" "+roll[0].ToString()+" "+roll[1].ToString()+" "+roll[2].ToString()+" "+roll[3].ToString()+" "+roll[4].ToString()+" "+roll[5].ToString()+" ";
+        if(opt.ContainsKey(temp))
+            return opt[temp];
+        int cnt=0,oldval;
+        for(int i=0;i<6;i++)
+        {
+            oldval=-1;
+            if(i+1==last)
+            {
+                if(roll[i]==0)
+                    continue;
+            }
+            else if(N!=n)
+            {
+                oldval=roll[last-1];
+                roll[last-1]=rollback[last-1];
+            }
+            roll[i]--;
+            //Console.Write(n+" "+last+" "+(i+1)+"    ");
+            //print(rollMax);
+            cnt+=dfs(n-1,i+1);
+            cnt%=mod;
+            roll[i]++;
+            if(oldval!=-1)
+                roll[last-1]=oldval;
+                
+        }
+        opt.Add(temp,cnt);
+        return cnt;
+    }
+    
+    private void print(int[] arr)
+    {
+        for(int i=0;i<6;i++)
+            Console.Write(arr[i]+" ");
+        Console.WriteLine();
+    }
+}
