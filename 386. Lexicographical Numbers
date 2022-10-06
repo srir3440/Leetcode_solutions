@@ -1,0 +1,33 @@
+public class Solution {
+    private IList<int> ans=new List<int>();
+    public IList<int> LexicalOrder(int n) {
+        int i=1;
+        while(ans.Count<n)
+        {
+            while(i<=n)
+            {
+                //Console.WriteLine(i);
+                if(ans.Count==n)
+                    return ans;
+                ans.Add(i);
+                i*=10;
+            }
+            i/=10;
+            int j=1;
+            while(i+j<=n && (i/10+1)*10>i+j)
+            {
+                //Console.WriteLine("2  "+(i+j));
+                if(ans.Count==n)
+                    return ans;
+                ans.Add(i+j);
+                j++;
+            }
+            i/=10;
+            while(i%10==9)
+                i/=10;
+            i++;
+        }
+        //Console.WriteLine(ans.Count);
+        return ans;
+    }
+}
