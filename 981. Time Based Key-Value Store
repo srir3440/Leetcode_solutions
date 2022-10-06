@@ -1,0 +1,43 @@
+public class TimeMap {
+    private Dictionary<string,List<KeyValuePair<int,string>>> map; 
+    public TimeMap() {
+        map=new Dictionary<string,List<KeyValuePair<int,string>>>();
+    }
+    
+    public void Set(string key, string value, int timestamp) {
+        if(!map.ContainsKey(key))
+            map.Add(key,new List<KeyValuePair<int,string>>());
+        map[key].Add(new KeyValuePair<int,string>(timestamp,value));
+    }
+    
+    public string Get(string key, int timestamp) {
+        if(!map.ContainsKey(key))
+            return "";
+        
+        int left=0,right=map[key].Count-1,mid;
+        while(left<=right)
+        {
+            mid=(left+right)/2;
+            if(map[key][mid].Key==timestamp)
+                return map[key][mid].Value;
+            else if(timestamp<map[key][mid].Key)
+                right=mid-1;
+            else
+                left=mid+1;
+        }
+        
+        
+        if(right==-1)
+            return "";
+        return map[key][right].Value;
+        
+        
+    }
+}
+
+/**
+ * Your TimeMap object will be instantiated and called as such:
+ * TimeMap obj = new TimeMap();
+ * obj.Set(key,value,timestamp);
+ * string param_2 = obj.Get(key,timestamp);
+ */
