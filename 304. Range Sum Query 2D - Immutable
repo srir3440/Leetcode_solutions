@@ -1,47 +1,60 @@
-public class NumMatrix {
-    private int[,,] opt;
-    public NumMatrix(int[][] matrix) {
-        //Console.WriteLine(matrix.Length+" "+matrix[0].Length);
-        opt=new int[matrix.Length,matrix[0].Length+1,matrix[0].Length+1];
-        for(int i=0;i<matrix.Length;i++)
-        {
-            for(int j=1;j<=matrix[0].Length;j++)
-                opt[i,j,j]=matrix[i][j-1];
-        }
-        //print(matrix.Length,matrix[0].Length+1);
-        for(int j=0;j<matrix.Length;j++)
-        {
-            for(int l=2;l<=matrix[0].Length;l++)
-            {
-                for(int i=1;i<matrix[0].Length-l+2;i++)
-                    opt[j,i,i+l-1]=opt[j,i,i+l-2]+opt[j,i+l-1,i+l-1];
-            }
-        }
-        //Console.WriteLine();
-        //print(matrix[0].Length+1,matrix.Length+1);
-    }
-    
-    public int SumRegion(int row1, int col1, int row2, int col2) {
-        int sum=0;
-        for(int i=row1;i<=row2;i++)
-            sum+=opt[i,col1+1,col2+1];
-        return sum;
-    }
-    
-    
-    private void print(int m,int n)
+public class SegmentTree
+{
+    public int[] tree;
+    public int len;
+    public SegmentTree(int[] arr)
     {
-        for(int i=0;i<m;i++)
+        int l=0;
+        while(arr.Length>(int)Math.Pow(2,l))
+            l++;
+        tree=new int[(int)Math.Pow(2,l+1)-1];
+        //Console.WriteLine(tree.Length);
+        buildTree(arr,0,arr.Length-1,0);
+        //for(int i=0;i<tree.Length;i++)
+            //Console.Write(tree[i]+" ");
+        this.len=arr.Length-1;
+    }
+    
+    private int buildTree(int[] arr,int start,int end,int index)
+    {
+        if(start==end)
         {
-            for(int j=0;j<n;j++)
-                Console.Write(opt[0,i,j]);
-            Console.WriteLine();
+            tree[index]=arr[start];
+            return arr[start];
         }
+        
+        int mid=(start+end)/2;
+        tree[index]=buildTree(arr,start,mid,2*index+1)+buildTree(arr,mid+1,end,2*index+2);
+        return tree[index];
+    }
+    
+    public int getSumQuery(int s1,int e1,int s2,int e2,int index)
+    {
+        //Console.WriteLine(s1+" "+e1+" "+s2+" "+e2);
+        if(Math.Max(s1,s2)>Math.Min(e1,e2))
+            return 0;
+        if(s1<=s2 && e2<=e1)
+            return tree[index];
+        
+        int mid=(s2+e2)/2;
+        return getSumQuery(s1,e1,s2,mid,2*index+1) + getSumQuery(s1,e1,mid+1,e2,2*index+2);
+    }
+}
+
+
+public class NumArray {
+    private SegmentTree st;
+    public NumArray(int[] nums) {
+        st=new SegmentTree(nums);
+    }
+    
+    public int SumRange(int left, int right) {
+        return st.getSumQuery(left,right,0,st.len,0);
     }
 }
 
 /**
- * Your NumMatrix object will be instantiated and called as such:
- * NumMatrix obj = new NumMatrix(matrix);
- * int param_1 = obj.SumRegion(row1,col1,row2,col2);
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray obj = new NumArray(nums);
+ * int param_1 = obj.SumRange(left,right);
  */
