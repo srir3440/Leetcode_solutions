@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    private Dictionary<int,int> hs=new Dictionary<int,int>();
+    private bool ans=false;
+    public bool FindTarget(TreeNode root, int k) {
+        traverse(root,k);
+        //Console.WriteLine(hs.Count);
+        traverseFind(root,k);
+        return ans;
+    }
+    
+    private void traverse(TreeNode node,int target)
+    {
+        if(node==null || ans)
+            return;
+        
+        if(!hs.ContainsKey(node.val))
+            hs.Add(node.val,0);
+        hs[node.val]++;
+        
+        traverse(node.left,target);
+        traverse(node.right,target);
+    }
+    
+    private void traverseFind(TreeNode node,int target)
+    {
+        if(node==null || ans)
+            return;
+        
+        hs[node.val]--;
+        //Console.WriteLine(node.val+" "+hs[node.val]);
+        if(hs.ContainsKey(target-node.val) && hs[target-node.val]>0)
+        {
+            
+            ans=true;
+            hs[node.val]++;
+            return;
+        }
+        hs[node.val]++;
+        traverseFind(node.left,target);
+        traverseFind(node.right,target);
+    }
+}
