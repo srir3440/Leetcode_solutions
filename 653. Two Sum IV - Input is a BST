@@ -11,45 +11,57 @@
  *     }
  * }
  */
-public class Solution {
-    private Dictionary<int,int> hs=new Dictionary<int,int>();
-    private bool ans=false;
-    public bool FindTarget(TreeNode root, int k) {
-        traverse(root,k);
-        //Console.WriteLine(hs.Count);
-        traverseFind(root,k);
-        return ans;
-    }
-    
-    private void traverse(TreeNode node,int target)
+public class iter
+{
+    public Stack<TreeNode> stack;
+    private bool isleft;
+    public iter(TreeNode root,bool isleft)
     {
-        if(node==null || ans)
-            return;
-        
-        if(!hs.ContainsKey(node.val))
-            hs.Add(node.val,0);
-        hs[node.val]++;
-        
-        traverse(node.left,target);
-        traverse(node.right,target);
-    }
-    
-    private void traverseFind(TreeNode node,int target)
-    {
-        if(node==null || ans)
-            return;
-        
-        hs[node.val]--;
-        //Console.WriteLine(node.val+" "+hs[node.val]);
-        if(hs.ContainsKey(target-node.val) && hs[target-node.val]>0)
+        stack=new Stack<TreeNode>();
+        this.isleft=isleft;
+        TreeNode node=root;
+        while(node!=null)
         {
-            
-            ans=true;
-            hs[node.val]++;
-            return;
+            stack.Push(node);
+            node = isleft ? node.left : node.right;
         }
-        hs[node.val]++;
-        traverseFind(node.left,target);
-        traverseFind(node.right,target);
+    }
+    
+    public void next()
+    {
+        
+        TreeNode node= isleft ? this.stack.Pop().right : this.stack.Pop().left;
+        
+        while(node!=null)
+        {
+            stack.Push(node);
+            node = isleft ? node.left : node.right;
+        }
+        
+    }
+}
+
+
+
+
+public class Solution {
+    public bool FindTarget(TreeNode root, int k) {
+        iter i1=new iter(root,true);
+        iter i2=new iter(root,false);
+        
+        while(i1.stack.Count!=0 && i2.stack.Count!=0)
+        {
+            int left=i1.stack.Peek().val,right=i2.stack.Peek().val;
+            if(left>=right)
+                return false;
+            if(left+right==k)
+                return true;
+            if(left+right<k)
+                i1.next();
+            else if(left+right>k)
+                i2.next();
+        }
+        
+        return false;
     }
 }
