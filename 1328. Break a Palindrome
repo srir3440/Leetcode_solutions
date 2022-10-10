@@ -1,0 +1,28 @@
+public class Solution {
+    public string BreakPalindrome(string palindrome) {
+        
+        
+        if(palindrome.Length==1)
+            return "";
+        StringBuilder sb=new StringBuilder(palindrome);
+        
+        int i=0;
+        while(i<palindrome.Length/2 && palindrome[i]=='a')
+            i++;
+        //Console.WriteLine(i);
+        
+        if(i==palindrome.Length/2)
+        {
+            sb[sb.Length-1]=(char)(palindrome[palindrome.Length-1]+1);
+            return sb.ToString();
+        }
+            //return "";
+        while(i<palindrome.Length/2 && palindrome[palindrome.Length-1-i]=='a')
+            i++;
+        //Console.WriteLine(i);
+        if(i==palindrome.Length/2)
+            return "";
+        sb[i]='a';
+        return sb.ToString();
+    }
+}
