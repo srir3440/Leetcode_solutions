@@ -1,22 +1,91 @@
-public class NumMatrix {
-    private int[,] opt;
-    public NumMatrix(int[][] matrix) {
-        opt=new int[matrix.Length+1,matrix[0].Length+1];
+public class SegmentTree
+{
+    private int[,] tree;
+    private int len1;
+    private int len2;
+    public int arrlen1;
+    private int arrlen2;
+    
+    public SegmentTree(int[][] arr)
+    {
+        arrlen1=arr.Length-1;
+        arrlen2=arr[0].Length-1;
+        len1=0;
+        len2=0;
+        while(arr.Length>(int)Math.Pow(2,len1))
+            len1++;
+        while(arr[0].Length>(int)Math.Pow(2,len2))
+            len2++;
+        len1=(int)Math.Pow(2,len1+1)-1;
+        len2=(int)Math.Pow(2,len2+1)-1;
+        tree=new int[len1,len2];
+        buildTree(arr,0,arr.Length-1,0);
+    }
+    
+    private void buildTree(int[][] arr,int start,int end,int index)
+    {
         
-        
-        for(int i=1;i<=matrix.Length;i++)
+        if(start==end)
         {
-            for(int j=1;j<=matrix[i-1].Length;j++)
-            {
-                opt[i,j]=opt[i-1,j]+opt[i,j-1]+matrix[i-1][j-1]-opt[i-1,j-1];
-                //Console.Write(opt[i,j]+" ");
-            }
-            //Console.WriteLine();
+            buildTree(arr[start],0,arr[start].Length-1,0,index);
+            return;
         }
+        int mid=(start+end)/2;
+        buildTree(arr,start,mid,2*index+1);
+        buildTree(arr,mid+1,end,2*index+2);
+        
+        for(int i=0;i<len2;i++)
+            tree[index,i]=tree[2*index+1,i]+tree[2*index+2,i];
+            
+    }
+    
+    private int buildTree(int[] arr,int start,int end,int index,int row)
+    {
+        if(start==end)
+        {
+            tree[row,index]=arr[start];
+            return arr[start];
+        }
+        int mid=(start+end)/2;
+        tree[row,index]= buildTree(arr,start,mid,2*index+1,row) + buildTree(arr,mid+1,end,2*index+2,row);
+        return tree[row,index];
+    }
+    
+    public int sumQuery(int start,int end,int r1,int c1,int r2,int c2,int index)
+    {
+        //Console.WriteLine(start+" "+end+" "+r1+" "+r2);
+        if(Math.Max(start,r1)>Math.Min(end,r2))
+            return 0;
+        
+        if(r1<=start && end<=r2)
+            return sumQuery(0,this.arrlen2,c1,c2,index,0);
+        
+        int mid=(start+end)/2;
+        
+        return sumQuery(start,mid,r1,c1,r2,c2,2*index+1) + sumQuery(mid+1,end,r1,c1,r2,c2,2*index+2);
+    }
+    
+    public int sumQuery(int start,int end,int c1,int c2,int treeIndex,int index)
+    {
+        if(Math.Max(start,c1)>Math.Min(end,c2))
+            return 0;
+        if(c1<=start && end<=c2)
+            return tree[treeIndex,index];
+        
+        int mid=(start+end)/2;
+        return sumQuery(start,mid,c1,c2,treeIndex,2*index+1) + sumQuery(mid+1,end,c1,c2,treeIndex,2*index+2);
+    }
+}
+
+
+public class NumMatrix {
+    private SegmentTree st;
+    public NumMatrix(int[][] matrix) {
+        st=new SegmentTree(matrix);
     }
     
     public int SumRegion(int row1, int col1, int row2, int col2) {
-        return opt[row2 + 1,col2 + 1] - opt[row1,col2 + 1] - opt[row2 + 1,col1] + opt[row1,col1];
+        return st.sumQuery(0,st.arrlen1,row1,col1,row2,col2,0);
     }
 }
 
