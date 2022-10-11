@@ -1,0 +1,23 @@
+public class Solution {
+    private int[] opt;
+    public int LengthOfLIS(int[] nums) {
+        
+        opt=new int[nums.Length];
+        for(int i=0;i<nums.Length;i++)
+            opt[i]=1;
+        
+        int max=1;
+        for(int i=1;i<nums.Length;i++)
+        {
+            for(int j=0;j<i;j++)
+            {
+                if(nums[j]<nums[i])
+                    opt[i]=Math.Max(opt[j]+1,opt[i]);
+            }
+            max=Math.Max(opt[i],max);
+        }
+        
+        
+        return max;
+    }
+}
