@@ -1,0 +1,10 @@
+public class Solution {
+    public int MinCostClimbingStairs(int[] cost) {
+        int[] opt=new int[cost.Length+1];
+        
+        for(int i=2;i<=cost.Length;i++)
+            opt[i]=Math.Min(opt[i-1]+cost[i-1],opt[i-2]+cost[i-2]);
+        
+        return opt[cost.Length];
+    }
+}
