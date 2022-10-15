@@ -1,0 +1,78 @@
+public class Solution {
+    private Dictionary<int,int> counts=new Dictionary<int,int>();
+    private Dictionary<string,int> opt=new Dictionary<string,int>();
+    public int DeleteAndEarn(int[] nums) {
+        for(int i=0;i<nums.Length;i++)
+        {
+            if(!counts.ContainsKey(nums[i]))
+                counts.Add(nums[i],0);
+            counts[nums[i]]++;
+        }
+        
+        return dfs(0);
+    }
+    
+    private int dfs(int k)
+    {
+        
+        
+        int max=0,tmp1,tmp2,tmp3=0;
+        StringBuilder sb=new StringBuilder();
+        
+            
+        foreach(var key in counts.Keys)
+            sb.Append(key.ToString()+" : "+counts[key].ToString()+" ");
+        
+        string temp=sb.ToString();
+        
+        if(opt.ContainsKey(temp))
+        {
+            //Console.WriteLine(k+" "+sb.ToString()+" "+opt[sb.ToString()]);
+            return opt[temp];
+        }
+            
+        
+        //Console.WriteLine(k+"   "+sb.ToString());
+        
+        foreach(var key in counts.Keys)
+        {
+            
+            tmp1=-1;tmp2=-1;
+            if(counts[key]<=0)
+                continue;
+            if(counts.ContainsKey(key-1))
+            {
+                tmp1=counts[key-1];
+                counts[key-1]=0;
+            }
+                
+            if(counts.ContainsKey(key+1))
+            {
+                tmp2=counts[key+1];
+                counts[key+1]=0;
+            }
+            tmp3=counts[key];
+            counts[key]=0;
+            max=Math.Max(max,dfs(key)+tmp3*key);
+            counts[key]=tmp3;
+            if(counts.ContainsKey(key-1))
+                counts[key-1]=tmp1;
+            if(counts.ContainsKey(key+1))
+                counts[key+1]=tmp2;
+        }
+        
+        
+        
+        opt.Add(temp,max);
+        //Console.WriteLine(sb.ToString()+"  "+opt[sb.ToString()]);
+        return max;
+    }
+    
+    private void print()
+    {
+        //Console.WriteLine();
+        foreach(var key in counts.Keys)
+            Console.Write(key+" : "+counts[key]+" ");
+        Console.WriteLine();
+    }
+}
