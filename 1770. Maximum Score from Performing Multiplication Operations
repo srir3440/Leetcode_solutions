@@ -1,0 +1,29 @@
+public class Solution {
+    private Dictionary<string,int> opt=new Dictionary<string,int>();
+    
+    public int MaximumScore(int[] nums, int[] multipliers) {
+        return dfs(nums,0,nums.Length-1,multipliers,0);
+        
+    }
+    
+    
+    private int dfs(int[] nums,int start,int end,int[] multipliers,int op)
+    {
+        //Console.WriteLine(start+" "+end+" "+op);
+        if(op>=multipliers.Length)
+            return 0;
+        
+        string temp=start.ToString()+" "+end.ToString();
+        if(opt.ContainsKey(temp))
+            return opt[temp];
+        
+        if(start==end)
+            return nums[start]*multipliers[op];
+        
+        int max=Math.Max(dfs(nums,start+1,end,multipliers,op+1)+nums[start]*multipliers[op],dfs(nums,start,end-1,multipliers,op+1)+nums[end]*multipliers[op]);
+        
+        opt[temp]=max;
+        //Console.WriteLine(max);
+        return max;
+    }
+}
