@@ -1,0 +1,20 @@
+public class Solution {
+    private HashSet<int> nos=new HashSet<int>();
+    public bool ContainsNearbyDuplicate(int[] nums, int k) {
+        
+        //Console.WriteLine(nos.Count);
+        for(int i=0;i<nums.Length;i++)
+        {
+            //Console.WriteLine(nos.Count+" "+k+" "+(i-k-1));
+            if(i>k)
+                nos.Remove(nums[Math.Max(0,i-k-1)]);
+            if(nos.Contains(nums[i]))
+                return true;
+            nos.Add(nums[i]);
+            
+            
+        }
+        
+        return false;
+    }
+}
