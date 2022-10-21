@@ -1,0 +1,36 @@
+public class customComparer:Comparer<int>
+{
+    public override int Compare(int a,int b)
+    {
+        if(a.CompareTo(b)!=0)
+            return -a.CompareTo(b);
+        return 0;
+    }
+}
+
+
+public class Solution {
+    public int[] MaxSlidingWindow(int[] nums, int k) {
+        PriorityQueue<int,int> maxheap=new PriorityQueue<int,int>(new customComparer());
+        int[] ans=new int[nums.Length-k+1];
+        
+        for(int i=0;i<k;i++)
+        {
+            maxheap.Enqueue(i,nums[i]);
+            //Console.WriteLine(maxheap.Peek());
+        }
+        
+        ans[0]=nums[maxheap.Peek()];
+        //Console.WriteLine(ans[0]);
+        int j=1;
+        for(int i=k;i<nums.Length;i++)
+        {
+            maxheap.Enqueue(i,nums[i]);
+            while(i-k>=maxheap.Peek())
+                maxheap.Dequeue();
+            ans[j++]=nums[maxheap.Peek()];
+        }
+        
+        return ans;
+    }
+}
