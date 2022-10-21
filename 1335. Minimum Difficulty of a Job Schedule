@@ -1,0 +1,77 @@
+public class Solution {
+    private int[] sumarr;
+    private int[,] maxarr;
+    private Dictionary<string,int> opt=new Dictionary<string,int>();
+    private int retmax=10000001;
+    public int MinDifficulty(int[] jobDifficulty, int d) {
+        sumarr=new int[jobDifficulty.Length+1];
+        maxarr=new int[jobDifficulty.Length,jobDifficulty.Length];
+        prefixsum(jobDifficulty);
+        maxinterval(jobDifficulty);
+        
+        //return 0;
+        int temp=dfs(jobDifficulty,0,jobDifficulty.Length-1,d);
+        return temp==retmax?-1:temp;
+    }
+    
+    private int dfs(int[] jobDifficulty,int start,int end,int d)
+    {
+        //Console.WriteLine(start+" "+end+" "+d);
+        string s=start+" "+end+" "+d;
+        if((end-start+1)<d)
+            return retmax;
+        
+        if(d==1)
+            return maxarr[start,end];
+        
+        if(opt.ContainsKey(s))
+            return opt[s];
+        
+        if((end-start+1)==d)
+            return sumarr[end+1]-sumarr[start];
+        
+        
+        
+        int min=Int32.MaxValue;
+        for(int i=0;i<end-start;i++)
+        {
+            int temp=dfs(jobDifficulty,start,start+i,d-1);
+            //Console.WriteLine(temp+" "+maxarr[start+i+1,end]+" ");
+            min=Math.Min(temp+maxarr[start+i+1,end],min);
+        }
+        //Console.WriteLine(min);
+        opt[s]=min;
+        return min;
+    }
+    
+    private void prefixsum(int[] jd)
+    {
+        
+        for(int i=1;i<=jd.Length;i++)
+            sumarr[i]=sumarr[i-1]+jd[i-1];
+            
+        /*for(int i=0;i<=jd.Length;i++)
+            Console.Write(sumarr[i]+" ");
+        Console.WriteLine();*/
+    }
+    
+    private void maxinterval(int[] arr)
+    {
+        
+        for(int i=0;i<arr.Length;i++)
+            maxarr[i,i]=arr[i];
+        
+        for(int l=1;l<arr.Length;l++)
+        {
+            for(int i=0;i<arr.Length-l;i++)
+                maxarr[i,i+l]=Math.Max(maxarr[i,i+l-1],arr[i+l]);
+        }
+        
+        /*for(int i=0;i<arr.Length;i++)
+        {
+            for(int j=0;j<arr.Length;j++)
+                Console.Write(maxarr[i,j]+" ");
+            Console.WriteLine();
+        }*/
+    }
+}
