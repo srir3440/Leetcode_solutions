@@ -1,0 +1,40 @@
+public class Solution {
+    
+    private List<string> words;
+    private Dictionary<string,bool> opt=new Dictionary<string,bool>(); 
+    public bool WordBreak(string s, IList<string> wordDict) {
+        
+        words=wordDict.ToList();
+        
+        
+        
+        return dfs(s,"");
+    }
+    
+    
+    private bool dfs(string s,string w)
+    {
+        //Console.WriteLine(s+" "+w);
+        
+        
+        if(s.Length==0)
+            return true;
+        
+        if(opt.ContainsKey(s))
+            return opt[s];
+        
+        bool ret=false;
+        int index;
+        foreach(var word in words)
+        {
+            index=s.IndexOf(word);
+            if(index==-1)
+                continue;
+            ret = ret || (dfs(s.Substring(0,index),word) && dfs(s.Substring(index+word.Length),word));
+        }
+        
+        opt[s]=ret;
+        
+        return ret;
+    }
+}
