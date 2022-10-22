@@ -1,0 +1,37 @@
+public class Solution {
+    public string MinWindow(string s, string t) {
+        
+        //Console.WriteLine(((int)'z')+" "+((int)'A'));
+        int[] chars=new int[58];
+        for(int i=0;i<t.Length;i++)
+            chars['z'-t[i]]++;
+        
+        
+        for(int i=1;i<=s.Length;i++)
+        {
+            for(int j=0;j<s.Length-i+1;j++)
+            {
+                string temp=s.Substring(j,i);
+                //Console.WriteLine(j+" "+(j+i));
+                int[] chars1=new int[58];
+                bool flag=true;
+                for(int k=0;k<temp.Length;k++)
+                    chars1['z'-temp[k]]++;
+                for(int k=0;k<58;k++)
+                {
+                    if(chars1[k]<chars[k])
+                    {
+                        flag=false;
+                        break;
+                    }
+                        
+                }
+                if(!flag)
+                    continue;
+                return temp;
+            }
+        }
+        
+        return "";
+    }
+}
