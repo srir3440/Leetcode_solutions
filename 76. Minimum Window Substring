@@ -1,37 +1,78 @@
 public class Solution {
+    private Dictionary<char,int> dict=new Dictionary<char,int>();
     public string MinWindow(string s, string t) {
         
-        //Console.WriteLine(((int)'z')+" "+((int)'A'));
-        int[] chars=new int[58];
+        
+        // follow hints
+        
+        
         for(int i=0;i<t.Length;i++)
-            chars['z'-t[i]]++;
-        
-        
-        for(int i=1;i<=s.Length;i++)
         {
-            for(int j=0;j<s.Length-i+1;j++)
-            {
-                string temp=s.Substring(j,i);
-                //Console.WriteLine(j+" "+(j+i));
-                int[] chars1=new int[58];
-                bool flag=true;
-                for(int k=0;k<temp.Length;k++)
-                    chars1['z'-temp[k]]++;
-                for(int k=0;k<58;k++)
-                {
-                    if(chars1[k]<chars[k])
-                    {
-                        flag=false;
-                        break;
-                    }
-                        
-                }
-                if(!flag)
-                    continue;
-                return temp;
-            }
+            if(!dict.ContainsKey(t[i]))
+                dict.Add(t[i],0);
+            dict[t[i]]++;
         }
         
-        return "";
+        int left=0,right=0,cnt=0,min=s.Length+1;
+        string ans="";
+        
+        while(right<s.Length)
+        {
+            
+            while(right<s.Length && !dict.ContainsKey(s[right]))
+                right++;
+            
+            
+            while(right<s.Length)
+            {
+                if(dict.ContainsKey(s[right]))
+                {
+                    dict[s[right]]--;
+                    if(dict[s[right]]==0)
+                        cnt++;
+                }
+                    
+                right++;
+                if(cnt==dict.Count)
+                    break;
+                
+            }
+            //Console.WriteLine("right: "+right);
+            //print();
+            
+            while(left<right-1)
+            {
+                if(dict.ContainsKey(s[left]))
+                {
+                    if(dict[s[left]]+1>0)
+                        break;
+                    else
+                        dict[s[left]]++;   
+                }
+                
+                left++;
+            }
+            
+            //Console.WriteLine("left: "+left);
+            //print();
+            
+            if(cnt==dict.Count && (right-left)<min)
+            {
+                min=right-left;
+                ans=s.Substring(left,right-left);
+                //Console.WriteLine(ans);
+            }
+                
+        }
+        
+        
+        return ans;
+    }
+    
+    private void print()
+    {
+        foreach(var key in dict.Keys)
+            Console.Write(key+": "+dict[key]+"   ");
+        Console.WriteLine();
     }
 }
