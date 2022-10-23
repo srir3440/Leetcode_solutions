@@ -1,0 +1,29 @@
+public class Solution {
+    private Dictionary<int,int> opt=new Dictionary<int,int>();
+    public int MaxProfit(int[] prices) {
+        int max=0;
+        return dfs(prices,0);
+    }
+    
+    private int dfs(int[] prices,int start)
+    {
+        
+        if(start>=prices.Length)
+            return 0;
+        
+        if(opt.ContainsKey(start))
+            return opt[start];
+        //Console.WriteLine("price: "+prices[start]);
+        int max=0;
+        for(int i=start+1;i<prices.Length;i++)
+        {
+            int temp=dfs(prices,i);
+            // I can either buy "start", or don't buy it(take the optimum value from subtrees ), "i" represents index where i sell start
+            max=Math.Max(max,Math.Max(temp,temp+prices[i]-prices[start]));
+        }
+            
+        //Console.WriteLine(max);
+        opt[start]=max;
+        return max;
+    }
+}
