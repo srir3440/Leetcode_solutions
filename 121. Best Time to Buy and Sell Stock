@@ -1,13 +1,19 @@
 public class Solution {
     
     public int MaxProfit(int[] prices) {
+        int[] opt=new int[prices.Length];
+        for(int i=prices.Length-2;i>=0;i--)
+            opt[i]=Math.Max(opt[i+1],prices[i+1]);
+        
+        
         
         int max=0;
         for(int i=0;i<prices.Length;i++)
         {
-            for(int j=i+1;j<prices.Length;j++)
-                max=Math.Max(max,prices[j]-prices[i]);
+            //Console.Write(opt[i]+" ");
+            max=Math.Max(opt[i]-prices[i],max);
         }
+        //Console.WriteLine();
         return max;
     }
 }
