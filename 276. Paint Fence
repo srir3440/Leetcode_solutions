@@ -1,0 +1,16 @@
+public class Solution {
+    public int NumWays(int n, int k) {
+        int[] opt=new int[n+1];
+        if(n==1)
+            return k;
+        opt[1]=k;opt[2]=k*k;
+        for(int i=3;i<=n;i++)
+        {
+            //diff color + same color
+            opt[i]=(k-1)*opt[i-1]+(k-1)*opt[i-2];
+        }
+            
+        
+        return opt[n];
+    }
+}
