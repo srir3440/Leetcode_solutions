@@ -1,0 +1,37 @@
+public class Solution {
+    private int[] p;
+    private Dictionary<string,int> opt=new Dictionary<string,int>();
+    public int MaxProfit(int k,int[] prices) {
+        p=prices;
+        int max=0;
+        for(int i=0;i<prices.Length;i++)
+        {
+            max=Math.Max(dfs(i,k),max);
+        }
+        
+        return max;
+    }
+    
+    private int dfs(int start,int transRem)
+    {
+        if(start>=p.Length)
+            return 0;
+        
+        if(transRem<=0)
+            return 0;
+        
+        string temp=start.ToString()+" "+transRem.ToString();
+        if(opt.ContainsKey(temp))
+            return opt[temp];
+        
+        int max=0;
+        for(int i=start+1;i<p.Length;i++)
+        {
+            max=Math.Max(max,Math.Max(dfs(i,transRem),dfs(i,transRem-1)+p[i]-p[start]));
+        }
+        
+        opt[temp]=max;
+        
+        return max;
+    }
+}
