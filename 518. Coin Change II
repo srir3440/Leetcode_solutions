@@ -1,0 +1,35 @@
+public class Solution {
+    private Dictionary<string,int> opt=new Dictionary<string,int>();
+    private int[] c;
+    public int Change(int amount, int[] coins) {
+        
+        Array.Sort(coins);
+        c=coins;
+        
+        return dfs(amount,0);
+    }
+    
+    
+    private int dfs(int amount,int start)
+    {
+        //Console.WriteLine(amount);
+        if(amount<0)
+            return 0;
+        
+        if(amount==0)
+            return 1;
+        
+        string tmp=amount.ToString()+" "+start.ToString();
+        if(opt.ContainsKey(tmp))
+            return opt[tmp];
+        
+        
+        int sum=0;
+        for(int i=start;i<c.Length;i++)
+            sum+=dfs(amount-c[i],i);
+        
+        opt[tmp]=sum;
+        
+        return sum;
+    }
+}
