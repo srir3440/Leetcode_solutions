@@ -1,39 +1,41 @@
 public class Solution {
-    public Dictionary<string,int> dict=new Dictionary<string,int>();
+    
+    private Dictionary<string,int> opt=new Dictionary<string,int>();
     public int NumDecodings(string s) {
         return dfs(s);
     }
     
-    public int dfs(string s)
+    private int dfs(string s)
     {
-        //Console.WriteLine(s+" "+s.Length);
-        if(dict.ContainsKey(s))
-            return dict[s];
-        if(s.Length<=1)
-            return isvalid(s);
-        if(s.Length==2)
-        {
-            int cnt=0;
-            cnt+=Math.Min(isvalid(s[0].ToString()),isvalid(s[1].ToString()));
-            cnt+=isvalid(s);
-            return cnt;
-        }
-        int one=0,two=0;
-        if(isvalid(s[0].ToString())==1)
-            one=dfs(s.Substring(1));
-        if(isvalid(s.Substring(0,2))==1)
-            two=dfs(s.Substring(2));
-        dict[s]=one+two;
-        return dict[s];
+        if(s=="")
+            return 1;
+        
+        if(s.Length==1)
+            return s=="0"?0:1;
+        
+        if(opt.ContainsKey(s))
+            return opt[s];
+        
+        //Console.WriteLine(s);
+        int sum=0;
+        
+        if(isvalid(s.Substring(0,1)))
+            sum+=dfs(s.Substring(1));
+        
+        if(isvalid(s.Substring(0,2)))
+            sum+=dfs(s.Substring(2));
+        
+        opt[s]=sum;
+        
+        return sum;
     }
     
-    private int isvalid(string s)
+    
+    private bool isvalid(string s)
     {
-        //Console.WriteLine(s);
-        if(s.Length==0)
-            return 1;
+        
         if(s[0]=='0' || (s.Length==2 && s[0]>'2') || (s.Length==2 && s[0]=='2' && s[1]>'6'))
-            return 0;
-        return 1;
+            return false;
+        return true;
     }
 }
