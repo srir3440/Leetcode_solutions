@@ -1,0 +1,33 @@
+public class Solution {
+    private int[,] opt;
+    private int a,b;
+    public int UniquePaths(int m, int n) {
+        opt=new int[m,n];
+        a=m;b=n;
+        return dfs(0,0);
+    }
+    
+    private int dfs(int i,int j)
+    {
+        if(!isvalid(i,j))
+            return 0;
+        
+        if(i==a-1 && j==b-1)
+            return 1;
+        
+        if(opt[i,j]!=0)
+            return opt[i,j];
+        
+        opt[i,j]= dfs(i+1,j) + dfs(i,j+1);
+        
+        return opt[i,j];
+        
+    }
+    
+    private bool isvalid(int i,int j)
+    {
+        if(i<0 || i>=a || j<0 || j>=b)
+            return false;
+        return true;
+    }
+}
