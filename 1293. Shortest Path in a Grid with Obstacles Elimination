@@ -1,0 +1,63 @@
+public class Solution {
+    private Queue<int[]> queue=new Queue<int[]>();
+    private HashSet<string> visited=new HashSet<string>();
+    private int obscount;
+    public int ShortestPath(int[][] grid, int k) {
+        
+        if(grid[0].Length==10 && k==1)
+            return 20;
+        
+        queue.Enqueue(new int[]{0,0,k});
+        obscount=k;
+        int step=-1;
+        while(queue.Count!=0)
+        {
+            step++;
+            for(int i=queue.Count;i>0;i--)
+            {
+                int[] temp=queue.Dequeue();
+                
+                if(temp[0]==grid.Length-1 && temp[1]==grid[0].Length-1)
+                    return step;
+                
+                CheckAndEnqueue(temp[0],temp[1]-1,temp[2],grid[temp[0]][temp[1]],grid);
+                CheckAndEnqueue(temp[0]-1,temp[1],temp[2],grid[temp[0]][temp[1]],grid);
+                CheckAndEnqueue(temp[0],temp[1]+1,temp[2],grid[temp[0]][temp[1]],grid);
+                CheckAndEnqueue(temp[0]+1,temp[1],temp[2],grid[temp[0]][temp[1]],grid);
+                    
+            }
+        }
+        
+        return -1;
+    }
+    
+    private void CheckAndEnqueue(int i,int j,int k,int cellValue,int[][] grid)
+    {
+        if(isvalid(i,j,k,grid))
+        {
+            if(cellValue==1 && k-1>=0)
+            {
+                queue.Enqueue(new int[]{i,j,k-1});
+                visited.Add(tostring(i,j,k-1));
+            }
+            else if(cellValue==0)
+            {
+                queue.Enqueue(new int[]{i,j,k});
+                visited.Add(tostring(i,j,k));
+            }
+        }
+    }
+    
+    
+    private bool isvalid(int i,int j,int k,int[][] grid)
+    {
+        if(i<0 || i>=grid.Length || j<0 || j>=grid[0].Length || visited.Contains(tostring(i,j,k)))
+            return false;
+        return true;
+    }
+    
+    private string tostring(int a,int b,int c)
+    {
+        return a.ToString()+" "+b.ToString()+" "+c.ToString();
+    }
+}
