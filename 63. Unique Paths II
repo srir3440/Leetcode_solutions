@@ -1,0 +1,32 @@
+public class Solution {
+    private int[,] opt;
+    private int[][] og;
+    public int UniquePathsWithObstacles(int[][] obstacleGrid) {
+        opt=new int[obstacleGrid.Length,obstacleGrid[0].Length];
+        og=obstacleGrid;
+        return dfs(0,0);
+    }
+    
+    private int dfs(int i,int j)
+    {
+        if(!isvalid(i,j))
+            return 0;
+        
+        if(i==og.Length-1 && j==og[0].Length-1)
+            return 1;
+        
+        if(opt[i,j]!=0)
+            return opt[i,j];
+        
+        opt[i,j]= dfs(i+1,j) + dfs(i,j+1);
+        
+        return opt[i,j];
+    }
+    
+    private bool isvalid(int i,int j)
+    {
+        if(i<0 || i>=og.Length || j<0 || j>=og[i].Length || og[i][j]==1)
+            return false;
+        return true;
+    }
+}
