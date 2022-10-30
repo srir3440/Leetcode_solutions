@@ -1,14 +1,11 @@
 public class Solution {
     private Queue<int[]> queue=new Queue<int[]>();
     private HashSet<string> visited=new HashSet<string>();
-    private int obscount;
     public int ShortestPath(int[][] grid, int k) {
         
-        if(grid[0].Length==10 && k==1)
-            return 20;
+        
         
         queue.Enqueue(new int[]{0,0,k});
-        obscount=k;
         int step=-1;
         while(queue.Count!=0)
         {
@@ -35,12 +32,12 @@ public class Solution {
     {
         if(isvalid(i,j,k,grid))
         {
-            if(cellValue==1 && k-1>=0)
+            if(cellValue==1 && k>0 && !visited.Contains(tostring(i,j,k-1)))
             {
                 queue.Enqueue(new int[]{i,j,k-1});
                 visited.Add(tostring(i,j,k-1));
             }
-            else if(cellValue==0)
+            else if(cellValue==0 && !visited.Contains(tostring(i,j,k)))
             {
                 queue.Enqueue(new int[]{i,j,k});
                 visited.Add(tostring(i,j,k));
@@ -51,7 +48,7 @@ public class Solution {
     
     private bool isvalid(int i,int j,int k,int[][] grid)
     {
-        if(i<0 || i>=grid.Length || j<0 || j>=grid[0].Length || visited.Contains(tostring(i,j,k)))
+        if(i<0 || i>=grid.Length || j<0 || j>=grid[0].Length)
             return false;
         return true;
     }
