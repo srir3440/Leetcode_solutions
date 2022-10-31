@@ -1,0 +1,36 @@
+public class Solution {
+    private int[][] mat;
+    private int[,] opt;
+    public int MinFallingPathSum(int[][] matrix) {
+        mat=matrix;
+        opt=new int[matrix.Length,matrix[0].Length];
+        int min=Int32.MaxValue;
+        for(int i=0;i<matrix[0].Length;i++)
+            min=Math.Min(dfs(0,i),min);
+        
+        return min;
+    }
+    
+    private int dfs(int i,int j)
+    {
+        if(!isvalid(i,j))
+            return Int32.MaxValue;
+        
+        if(i==mat.Length-1)
+            return mat[i][j];
+        
+        if(opt[i,j]!=0)
+            return opt[i,j];
+        
+        opt[i,j] = Math.Min(dfs(i+1,j-1),Math.Min(dfs(i+1,j),dfs(i+1,j+1))) + mat[i][j];
+        
+        return opt[i,j];
+    }
+    
+    private bool isvalid(int i,int j)
+    {
+        if(i<0 || i>=mat.Length || j<0 || j>=mat[i].Length)
+            return false;
+        return true;
+    }
+}
