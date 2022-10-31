@@ -1,0 +1,33 @@
+public class Solution {
+    private int[][] g;
+    private int[,] opt;
+    public int MinPathSum(int[][] grid) {
+        g=grid;
+        opt=new int[grid.Length,grid[0].Length];
+        return dfs(0,0);
+    }
+    
+    private int dfs(int i,int j)
+    {
+        if(!isvalid(i,j))
+            return Int32.MaxValue;
+        
+        if(i==g.Length-1 && j==g[i].Length-1)
+            return g[i][j];
+        
+        if(opt[i,j]!=0)
+            return opt[i,j];
+        
+        opt[i,j] = Math.Min(dfs(i+1,j),dfs(i,j+1)) + g[i][j];
+        
+        
+        return opt[i,j];
+    }
+    
+    private bool isvalid(int i,int j)
+    {
+        if(i<0 || i>=g.Length || j<0 || j>=g[i].Length)
+            return false;
+        return true;
+    }
+}
