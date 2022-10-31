@@ -1,0 +1,31 @@
+public class customComparer:Comparer<int>
+{
+    public override int Compare(int a,int b)
+    {
+        if(a.CompareTo(b)!=0)
+            return -a.CompareTo(b);
+        return 0;
+    }
+}
+
+
+public class Solution {
+    private PriorityQueue<int,int> maxheap=new PriorityQueue<int,int>(new customComparer());
+    public int EarliestFullBloom(int[] plantTime, int[] growTime) {
+        
+        
+        int ans=0,plantDay=0;
+        for(int i=0;i<growTime.Length;i++)
+            maxheap.Enqueue(i,growTime[i]);
+        
+        while(maxheap.Count!=0)
+        {
+            int index=maxheap.Dequeue();
+            //Console.WriteLine(index);
+            plantDay+=plantTime[index];
+            ans=Math.Max(ans,plantDay+growTime[index]);
+        }
+        
+        return ans;
+    }
+}
