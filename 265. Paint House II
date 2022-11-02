@@ -1,31 +1,24 @@
 public class Solution {
-    private int[,] opt;
-    private int[][] co;
     public int MinCostII(int[][] costs) {
-        co=costs;
-        opt=new int[costs.Length,costs[0].Length];
+        int[,] opt=new int[costs.Length+1,costs[0].Length];
         
-        return dfs(0,-1);
-    }
-    
-    private int dfs(int start,int color)
-    {
-        if(start>=co.Length)
-            return 0;
-        
-        if(color!=-1 && opt[start,color]!=0)
-            return opt[start,color];
-        
-        int min=Int32.MaxValue;
-        for(int i=0;i<co[start].Length;i++)
+        for(int i=1;i<=costs.Length;i++)
         {
-            if(i!=color)
-                min=Math.Min(min,dfs(start+1,i)+co[start][i]);
+            for(int j=0;j<costs[i-1].Length;j++)
+            {
+                opt[i,j]=Int32.MaxValue;
+                for(int k=0;k<costs[i-1].Length;k++)
+                {
+                    if(k!=j)
+                        opt[i,j]=Math.Min(opt[i,j],opt[i-1,k]+costs[i-1][j]);
+                }
+            }
         }
         
-        if(color!=-1)
-            opt[start,color]=min;
+        int ans=Int32.MaxValue;
+        for(int i=0;i<costs[0].Length;i++)
+            ans=Math.Min(opt[costs.Length,i],ans);
         
-        return min;
+        return ans;
     }
 }
