@@ -1,0 +1,55 @@
+public class Solution {
+    private Dictionary<string,int> opt=new Dictionary<string,int>();
+    private int mod=((int)Math.Pow(10,9))+7;
+    public int CountVowelPermutation(int n) {
+        
+        char[] a=new char[]{'a','e','i','o','u'};
+        int ans=0;
+        for(int i=0;i<a.Length;i++)
+        {
+            ans=(ans+dfs(a[i],n-1))%mod;
+        }
+        
+        return ans;
+    }
+    
+    
+    private int dfs(char a,int n)
+    {
+        if(n<=0)
+            return 1;
+        
+        string s=a.ToString()+" "+n.ToString();
+        
+        if(opt.ContainsKey(s))
+            return opt[s];
+        
+        int temp=0;
+        switch(a)
+        {
+            case 'a': temp = (temp+dfs('e',n-1))%mod;
+                      break;
+                
+            case 'e': temp = (temp+dfs('a',n-1))%mod; 
+                      temp = (temp+dfs('i',n-1))%mod;
+                      break;
+                
+            case 'i': temp = (temp+dfs('a',n-1))%mod; 
+                      temp = (temp+dfs('e',n-1))%mod; 
+                      temp = (temp+dfs('o',n-1))%mod; 
+                      temp = (temp+dfs('u',n-1))%mod;
+                      break;
+                
+            case 'o': temp = (temp+dfs('i',n-1))%mod;
+                      temp = (temp+dfs('u',n-1))%mod;
+                      break;
+                
+            case 'u': temp = (temp+dfs('a',n-1))%mod; 
+                      break;
+        }
+        
+        opt[s] = temp;
+        
+        return opt[s];
+    }
+}
