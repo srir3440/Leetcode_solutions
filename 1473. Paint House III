@@ -1,0 +1,57 @@
+public class Solution {
+    private int[] h;
+    private int[][] co;
+    private int[,,] opt;
+    public int MinCost(int[] houses, int[][] cost, int m, int n, int target) {
+        h=houses;
+        co=cost;
+        opt=new int[m,n,target+1];
+        
+        int ret=dfs(0,-1,target);
+        
+        return ret>=(int)Math.Pow(10,7)?-1:ret;
+    }
+    
+    private int dfs(int start,int color,int neighbourRem)
+    {
+        //Console.WriteLine(start+" "+color+" "+neighbourRem);
+        
+        if(start>=h.Length)
+        {
+            if(neighbourRem!=0)
+                return (int)Math.Pow(10,7);
+            return 0;
+        }
+            
+        
+        if(neighbourRem<0)
+            return (int)Math.Pow(10,7);
+        
+        if(color!=-1 && opt[start,color,neighbourRem]!=0)
+            return opt[start,color,neighbourRem];
+        
+        if(h[start]!=0)
+        {
+            if(h[start]-1!=color)
+                return dfs(start+1,h[start]-1,neighbourRem-1);
+            else
+                return dfs(start+1,h[start]-1,neighbourRem);    
+        }
+            
+        int min=Int32.MaxValue;
+        for(int i=0;i<co[start].Length;i++)
+        {
+            if(i!=color)
+                min=Math.Min(min,dfs(start+1,i,neighbourRem-1)+co[start][i]);
+            else
+                min=Math.Min(min,dfs(start+1,i,neighbourRem)+co[start][i]);
+        }
+        
+        //Console.WriteLine(min);
+        
+        if(color!=-1)
+            opt[start,color,neighbourRem]=min;
+        
+        return min;
+    }
+}
