@@ -1,0 +1,51 @@
+public class Solution {
+    private Dictionary<string,int> hs=new Dictionary<string,int>();
+    public int LongestPalindrome(string[] words) {
+        for(int i=0;i<words.Length;i++)
+        {
+            
+            if(!hs.ContainsKey(words[i]))
+                hs.Add(words[i],0);
+            hs[words[i]]++;
+        }
+        
+        //foreach(var key in hs.Keys)
+            //Console.WriteLine(key+" "+hs[key]);
+        
+        
+        int palincnt=0;
+        int ans=0;
+        bool flag=false;
+        string word1,word2;
+        for(int i=0;i<words.Length;i++)
+        {
+            word1=words[i][0].ToString()+words[i][1].ToString();
+            word2=words[i][1].ToString()+words[i][0].ToString();
+            if(hs.ContainsKey(word1) && hs.ContainsKey(word2))
+            {
+                if(word1==word2)
+                {
+                    ans+=hs[word1]/2;
+                    hs[word1]%=2;
+                    if(hs[word1]==1)
+                        flag=true;
+                }
+                else
+                    palincnt+=Math.Min(hs[word1],hs[word2]);
+            }
+        
+            hs.Remove(word1);
+            hs.Remove(word2);
+        }
+        
+        
+        
+        
+        
+        
+        if(!flag)
+            return 4*palincnt+4*ans;
+        
+        return 4*palincnt+4*ans+2;
+    }
+}
