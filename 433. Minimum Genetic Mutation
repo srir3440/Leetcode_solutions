@@ -1,0 +1,59 @@
+public class Solution {
+    private HashSet<string> hs=new HashSet<string>();
+    private HashSet<string> visited=new HashSet<string>();
+    private Queue<string> queue=new Queue<string>();
+    public int MinMutation(string start, string end, string[] bank) {
+        
+        for(int i=0;i<bank.Length;i++)
+            hs.Add(bank[i]);
+        
+        if(!hs.Contains(end))
+            return -1;
+        
+        queue.Enqueue(start);
+        
+        int step=-1;
+        
+        while(queue.Count!=0)
+        {
+            step++;
+            for(int i=queue.Count;i>0;i--)
+            {
+                
+                string s=queue.Dequeue();
+                //Console.Write(s+" ");
+                
+
+                if(s==end)
+                    return step;
+                
+                if(!visited.Contains(s))
+                {
+                    visited.Add(s);
+                    for(int j=0;j<s.Length;j++)
+                    {
+                        CheckAndEnqueue(new StringBuilder(s),j,'A');
+                        CheckAndEnqueue(new StringBuilder(s),j,'C');
+                        CheckAndEnqueue(new StringBuilder(s),j,'G');
+                        CheckAndEnqueue(new StringBuilder(s),j,'T');        
+                    }
+                    
+                }
+                
+            }
+            //Console.WriteLine();
+        }
+        
+        return -1;
+    }
+    
+    
+    private void CheckAndEnqueue(StringBuilder temp,int index,char gene)
+    {
+        temp[index]=gene;
+        string s=temp.ToString();
+        if(hs.Contains(s))
+            queue.Enqueue(s);
+    }
+    
+}
