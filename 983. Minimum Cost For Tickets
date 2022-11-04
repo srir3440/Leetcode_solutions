@@ -1,0 +1,73 @@
+public class Solution {
+    private int[] opt,d,cos;
+    public int MincostTickets(int[] days, int[] costs) {
+        d=days;
+        cos=costs;
+        opt=new int[days[days.Length-1]+1];
+        //Console.WriteLine(binsearch(15)+" "+findnextday(15));
+        
+        return dfs(days[days.Length-1]);
+    }
+    
+    private int dfs(int day)
+    {
+        
+        
+        
+        day=binsearch(day);
+        
+        if(day<=0)
+            return 0;
+        
+        if(opt[day]!=0)
+            return opt[day];
+        
+        int min=Math.Min(dfs(day-1)+cos[0],Math.Min(dfs(day-7)+cos[1],dfs(day-30)+cos[2]));
+        
+        opt[day]=min;
+        
+        return min;
+    }
+    
+    private int findnextday(int day)
+    {
+        if(d[0]>day)
+            return 0;
+            
+        for(int i=0;i<d.Length;i++)
+        {
+            if(d[i]>day)
+                return d[i-1];
+        }
+        
+        return d[d.Length-1];
+    }
+    
+    private int binsearch(int day)
+    {
+        int left=0,right=d.Length-1,mid,parent=-1;
+        
+        if(day>d[right])
+            return right;
+        
+        while(left<=right)
+        {
+            mid=(left+right)/2;
+            
+            
+            if(day<d[mid])
+                right=mid-1;
+            else
+            {
+                parent=mid;
+                left=mid+1;
+            }
+                
+        }
+        
+        if(parent==-1)
+            return 0;
+        
+        return d[parent];
+    }
+}
