@@ -1,0 +1,22 @@
+public class Solution {
+    public string OrderlyQueue(string s, int k) {
+        if(k>1)
+        {
+            char[] temp=s.ToCharArray();
+            Array.Sort(temp);
+            return new string(temp);
+        }
+        
+        PriorityQueue<string,string> minheap=new PriorityQueue<string,string>();
+        int i=0;
+        StringBuilder sb=new StringBuilder(s);
+        while(i<sb.Length)
+        {
+            s+=s[0];
+            s=s.Substring(1);
+            minheap.Enqueue(s,s);
+            i++;
+        }
+        return minheap.Dequeue();
+    }
+}
