@@ -1,0 +1,34 @@
+public class Solution {
+    public string RemoveDuplicates(string s) {
+        
+        Stack<char> stack=new Stack<char>();
+        int i=0;
+        while(i<s.Length)
+        {
+            if(stack.Count!=0 && stack.Peek()==s[i])
+                stack.Pop();
+            else
+                stack.Push(s[i]);
+            i++;
+        }
+        
+        StringBuilder ret=new StringBuilder();
+        for(i=stack.Count;i>0;i--)
+            ret.Append(stack.Pop());
+        
+        
+        return reverse(ret);
+    }
+    
+    private string reverse(StringBuilder sb)
+    {
+        char tmp;
+        for(int i=0,j=sb.Length-1;i<=j;i++,j--)
+        {
+            tmp=sb[i];
+            sb[i]=sb[j];
+            sb[j]=tmp;
+        }
+        return sb.ToString();
+    }
+}
