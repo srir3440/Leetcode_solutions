@@ -1,0 +1,59 @@
+public class Solution {
+    private Queue<int[]> queue=new Queue<int[]>();
+    private char[][] m;
+    public int NearestExit(char[][] maze, int[] entrance) {
+        
+        m=maze;
+        queue.Enqueue(entrance);
+        m[entrance[0]][entrance[1]]='+';
+        
+        int step=-1;
+        while(queue.Count!=0)
+        {
+            step++;
+            for(int i=queue.Count;i>0;i--)
+            {
+                int[] tmp=queue.Dequeue();
+                //Console.Write(tmp[0]+" "+tmp[1]+"  ");
+                
+                if(step!=0 && IsExit(tmp[0],tmp[1]))
+                    return step;
+                
+                CheckAndEnqueue(tmp[0],tmp[1]-1);
+                CheckAndEnqueue(tmp[0]-1,tmp[1]);
+                CheckAndEnqueue(tmp[0],tmp[1]+1);
+                CheckAndEnqueue(tmp[0]+1,tmp[1]);
+            }
+            //Console.WriteLine();
+        }
+        
+        return -1;
+    }
+    
+    
+    private void CheckAndEnqueue(int i,int j)
+    {
+        if(isvalid(i,j) && m[i][j]=='.')
+        {
+            queue.Enqueue(new int[]{i,j});
+            m[i][j]='+';
+        }
+    }
+    
+    private bool IsExit(int i,int j)
+    {      
+        
+        if(!isvalid(i,j-1) || !isvalid(i-1,j) || !isvalid(i,j+1) || !isvalid(i+1,j))
+            return true;
+        
+        
+        return false;
+    }
+    
+    private bool isvalid(int i,int j)
+    {
+        if(i<0 || i>=m.Length || j<0 || j>=m[i].Length)
+            return false;
+        return true;
+    }
+}
