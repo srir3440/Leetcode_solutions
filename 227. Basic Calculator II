@@ -1,0 +1,122 @@
+public class Solution {
+    private Stack<string> stack=new Stack<string>();
+    private Stack<string> stack2=new Stack<string>();
+    public int Calculate(string s)
+    {
+        calc(s);
+        
+        while(stack.Count!=0)
+            stack2.Push(stack.Pop());
+        
+        finalcalc();
+        
+        return Int32.Parse(stack2.Pop());
+    }
+    
+    public void finalcalc()
+    {
+        
+        int i=0;
+        while(stack2.Count>1)
+        {
+            
+            int o1=Int32.Parse(stack2.Pop());
+            char op=stack2.Pop()[0];
+            int o2=Int32.Parse(stack2.Pop());
+            //Console.WriteLine("{0} {1} {2}",o1,op,o2);
+            stack2.Push(evaluate(o1,o2,op));
+        }
+    }
+    
+    
+    public void calc(string s) 
+    {
+        //Console.WriteLine(s);
+        int i=0;
+        while(i<s.Length)
+        {
+            
+            //Console.WriteLine(i);
+            if(s[i]=='+')
+            {
+                stack.Push("+");
+                i++;
+            }
+            
+            else if(s[i]=='-')
+            {
+                string no="";
+                stack.Push(s[i].ToString());
+                if(stack.Count==0 || stack.Peek()=="(")
+                {
+                    no="-";
+                    no+=getnumber(s,ref i);
+                    stack.Push(no);    
+                }
+                else
+                    i++;
+                    
+            }
+            
+            else if(s[i]=='*' || s[i]=='/')
+            {
+                char op=s[i];
+                i++;
+                string no=getnumber(s,ref i);
+                stack.Push(evaluate(Int32.Parse(stack.Pop()),Int32.Parse(no),op));
+            }
+            
+            else if(Char.IsDigit(s[i]))
+            {
+                string no=getnumber(s,ref i);
+                stack.Push(no);
+            }
+            
+            else
+                i++;
+        }
+        
+        
+    }
+    
+    
+    private string reverse(string s)
+    {
+        StringBuilder sb=new StringBuilder(s);
+        for(int i=0,j=s.Length-1;i<=j;i++,j--)
+        {
+            char tmp=sb[i];
+            sb[i]=sb[j];
+            sb[j]=tmp;
+        }
+        return sb.ToString();
+    }
+    
+    private string evaluate(int a,int b,char op)
+    {
+        
+        int val;
+        switch(op)
+        {
+            case '+':val=a+b;break;
+            case '-':val=a-b;break;
+            case '*':val=a*b;break;
+            case '/':val=(int)Math.Floor((double)a/b);break;
+            default:val=0;break;
+        }
+        
+        return val.ToString();
+    }
+    
+    private string getnumber(string s,ref int i)
+    {
+        string no="";
+        while(i<s.Length && (Char.IsDigit(s[i]) || s[i]==' '))
+        {
+            if(s[i]!=' ')
+                no+=s[i];
+            i++;
+        }
+        return no;
+    }
+}
