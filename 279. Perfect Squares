@@ -1,0 +1,22 @@
+public class Solution {
+    
+    private int[] opt;
+    public int NumSquares(int n) {
+        
+        
+        
+        opt=new int[n+1];
+        
+        
+        for(int i=1;i<=n;i++)
+        {
+            int root=(int)Math.Sqrt(i);
+            //Console.WriteLine(root);
+            opt[i]=Int32.MaxValue;
+            for(int j=1;j<=root;j++)
+                opt[i]=Math.Min(opt[i],opt[i-(j*j)]+1);
+        }
+        
+        return opt[n];
+    }
+}
