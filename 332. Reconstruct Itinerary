@@ -1,0 +1,57 @@
+public class Solution {
+    
+    private Dictionary<string,SortedDictionary<string,int>> dict=new Dictionary<string,SortedDictionary<string,int>>();
+    private IList<string> ans=null;
+    private IList<string> nos=new List<string>();
+    private int total;
+    
+    public IList<string> FindItinerary(IList<IList<string>> tickets) {
+        
+        total=tickets.Count+1;
+        for(int i=0;i<tickets.Count;i++)
+        {
+            if(!dict.ContainsKey(tickets[i][0]))
+                dict.Add(tickets[i][0],new SortedDictionary<string,int>());
+            if(!dict[tickets[i][0]].ContainsKey(tickets[i][1]))
+                dict[tickets[i][0]].Add(tickets[i][1],0);
+            dict[tickets[i][0]][tickets[i][1]]++;
+        }
+        
+        nos.Add("JFK");
+        dfs("JFK");
+        return ans;
+    }
+    
+    
+    private void dfs(string start)
+    {
+        //Console.WriteLine(start+" "+nos.Count);
+        if(ans!=null)
+            return;
+        
+        if(ans==null && nos.Count==total)
+        {
+            
+            ans=new List<string>(nos);
+            return;
+        }
+            
+        
+        if(!dict.ContainsKey(start))
+            return;
+        
+        
+        List<string> en=dict[start].Keys.ToList();
+        foreach(var key in en)
+        {
+            if(ans==null && dict[start][key]>0)
+            {
+                dict[start][key]--;
+                nos.Add(key);
+                dfs(key);
+                nos.RemoveAt(nos.Count-1);
+                dict[start][key]++;
+            }
+        }
+    }
+}
