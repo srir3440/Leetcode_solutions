@@ -1,0 +1,28 @@
+public class Solution {
+    private int[,] opt;
+    private int mod=(int)Math.Pow(10,9)+7;
+    public int SumSubarrayMins(int[] arr) {
+        opt=new int[2,arr.Length];
+        //Console.WriteLine(arr.Length);
+        int ans=0;
+        for(int i=0;i<arr.Length;i++)
+        {
+            ans+=arr[i];
+            opt[0,i]=arr[i];
+        }
+        
+        for(int l=1;l<arr.Length;l++)
+        {
+            for(int i=0;i<arr.Length-l;i++)
+            {
+                //Console.WriteLine(i+" "+(i+l));
+                opt[1,i]=Math.Min(opt[0,i],opt[0,i+1]);
+                ans+=opt[1,i];
+                ans%=mod;
+                opt[0,i]=opt[1,i];
+            }
+        }
+        
+        return ans;
+    }
+}
