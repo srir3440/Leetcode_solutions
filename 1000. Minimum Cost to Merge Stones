@@ -3,6 +3,7 @@ public class Solution {
     private int m;
     private int[] st;
     private Dictionary<string,int> opt=new Dictionary<string,int>();
+    
     public int MergeStones(int[] stones, int k) {
         
         m=k;
