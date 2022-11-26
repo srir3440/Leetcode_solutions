@@ -1,0 +1,31 @@
+public class Solution {
+    
+    private int[] st,et,p;
+    private Dictionary<int,int> opt=new Dictionary<int,int>();
+    public int JobScheduling(int[] startTime, int[] endTime, int[] profit) {
+        
+        st=startTime;
+        et=endTime;
+        p=profit;
+        
+        return dfs(-1);
+    }
+    
+    private int dfs(int index)
+    {
+        //Console.WriteLine(index);
+        if(opt.ContainsKey(index))
+            return opt[index];
+        
+        int max=0;
+        for(int i=0;i<st.Length;i++)
+        {
+            if(index==-1 || (i!=index && st[i]>=et[index]))
+                max=Math.Max(max,dfs(i)+p[i]);
+        }
+        
+        opt[index]=max;
+        
+        return max;
+    }
+}
