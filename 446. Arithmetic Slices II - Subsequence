@@ -1,0 +1,47 @@
+public class Solution {
+    
+    private int[] n;
+    private Dictionary<string,int> opt=new Dictionary<string,int>(); 
+    
+    public int NumberOfArithmeticSlices(int[] nums) {
+        
+        n=nums;
+        int ans=0;
+        for(int i=nums.Length-2;i>=0;i--)
+        {
+            for(int j=i+1;j<nums.Length;j++)
+            {
+                ans+=dfs(j,(long)nums[j]-nums[i],2);
+            }
+        }
+        
+        
+        // subtract ans from number of length 2 subsequences since min length is 3 
+        return ans-(nums.Length*(nums.Length-1))/2;
+    }
+    
+    private int dfs(int start,long diff,int cnt)
+    {
+        
+        
+        string temp=start.ToString()+" "+diff.ToString();
+        //Console.WriteLine(start+" "+diff+" "+cnt+"   temp: "+temp);
+        
+        if(opt.ContainsKey(temp))
+            return opt[temp];
+        
+        
+        int ans=cnt>=2?1:0;
+        for(int i=start+1;i<n.Length;i++)
+        {
+            if((long)n[i]-n[start]==diff)
+                ans+=dfs(i,diff,cnt+1);
+        }
+        
+        //Console.WriteLine(ans);
+        opt[temp]=ans;
+        
+        return ans;
+            
+    }
+}
