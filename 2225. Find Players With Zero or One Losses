@@ -1,0 +1,33 @@
+public class Solution {
+    
+    private SortedDictionary<int,int> loss=new SortedDictionary<int,int>();
+    
+    public IList<IList<int>> FindWinners(int[][] matches) {
+        
+        IList<IList<int>> ans=new List<IList<int>>();
+        ans.Add(new List<int>());
+        ans.Add(new List<int>());
+        
+        for(int i=0;i<matches.Length;i++)
+        {
+            // winner
+            if(!loss.ContainsKey(matches[i][0]))
+                loss.Add(matches[i][0],0);
+            
+            // loser
+            if(!loss.ContainsKey(matches[i][1]))
+                loss.Add(matches[i][1],0);
+            loss[matches[i][1]]++;
+        }
+        
+        foreach(var key in loss.Keys)
+        {
+            if(loss[key]==0)
+                ans[0].Add(key);
+            if(loss[key]==1)
+                ans[1].Add(key);
+        }
+        
+        return ans;
+    }
+}
