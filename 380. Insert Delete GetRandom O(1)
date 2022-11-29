@@ -1,39 +1,50 @@
 public class RandomizedSet {
-    private Dictionary<int,int> randset;
-    private List<int> randlist;
-    private Random ran;
+    private Dictionary<int,int> dict;
+    private List<int> list;
+    private Random rand;
     public RandomizedSet() {
-        randset=new Dictionary<int,int>();    
-        randlist=new List<int>();
-        ran=new Random();
+        dict=new Dictionary<int,int>();   // element - index mapping
+        list=new List<int>();
+        rand=new Random();
     }
     
     public bool Insert(int val) {
-        if(randset.ContainsKey(val))
+        
+        if(dict.ContainsKey(val))
             return false;
-        randlist.Add(val);
-        randset.Add(val,randlist.Count-1);
+        
+        dict[val]=list.Count;
+        list.Add(val);
+        
         return true;
     }
     
     public bool Remove(int val) {
-        if(randset.ContainsKey(val))
-        {
-            int index=randset[val];
-            int last=randlist.Last();
-            randlist[index]=last;
-            randset[last]=index;
-            randlist.RemoveAt(randlist.Count-1);
-            randset.Remove(val);
-            //Console.WriteLine(randlist.Count+" "+randset.Count);
-            return true;
-        }
-        return false;
+        
+        if(!dict.ContainsKey(val))
+            return false;
+        
+        
+        int index=dict[val];
+        
+        // swap with last value to make removal constant time
+        int tmp=list[list.Count-1];
+        list[list.Count-1]=list[index];
+        list[index]=tmp;
+        
+        //update the index of last element in dict
+        dict[tmp]=index;
+        
+        //remove last element
+        dict.Remove(list[list.Count-1]);
+        list.RemoveAt(list.Count-1);
+        
+        return true;
     }
     
     public int GetRandom() {
-        int rand=ran.Next(0,randlist.Count);
-        return randlist[rand];
+        int r=rand.Next(0,list.Count);
+        return list[r];
     }
 }
 
