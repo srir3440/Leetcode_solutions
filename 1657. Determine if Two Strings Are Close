@@ -1,0 +1,47 @@
+public class Solution {
+    public bool CloseStrings(string word1, string word2) {
+        
+        if(word1.Length != word2.Length)
+            return false;
+        
+        Dictionary<int,int> cnts1=getcnt(word1);
+        Dictionary<int,int> cnts2=getcnt(word2);
+        Dictionary<int,int> hs=new Dictionary<int,int>();
+        foreach(var key in cnts2.Keys)
+        {
+            if(!cnts1.ContainsKey(key))
+                return false;
+            if(!hs.ContainsKey(cnts2[key]))
+                hs.Add(cnts2[key],0);
+            hs[cnts2[key]]++;
+        }
+    
+        
+        foreach(var key in cnts1.Keys)
+        {
+            if(!hs.ContainsKey(cnts1[key]))
+               return false;
+            hs[cnts1[key]]--;
+            if(hs[cnts1[key]]<0)
+                return false;
+        }
+        
+        
+        return true;
+        
+        
+    }
+    
+    private Dictionary<int,int> getcnt(string word)
+    {
+        Dictionary<int,int> cnt=new Dictionary<int,int>();
+        for(int i=0;i<word.Length;i++)
+        {
+            if(!cnt.ContainsKey(word[i]))
+                cnt.Add(word[i],0);
+            cnt[word[i]]++;
+        }
+        
+        return cnt;
+    }
+}
