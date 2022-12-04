@@ -1,0 +1,48 @@
+public class Solution {
+    private LinkedList<char>[] maxdict;
+    private Dictionary<char,LinkedListNode<char>> llist=new Dictionary<char,LinkedListNode<char>>();
+    private Dictionary<char,int> map=new Dictionary<char,int>();
+    public string FrequencySort(string s) {
+        
+        maxdict=new LinkedList<char>[s.Length+1];
+        maxdict[0]=new LinkedList<char>();
+        
+        for(int i=0;i<s.Length;i++)
+        {
+            if(!map.ContainsKey(s[i]))
+                map.Add(s[i],0);
+            if(!llist.ContainsKey(s[i]))
+            {
+                llist.Add(s[i],new LinkedListNode<char>(s[i]));
+                maxdict[map[s[i]]].AddLast(llist[s[i]]);
+            }
+            
+            maxdict[map[s[i]]].Remove(llist[s[i]]);
+            map[s[i]]++;
+            if(maxdict[map[s[i]]]==null)
+                maxdict[map[s[i]]]=new LinkedList<char>();
+            maxdict[map[s[i]]].AddLast(llist[s[i]]);
+        }
+        
+        StringBuilder ans=new StringBuilder();
+        for(int i=maxdict.Length-1;i>0;i--)
+        {
+            //Console.Write(i+"- ");
+            if(maxdict[i]==null)
+            {
+                //Console.WriteLine();
+                continue;
+            }
+            
+            foreach(var ch in maxdict[i])
+            {
+                for(int k=0;k<i;k++)
+                    ans.Append(ch);
+            }
+                
+            //Console.WriteLine();
+        }
+        
+        return ans.ToString();
+    }
+}
