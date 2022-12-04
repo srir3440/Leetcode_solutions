@@ -1,0 +1,34 @@
+public class Solution {
+    public int MinimumAverageDifference(int[] nums) {
+        
+        
+        long[] prefixsum=new long[nums.Length+1];
+        long[] suffixsum=new long[nums.Length+1];
+        
+        for(int i=1;i<=nums.Length;i++)
+            prefixsum[i]=prefixsum[i-1]+nums[i-1];
+        
+        for(int i=nums.Length-1;i>=0;i--)
+            suffixsum[i]=suffixsum[i+1]+nums[i];
+        
+        int min=Int32.MaxValue,diff;
+        int index=-1;
+        
+        for(int i=1;i<nums.Length;i++)
+        {
+            diff=(int)Math.Abs((prefixsum[i]/(long)i)-(suffixsum[i]/(nums.Length-(long)i)));
+            //Console.WriteLine((prefixsum[i])+" "+(suffixsum[i])+" "+diff+" "+i);
+            if(min>diff)
+            {
+                min=diff;
+                index=i-1;
+            }
+        }
+        
+        diff=(int)(prefixsum[nums.Length]/(long)nums.Length);
+        if(min>diff)
+            return nums.Length-1;
+        
+        return index;
+    }
+}
