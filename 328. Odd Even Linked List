@@ -11,40 +11,22 @@
  */
 public class Solution {
     public ListNode OddEvenList(ListNode head) {
-        if(head==null)
+        
+        if(head==null || head.next==null || head.next.next==null)
             return head;
-        int len=0;
-        ListNode curr=head,p=head;
-        while(curr!=null)
-        {
-            len++;
-            curr=curr.next;
+        
+        ListNode odd=head,even=head.next,oddtemp=head,eventemp=head.next;
+        
+        while (even != null && even.next != null) {
+            odd.next = even.next;
+            odd = odd.next;
+            even.next = odd.next;
+            even = even.next;
         }
-        curr=head;
-        ListNode tmp=head.next;
-        if(len%2==1)
-        {
-            while(curr.next!=null)
-            {
-                p=curr.next;
-                curr.next=p.next;
-                curr=p;
-            }
-            curr.next=tmp;
-        }
-        else
-        {
-            while(curr.next!=null)
-            {
-                p=curr.next;
-                curr.next=p.next;
-                if(curr.next==null)
-                    break;
-                curr=p;
-            }
-            curr.next=tmp;
-        }
-        //Console.WriteLine(head.val);
-        return head;
+        
+        
+        odd.next=eventemp;
+        
+        return oddtemp;
     }
 }
