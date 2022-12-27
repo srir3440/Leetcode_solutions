@@ -1,0 +1,43 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    private Dictionary<TreeNode,long> dict=new Dictionary<TreeNode,long>();
+    private long max=0;
+    private int mod=(int)Math.Pow(10,9)+7;
+    public int MaxProduct(TreeNode root) {
+        populateSum(root);
+        traverse(root,dict[root]);
+        return (int)(max%mod);
+    }
+    
+    private long populateSum(TreeNode node)
+    {
+        if(node==null)
+            return 0;
+        long left=populateSum(node.left);
+        long right=populateSum(node.right);
+        dict.Add(node,node.val+left+right);
+        return dict[node];
+    }
+    
+    private void traverse(TreeNode node,long val)
+    {
+        if(node==null)
+            return;
+        long sum=val- dict[node];
+        max=Math.Max(max,sum*dict[node]);
+        traverse(node.left,val);
+        traverse(node.right,val);
+    }
+}
