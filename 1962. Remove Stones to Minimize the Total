@@ -1,0 +1,33 @@
+public class customComparer:Comparer<int>
+{
+    public override int Compare(int a,int b)
+    {
+        if(a.CompareTo(b)!=0)
+            return -a.CompareTo(b);
+        return 0;
+    }
+}
+
+
+public class Solution {
+    public int MinStoneSum(int[] piles, int k) {
+        PriorityQueue<int,int> maxheap=new PriorityQueue<int,int>(new customComparer());
+        
+        for(int i=0;i<piles.Length;i++)
+            maxheap.Enqueue(piles[i],piles[i]);
+        
+        while(k>0)
+        {
+            int tmp=maxheap.Dequeue();
+            tmp-=tmp/2;
+            maxheap.Enqueue(tmp,tmp);
+            k--;
+        }
+            
+        
+        int sum=0;
+        while(maxheap.Count>0)
+            sum+=maxheap.Dequeue();
+        return sum;
+    }
+}
