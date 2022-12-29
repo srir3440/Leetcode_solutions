@@ -1,0 +1,41 @@
+public class Solution {
+    private Dictionary<int,Dictionary<int,int>> adjlist=new Dictionary<int,Dictionary<int,int>>();
+    private HashSet<int> visited=new HashSet<int>();
+    public bool ValidPath(int n, int[][] edges, int source, int destination) {
+        
+        
+        for(int i=0;i<edges.Length;i++)
+        {
+            if(!adjlist.ContainsKey(edges[i][0]))
+                adjlist.Add(edges[i][0],new Dictionary<int,int>());
+            if(!adjlist.ContainsKey(edges[i][1]))
+                adjlist.Add(edges[i][1],new Dictionary<int,int>());
+            adjlist[edges[i][0]].Add(edges[i][1],edges[i][1]);
+            adjlist[edges[i][1]].Add(edges[i][0],edges[i][0]);
+        }
+            
+        
+        return dfs(source,destination);
+    }
+    
+    private bool dfs(int node,int dest)
+    {
+        //Console.WriteLine(node);
+        if(node==dest)
+            return true;
+        
+        if(visited.Contains(node) || !adjlist.ContainsKey(node) || adjlist[node].Count==0)
+            return false;
+        
+        visited.Add(node);
+        foreach(var key in adjlist[node].Keys)
+        {
+            if(dfs(key,dest))
+                return true;
+        }
+            
+        //visited.Remove(node);
+        
+        return false;
+    }
+}
