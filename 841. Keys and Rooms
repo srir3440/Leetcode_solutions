@@ -1,0 +1,20 @@
+public class Solution {
+    private HashSet<int> visited=new HashSet<int>();
+    private IList<IList<int>> r;
+    public bool CanVisitAllRooms(IList<IList<int>> rooms) {
+        
+        r=rooms;
+        dfs(0);
+        return visited.Count==rooms.Count;
+    }
+    
+    private void dfs(int s)
+    {
+        if(visited.Contains(s))
+            return;
+        
+        visited.Add(s);
+        foreach(var i in r[s])
+            dfs(i);
+    }
+}
