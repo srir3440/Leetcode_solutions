@@ -1,0 +1,54 @@
+public class customComparer:Comparer<int[]>
+{
+    public override int Compare(int[] a,int[] b)
+    {
+        if(a[0].CompareTo(b[0])!=0)
+            return a[0].CompareTo(b[0]);
+        if(a[1].CompareTo(b[1])!=0)
+            return a[1].CompareTo(b[1]);
+        return 0;
+    }
+}
+
+
+public class Solution {
+    private PriorityQueue<int,int> tasksheap=new PriorityQueue<int,int>();
+    private PriorityQueue<int,int[]> minheap=new PriorityQueue<int,int[]>(new customComparer());
+    
+    public int[] GetOrder(int[][] tasks) {
+        int[] ans=new int[tasks.Length];
+        for(int i=0;i<tasks.Length;i++)
+            tasksheap.Enqueue(i,tasks[i][0]);
+            
+            
+        int j=0,curTime=0;
+        
+        while(true)
+        {
+            while(tasksheap.Count!=0 && tasks[tasksheap.Peek()][0]<=curTime)
+            {
+                int ind=tasksheap.Dequeue();
+                minheap.Enqueue(ind,new int[]{tasks[ind][1],ind});
+            }
+            
+            if(minheap.Count==0)
+            {
+                if(tasksheap.Count==0)
+                    break;
+                curTime=tasks[tasksheap.Peek()][0];
+            }
+               
+
+            else
+            {
+                int tmp=minheap.Dequeue();
+                curTime+=tasks[tmp][1];
+                ans[j++]=tmp;
+            }
+        }
+        
+            
+        return ans;
+            
+    }
+}
