@@ -1,0 +1,63 @@
+public class Solution {
+    private HashSet<int> curSet=new HashSet<int>();
+    private HashSet<int> otherSet=new HashSet<int>();
+    private Queue<int> queue=new Queue<int>();
+    private Dictionary<int,Dictionary<int,int>> adjlist=new Dictionary<int,Dictionary<int,int>>();
+    public bool PossibleBipartition(int n, int[][] dislikes) {
+        
+        prepAdjList(dislikes);
+        
+        for(int i=1;i<=n;i++)
+        {
+            // repeat for all the connected components in case of disconnected graph
+            queue.Clear();
+            curSet.Clear();
+            otherSet.Clear();
+            
+            curSet.Add(i);
+            queue.Enqueue(i);
+        
+            
+        
+            while(queue.Count!=0)
+            {
+            
+                for(int j=queue.Count;j>0;j--)
+                {   
+                    int tmp=queue.Dequeue();
+                    if(otherSet.Contains(tmp))
+                        return false;
+                    if(adjlist.ContainsKey(tmp))
+                    {
+                        foreach(var key in adjlist[tmp].Keys)
+                        {
+                            otherSet.Add(key);
+                            queue.Enqueue(key);
+                        }
+                        adjlist.Remove(tmp);
+                    }
+                }
+            
+                // swap sets
+                //Console.WriteLine(curSet.Count+" "+otherSet.Count);
+                HashSet<int> tmpSet=curSet;
+                curSet=otherSet;
+                otherSet=tmpSet;
+                // Console.WriteLine(curSet.Count+" "+otherSet.Count);
+            }   
+        }
+        
+        
+        return true;
+    }
+    
+    private void prepAdjList(int[][] dislikes)
+    {
+        for(int i=0;i<dislikes.Length;i++)
+        {
+            if(!adjlist.ContainsKey(dislikes[i][0]))
+                adjlist.Add(dislikes[i][0],new Dictionary<int,int>());
+            adjlist[dislikes[i][0]].Add(dislikes[i][1],dislikes[i][1]);
+        }
+    }
+}
