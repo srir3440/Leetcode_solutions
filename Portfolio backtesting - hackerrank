@@ -1,0 +1,43 @@
+class HelloWorld {
+    
+    private static Dictionary<string,int> opt=new Dictionary<string,int>();
+    private static int[] a;
+    static void Main() {
+        
+        a=new int[]{4,-3, 6,-2,-1};
+        int k=2;
+        
+        int nooflosses=0;
+        for(int i=0;i<a.Length;i++)
+        {
+            if(a[i]<0)
+                nooflosses++;
+        }
+        k=nooflosses-k;
+        
+        int prof=dfs(0,0,k);
+        Console.WriteLine(prof<0?-1:prof);
+        
+    }
+    
+    private static int dfs(int profit,int index,int loss_remain_to_skip)
+    {
+        //Console.WriteLine(profit+" "+index+" "+loss_remain_to_skip);
+        if(profit<0 || loss_remain_to_skip<0)
+            return Int32.MinValue;
+        
+        if(index>=a.Length)
+            return profit;
+        
+        string s=index.ToString()+" "+loss_remain_to_skip;
+        if(opt.ContainsKey(s))
+            return opt[s];
+        
+        if(a[index]>0)
+            return dfs(profit+a[index],index+1,loss_remain_to_skip);
+        
+        opt[s]=Math.Max(dfs(profit,index+1,loss_remain_to_skip-1),dfs(profit+a[index],index+1,loss_remain_to_skip));
+        
+        return opt[s];
+    }
+}
