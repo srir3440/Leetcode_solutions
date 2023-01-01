@@ -1,0 +1,44 @@
+public class Solution {
+    private int[][] g;
+    private int[] start;
+    private HashSet<string> visited=new HashSet<string>();
+    private int nonobs=0;
+    public int UniquePathsIII(int[][] grid) {
+        g=grid;
+        getPoints();
+        //Console.WriteLine(start[0]+" "+start[1]+" "+nonobs);
+        return dfs(start[0],start[1],1);
+    }
+    
+    private int dfs(int r,int c,int len)
+    {
+        
+        if(r<0 || r>=g.Length || c<0 || c>=g[r].Length || g[r][c]==-1 || visited.Contains(r+" "+c))
+            return 0;
+        
+        if(len==nonobs && g[r][c]==2)
+            return 1;
+        
+        //Console.WriteLine(r+" "+c+" "+len);
+        visited.Add(r+" "+c);
+        int sum=dfs(r,c-1,len+1)+dfs(r-1,c,len+1)+dfs(r,c+1,len+1)+dfs(r+1,c,len+1);
+        visited.Remove(r+" "+c);
+        
+        return sum;
+    }
+    
+    private void getPoints()
+    {
+        for(int i=0;i<g.Length;i++)
+        {
+            for(int j=0;j<g[i].Length;j++)
+            {
+                if(g[i][j]==1)
+                    start=new int[]{i,j};
+                if(g[i][j]!=-1)
+                    nonobs+=1;
+               
+            }
+        }    
+    }
+}
