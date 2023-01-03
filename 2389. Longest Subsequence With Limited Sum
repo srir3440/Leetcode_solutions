@@ -1,0 +1,32 @@
+public class Solution {
+    public int[] AnswerQueries(int[] nums, int[] queries) {
+        Array.Sort(nums);
+        int[] preSum=new int[nums.Length];
+        preSum[0]=nums[0];
+        for(int i=1;i<nums.Length;i++)
+            preSum[i]=preSum[i-1]+nums[i];
+        
+        for(int i=0;i<queries.Length;i++)
+            queries[i]=binSearch(preSum,queries[i])+1;
+        return queries;
+    }
+    
+    private int binSearch(int[] arr,int target)
+    {
+        
+        int left=0,right=arr.Length-1,mid,parent=-1;
+        while(left<=right)
+        {
+            mid=(left+right)/2;
+            if(target<arr[mid])
+                right=mid-1;
+            else
+            {
+                parent=mid;
+                left=mid+1;
+            }
+        }
+        
+        return parent;
+    }
+}
