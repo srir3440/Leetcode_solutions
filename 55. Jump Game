@@ -1,0 +1,27 @@
+public class Solution {
+    private Dictionary<int,bool> opt=new Dictionary<int,bool>();
+    private int[] n;
+    public bool CanJump(int[] nums) {
+        n=nums;
+        return dfs(0);
+    }
+    
+    private bool dfs(int index)
+    {
+        if(index>=n.Length-1)
+            return true;
+        
+        if(opt.ContainsKey(index))
+            return opt[index];
+        
+        int i=1;
+        for(;i<=n[index];i++)
+        {
+            if(dfs(index+i))
+                break;
+        }
+        
+        opt[index]=(i<=n[index]);
+        return opt[index];
+    }
+}
