@@ -1,0 +1,45 @@
+public class Solution {
+    private Dictionary<int,int> dict=new Dictionary<int,int>();
+    private Dictionary<int,int> opt=new Dictionary<int,int>();
+    public int MinimumRounds(int[] tasks) {
+        for(int i=0;i<tasks.Length;i++)
+        {
+            if(!dict.ContainsKey(tasks[i]))
+                dict.Add(tasks[i],0);
+            dict[tasks[i]]++;
+        }
+        
+        int cnt=0;
+        foreach(var key in dict.Keys)
+        {
+            int tmp=dfs(dict[key]);
+            //Console.WriteLine(dict[key]+" "+tmp);
+            if(tmp==Int32.MaxValue)
+                return -1;
+            cnt+=tmp;
+        }
+        
+        return cnt;
+    }
+    
+    private int dfs(int val)
+    {
+        if(val==0)
+            return 0;
+        
+        if(val==1 || val<0)
+            return Int32.MaxValue;
+        
+        if(opt.ContainsKey(val))
+            return opt[val];
+        
+        int tmp=Math.Min(dfs(val-2),dfs(val-3));
+        
+        if(tmp==Int32.MaxValue)
+            opt[val]=tmp;
+        else
+            opt[val]=tmp+1;
+        
+        return opt[val];
+    }
+}
