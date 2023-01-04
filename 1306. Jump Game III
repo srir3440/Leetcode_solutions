@@ -1,0 +1,28 @@
+public class Solution {
+    private Dictionary<int,bool> opt=new Dictionary<int,bool>();
+    
+    private int[] a;
+    public bool CanReach(int[] arr, int start) {
+        a=arr;
+        return dfs(start);
+    }
+    
+    private bool dfs(int index)
+    {
+        if(index<0 || index>=a.Length || a[index]==-1)
+            return false;
+        
+        if(a[index]==0)
+            return true;
+        
+        if(opt.ContainsKey(index))
+            return opt[index];
+        
+        int tmp=a[index];
+        a[index]=-1;
+        opt[index]=dfs(index+tmp) || dfs(index-tmp);
+        a[index]=tmp;
+        
+        return opt[index];
+    }
+}
