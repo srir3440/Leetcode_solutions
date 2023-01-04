@@ -1,0 +1,65 @@
+public class Solution {
+    private Dictionary<int,int> opt=new Dictionary<int,int>();
+    private Dictionary<int,List<int>> valuesMap=new Dictionary<int,List<int>>();
+    private int[] a;
+    public int MinJumps(int[] arr) {
+        a=arr;
+        fillMap(arr);
+        return dfs(0);
+    }
+    
+    private int dfs(int index)
+    {
+        
+        
+        //Console.WriteLine(index);
+        if(index<0 || index>=a.Length || a[index]==Int32.MaxValue)
+            return Int32.MaxValue;
+        
+        
+        if(index==a.Length-1)
+            return 0;
+        
+        //if(opt.ContainsKey(index))
+            //return opt[index];
+        
+        int tmp=a[index];
+        a[index]=Int32.MaxValue;
+        int min=Int32.MaxValue;
+        foreach(var i in valuesMap[tmp])
+        {
+            if(i!=index)
+                min=Math.Min(min,dfs(i));
+        }
+        min=Math.Min(min,Math.Min(dfs(index+1),dfs(index-1)));
+        a[index]=tmp;
+        
+        
+        if(min==Int32.MaxValue)
+            opt[index]=min;
+        else
+            opt[index]=min+1;
+        
+        //Console.WriteLine("ret: "+opt[index]);
+        return opt[index];
+        
+    }
+    
+    private void fillMap(int[] arr)
+    {
+        for(int i=0;i<arr.Length;i++)
+        {
+            if(!valuesMap.ContainsKey(arr[i]))
+                valuesMap.Add(arr[i],new List<int>());
+            valuesMap[arr[i]].Add(i);
+        }
+        
+        /*foreach(var key in valuesMap.Keys)
+        {
+            Console.Write(key+" ");
+            for(int i=0;i<valuesMap[key].Count;i++)
+                Console.Write(valuesMap[key][i]+" ");
+            Console.WriteLine();
+        }*/
+    }
+}
