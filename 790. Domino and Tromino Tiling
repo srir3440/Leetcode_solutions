@@ -1,0 +1,39 @@
+public class Solution {
+    private int[,] opt;
+    private int mod=(int)Math.Pow(10,9)+7;
+    public int NumTilings(int n) {
+        opt=new int[2,n+1];
+        return dfs(0,n);
+    }
+    
+    private int dfs(int extra,int cols)
+    {
+        if(extra==0 && cols==2)
+            return 2;
+        
+        if(cols==1)
+            return 1;
+        
+        if(opt[extra,cols]!=0)
+            return opt[extra,cols];
+        
+        //shapes with 1 pointed out square , can fill by tromino or horizontal domino
+        if(extra==1)
+            opt[extra,cols]=dfs(0,cols-1)%mod + dfs(1,cols-1)%mod;
+        
+        // vertical domino, 2 horizontal dominos, twice the shape with 1 pointed out square (using tromino)
+        else
+        {
+            opt[extra,cols]=dfs(0,cols-1)%mod + dfs(0,cols-2)%mod;
+            opt[extra,cols]%=mod;
+            opt[extra,cols]+=dfs(1,cols-2)%mod;
+            opt[extra,cols]%=mod;
+            opt[extra,cols]+=dfs(1,cols-2)%mod;
+        }
+            
+        
+        opt[extra,cols]%=mod;
+        
+        return opt[extra,cols];
+    }
+}
