@@ -31,7 +31,6 @@ public class Solution {
             opt[extra,cols]+=dfs(1,cols-2)%mod;
         }
             
-        
         opt[extra,cols]%=mod;
         
         return opt[extra,cols];
