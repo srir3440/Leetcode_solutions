@@ -1,0 +1,31 @@
+public class Solution {
+    private PriorityQueue<int[],int> minheap=new PriorityQueue<int[],int>();
+    public int FindMinArrowShots(int[][] points) {
+        for(int i=0;i<points.Length;i++)
+            minheap.Enqueue(points[i],points[i][0]);
+        
+        int start=minheap.Peek()[0],end=minheap.Peek()[1],cnt=1;
+        int newstart,newend;
+        while(minheap.Count>0)
+        {
+            int[] tmp=minheap.Dequeue();
+            //Console.WriteLine(tmp[0]+" "+tmp[1]);
+            newstart=Math.Max(tmp[0],start);
+            newend=Math.Min(tmp[1],end);
+            if(newstart>newend)
+            {
+                cnt++;
+                start=tmp[0];
+                end=tmp[1];
+            }
+            else
+            {
+                start=newstart;
+                end=newend;
+            }
+            //Console.WriteLine("after: "+start+" "+end);
+        }
+            
+        return cnt;
+    }
+}
