@@ -1,0 +1,19 @@
+public class Solution {
+    public int MaxResult(int[] nums, int k) {
+        int[] opt=new int[nums.Length];
+        opt[nums.Length-1]=nums[nums.Length-1];
+        
+        for(int i=nums.Length-2;i>=0;i--)
+        {
+            opt[i]=Int32.MinValue;
+            for(int j=1;j<=k;j++)
+            {
+                if(i+j<=nums.Length-1)
+                    opt[i]=Math.Max(opt[i],opt[i+j]+nums[i]);
+            }
+            //Console.Write(opt[i]+" ");
+        }
+        //Console.WriteLine();
+        return opt[0];
+    }
+}
