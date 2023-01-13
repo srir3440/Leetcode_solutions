@@ -1,16 +1,21 @@
+public class customComparer:Comparer<int>
+{
+    public override int Compare(int a,int b) => b.CompareTo(a);
+}
+
 public class Solution {
+    private PriorityQueue<int[],int> maxheap=new PriorityQueue<int[],int>(new customComparer());
     public int MaxResult(int[] nums, int k) {
         int[] opt=new int[nums.Length];
         opt[nums.Length-1]=nums[nums.Length-1];
-        
+        maxheap.Enqueue(new int[]{nums[nums.Length-1],nums.Length-1},nums[nums.Length-1]);
         for(int i=nums.Length-2;i>=0;i--)
         {
-            opt[i]=Int32.MinValue;
-            for(int j=1;j<=k;j++)
-            {
-                if(i+j<=nums.Length-1)
-                    opt[i]=Math.Max(opt[i],opt[i+j]+nums[i]);
-            }
+            while(maxheap.Count>0 && maxheap.Peek()[1]>i+k)
+                maxheap.Dequeue();
+            
+            opt[i]=maxheap.Peek()[0]+nums[i];
+            maxheap.Enqueue(new int[]{opt[i],i},opt[i]);
             //Console.Write(opt[i]+" ");
         }
         //Console.WriteLine();
