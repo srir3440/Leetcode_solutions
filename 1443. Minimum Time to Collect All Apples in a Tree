@@ -1,0 +1,51 @@
+public class Solution {
+    private Dictionary<int,Dictionary<int,int>> adjlist=new Dictionary<int,Dictionary<int,int>>();
+    private IList<bool> ha;
+    private Dictionary<int,int> opt=new Dictionary<int,int>();
+    public int MinTime(int n, int[][] edges, IList<bool> hasApple) {
+        prepareAdjlist(edges);
+        ha=hasApple;
+        dfs(0);
+        return opt[0];
+    }
+    
+    private int dfs(int node)
+    {
+        //Console.WriteLine(node);
+        if(!adjlist.ContainsKey(node))
+        {
+            //Console.WriteLine("min: "+(ha[node]?1:0));
+            return ha[node]?1:0;
+        }
+            
+        
+        
+        int min=0,sum=0;
+        foreach(var key in adjlist[node].Keys)
+        {
+            adjlist[node].Remove(key);
+            adjlist[key].Remove(node);
+            min+=dfs(key);
+            sum+=opt[key];
+        }
+        
+        //Console.WriteLine("ret: "+(2*min+sum));
+        opt[node]=2*min+sum;
+        return min>0?1:(ha[node]?1:0);
+    }
+    
+    private void prepareAdjlist(int[][] edges)
+    {
+        for(int i=0;i<edges.Length;i++)
+        {
+            if(!adjlist.ContainsKey(edges[i][0]))
+                adjlist.Add(edges[i][0],new Dictionary<int,int>());
+            adjlist[edges[i][0]].Add(edges[i][1],edges[i][1]);
+            if(!adjlist.ContainsKey(edges[i][1]))
+                adjlist.Add(edges[i][1],new Dictionary<int,int>());
+            adjlist[edges[i][1]].Add(edges[i][0],edges[i][0]);
+        }
+        
+        
+    }
+}
