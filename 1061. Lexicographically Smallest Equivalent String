@@ -1,0 +1,62 @@
+public class Solution {
+    private int[] groups=new int[26];
+    public string SmallestEquivalentString(string s1, string s2, string baseStr) {
+        
+        for(int i=0;i<26;i++)
+            groups[i]=-1;
+        
+        for(int i=0;i<s1.Length;i++)
+            groups[s1[i]-'a']=s1[i]-'a';
+        
+        for(int i=0;i<s1.Length;i++)
+            groups[s2[i]-'a']=s2[i]-'a';
+        
+        for(int i=0;i<s1.Length;i++)
+        {
+            int r1=getroot(s1[i]-'a');
+            int r2=getroot(s2[i]-'a');
+            if(r1==r2)
+                continue;
+            groups[r2]=r1;
+        }
+        
+        Dictionary<int,char> hs=new Dictionary<int,char>();
+        for(int i=0;i<26;i++)
+        {
+            if(groups[i]!=-1)
+            {
+                int root=getroot(i);
+                if(!hs.ContainsKey(root))
+                    hs.Add(root,(char)('a'+root));
+                hs[root]=(char)('a'+Math.Min(hs[root]-'a',i));
+                //Console.WriteLine((char)(i+'a')+" "+(char)(root+'a')+" "+hs[root]);
+            }
+                
+        }
+        //Console.WriteLine(hs.Count);  
+        
+        //foreach(var key in hs.Keys)
+            //Console.WriteLine((char)('a'+key)+" "+hs[key]);
+        
+        string ans="";
+        foreach(var c in baseStr)
+        {
+            if(groups[c-'a']==-1)
+                ans+=c;
+            else
+                ans+=hs[getroot(c-'a')];
+            //Console.Write(ans+" ");
+        }
+        //Console.WriteLine();
+        
+        return ans;
+    }
+    
+    
+    private int getroot(int c)
+    {
+        if(groups[c]==c)
+            return c;
+        return getroot(groups[c]);
+    }
+}
