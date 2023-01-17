@@ -1,0 +1,35 @@
+public class Solution {
+    private Dictionary<string,int> opt=new Dictionary<string,int>();
+    
+    public int MinFlipsMonoIncr(string s) {
+        //Console.WriteLine(s.Length);
+        return dfs(new StringBuilder(s),0,s.Length-1);
+    }
+    
+    private int dfs(StringBuilder sb,int start,int end)
+    {
+        //Console.WriteLine(sb+" "+start+" "+end);
+        while(start<end && sb[start]=='0')
+            start++;
+        
+        while(end>start && sb[end]=='1')
+            end--;
+        
+        if(end<=start)
+            return 0;
+        
+        string s=start.ToString()+" "+end.ToString();
+        if(opt.ContainsKey(s))
+            return opt[s];
+        
+        int min=Int32.MaxValue;
+        sb[start]='0';
+        min=Math.Min(min,dfs(sb,start+1,end)+1);
+        sb[start]='1';
+        sb[end]='1';
+        min=Math.Min(min,dfs(sb,start,end-1)+1);
+        sb[end]='0';
+        opt[s]=min;
+        return min;
+    }
+}
