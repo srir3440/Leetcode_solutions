@@ -1,0 +1,64 @@
+public class Solution {
+    private Queue<int> queue=new Queue<int>();
+    private HashSet<int> visited=new HashSet<int>();
+    private int n;
+    public int SnakesAndLadders(int[][] board) {
+        n=board.Length;
+        
+        /*for(int i=1;i<=n*n;i++)
+        {
+            int[] tmp=GetRowCol(i);
+            Console.WriteLine(tmp[0]+" "+tmp[1]);
+        }
+        return 0;*/
+        
+        queue.Enqueue(1);
+        visited.Add(1);
+        
+        int step=-1;
+        while(queue.Count!=0)
+        {
+            step++;
+            for(int i=queue.Count;i>0;i--)
+            {
+                int tmp=queue.Dequeue();
+                //Console.Write(tmp+" ");
+                if(tmp==n*n)
+                    return step;
+                
+                
+                for(int j=1;j<=6;j++)
+                {
+                    if(tmp+j>n*n)
+                        break;
+                    int[] rC=GetRowCol(tmp+j);
+                    if(board[rC[0]][rC[1]]==-1)
+                    {
+                        if(visited.Contains(tmp+j))
+                            continue;
+                        queue.Enqueue(tmp+j);
+                        visited.Add(tmp+j);
+                        continue;
+                    }
+                    
+                    if(visited.Contains(board[rC[0]][rC[1]]))
+                        continue;
+                    queue.Enqueue(board[rC[0]][rC[1]]);
+                    visited.Add(board[rC[0]][rC[1]]);
+                }
+            }
+            //Console.WriteLine();
+        }
+        
+        return -1;
+    }
+    
+    private int[] GetRowCol(int pos)
+    {
+        int c=(pos-1)%n;
+        int r=(pos-1)/n;
+        if(r%2==0)
+            return new int[]{n-1-r,c};
+        return new int[]{n-1-r,n-1-c};
+    }
+}
