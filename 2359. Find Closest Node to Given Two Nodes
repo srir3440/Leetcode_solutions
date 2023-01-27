@@ -1,0 +1,47 @@
+public class Solution {
+    private Queue<int[]> queue=new Queue<int[]>();
+    private int[] dist;
+    
+    public int ClosestMeetingNode(int[] edges, int node1, int node2) {
+        
+        //Console.WriteLine();
+        if(node1==node2)
+            return node1;
+        
+        dist=new int[edges.Length];
+        
+        for(int i=0;i<edges.Length;i++)
+            dist[i]=-1;
+        
+        queue.Enqueue(new int[]{node1,node1});
+        queue.Enqueue(new int[]{node2,node2});
+        
+        bool flag=false;
+        int min=Int32.MaxValue;
+        while(queue.Count!=0)
+        {
+            for(int i=queue.Count;i>0;i--)
+            {
+                int[] tmp=queue.Dequeue();
+                //Console.Write(tmp[0]+" "+tmp[1]+"     ");
+                if(dist[tmp[0]]!=-1 && dist[tmp[0]]!=tmp[1])
+                {
+                    flag=true;
+                    min=Math.Min(min,tmp[0]);
+                }
+                
+                dist[tmp[0]]=tmp[1];
+                if(edges[tmp[0]]!=-1)
+                {
+                    queue.Enqueue(new int[]{edges[tmp[0]],tmp[1]});
+                    edges[tmp[0]]=-1;
+                }
+            }
+            //Console.WriteLine();
+            if(flag)
+                return min;
+        }
+        
+        return -1;
+    }
+}
