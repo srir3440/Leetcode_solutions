@@ -1,0 +1,54 @@
+public class Solution {
+    private int[,] adjmatrix;
+    private Dictionary<string,int> opt=new Dictionary<string,int>();
+    private int dest;
+    private int len;
+    public int FindCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+        
+        adjmatrix=new int[n,n];
+        dest=dst;
+        len=n;
+        
+        PrepAdjMatrix(flights);
+        
+        int ans=dfs(src,k);
+        return ans==Int32.MaxValue?-1:ans;
+    }
+    
+    private int dfs(int src,int stopsRemain)
+    {
+        //Console.WriteLine(src+" "+stopsRemain);
+        if(src==dest)
+            return 0;
+        
+        if(stopsRemain<0)
+            return Int32.MaxValue;
+        
+        string s=src.ToString()+" "+stopsRemain.ToString();
+        if(opt.ContainsKey(s))
+            return opt[s];
+        
+        int min=Int32.MaxValue;
+        for(int i=0;i<len;i++)
+        {
+            if(adjmatrix[src,i]!=0)
+            {
+                int tmp=adjmatrix[src,i];
+                adjmatrix[src,i]=0;
+                int ret=dfs(i,stopsRemain-1);
+                if(ret!=Int32.MaxValue)
+                    min=Math.Min(min,ret+tmp);
+                adjmatrix[src,i]=tmp;
+            }
+        }
+        //Console.WriteLine(min);
+        opt[s]=min;
+        return min;
+    }
+    
+    private void PrepAdjMatrix(int[][] flights)
+    {
+        for(int i=0;i<flights.Length;i++)
+            adjmatrix[flights[i][0],flights[i][1]]=flights[i][2];
+    }
+}
