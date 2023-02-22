@@ -1,0 +1,51 @@
+public class Solution {
+    private int[] answer;
+    private Queue<int> queue=new Queue<int>();
+    private Dictionary<int,Dictionary<int,int>> adjlist=new Dictionary<int,Dictionary<int,int>>();
+    public int[] ShortestAlternatingPaths(int n, int[][] redEdges, int[][] blueEdges) {
+        answer=new int[n];
+        prepareAdjList(redEdges);
+        prepareAdjList(blueEdges,-1);
+        for(int i=0;i<n;i++)
+            answer[i]=-1;
+        queue.Enqueue(0);
+        
+        int step=-1;
+        while(queue.Count!=0)
+        {
+            step++;
+            for(int i=queue.Count;i>0;i--)
+            {
+                int tmp=queue.Dequeue();
+                //Console.Write(tmp+" ");
+                int node=Math.Abs(tmp);
+                if(answer[node]==-1)
+                    answer[node]=step;
+                if(!adjlist.ContainsKey(node))
+                    continue;
+                foreach(var neigh in adjlist[node].Keys)
+                {
+                    if((tmp<0 && neigh>0) || (tmp>0 && neigh<0) || tmp==0)
+                    {
+                        queue.Enqueue(neigh);
+                        adjlist[node].Remove(neigh);
+                    }
+                }
+                //Console.WriteLine();
+            }
+        }
+        
+        return answer;
+    }
+    
+    private void prepareAdjList(int[][] edges,int multi=1)
+    {
+        for(int i=0;i<edges.Length;i++)
+        {
+            if(!adjlist.ContainsKey(edges[i][0]))
+                adjlist.Add(edges[i][0],new Dictionary<int,int>());
+            if(!adjlist[edges[i][0]].ContainsKey(edges[i][1]*multi))
+                adjlist[edges[i][0]].Add(edges[i][1]*multi,edges[i][1]*multi);
+        }
+    }
+}
