@@ -1,33 +1,35 @@
 public class Solution {
     public int ShipWithinDays(int[] weights, int days) {
-        int right=25*(int)Math.Pow(10,6);
-        int left=Int32.MinValue;
-        for(int i=0;i<weights.Length;i++)
-            left=Math.Max(weights[i],left);
-        int mid;
+        int left=1,right=25*(int)Math.Pow(10,6),mid;
+        
         while(left<right)
         {
             mid=(left+right)/2;
-            if(getdayscnt(weights,mid,days))
+            if(ispossible(mid,weights,days))
                 right=mid;
             else
                 left=mid+1;
         }
+        
         return left;
     }
     
-    private bool getdayscnt(int[] weights,int i,int days)
+    private bool ispossible(int target,int[] weights,int days)
     {
-        int dayscnt=1,sum=0;
-        for(int j=0;j<weights.Length;j++)
+        int sum=0;
+        //Console.WriteLine(target);
+        for(int i=0;i<weights.Length;i++)
         {
-            if(sum+weights[j]>i)
+            if(weights[i]>target)
+                return false;
+            if(sum+weights[i]>target)
             {
                 sum=0;
-                dayscnt++;
+                days--;
             }
-            sum+=weights[j];
+            sum+=weights[i];
         }
-        return dayscnt<=days;
+        
+        return days>=1;
     }
 }
