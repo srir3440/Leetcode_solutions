@@ -1,0 +1,51 @@
+public class Solution {
+    private Dictionary<int,Dictionary<int,int>> adjlist=new Dictionary<int,Dictionary<int,int>>();
+    private long ans=0,s;
+    public long MinimumFuelCost(int[][] roads, int seats) {
+        
+        if(roads.Length==0)
+            return 0;
+        
+        s=seats;
+        prepareAdjList(roads);
+        
+        long children=dfs(0);
+        
+        
+        ans-=(children-1)/s+1;
+        
+        return ans;
+    }
+    
+    private long dfs(int node)
+    {
+        //Console.WriteLine(node);
+        if(!adjlist.ContainsKey(node))
+            return 0;
+        
+        long children=1;
+        foreach(var key in adjlist[node].Keys)
+        {
+            adjlist[key].Remove(node);
+            children+=dfs(key);
+            adjlist[key].Add(node,node);
+        }
+        
+        ans+=(children-1)/s+1;
+        //Console.WriteLine("children: "+children+" "+"ans: "+ans);
+        return children;
+    }
+    
+    private void prepareAdjList(int[][] roads)
+    {
+        for(int i=0;i<roads.Length;i++)
+        {
+            if(!adjlist.ContainsKey(roads[i][0]))
+                adjlist.Add(roads[i][0],new Dictionary<int,int>());
+            adjlist[roads[i][0]].Add(roads[i][1],roads[i][1]);
+            if(!adjlist.ContainsKey(roads[i][1]))
+                adjlist.Add(roads[i][1],new Dictionary<int,int>());
+            adjlist[roads[i][1]].Add(roads[i][0],roads[i][0]);
+        }
+    }
+}
